@@ -31,9 +31,12 @@ export default function Login({ status, canResetPassword }) {
                 </div>
             )}
 
+            {/* Título del formulario */}
+            <h2 className="text-center text-2xl font-bold mb-6">Inicio de sesión</h2>
+
             <form onSubmit={submit}>
                 <div>
-                    <InputLabel htmlFor="email" value="Email" />
+                    <InputLabel htmlFor="email" value="Nombre de usuario" />
 
                     <TextInput
                         id="email"
@@ -50,7 +53,7 @@ export default function Login({ status, canResetPassword }) {
                 </div>
 
                 <div className="mt-4">
-                    <InputLabel htmlFor="password" value="Password" />
+                    <InputLabel htmlFor="password" value="Contraseña" />
 
                     <TextInput
                         id="password"
@@ -75,26 +78,29 @@ export default function Login({ status, canResetPassword }) {
                             }
                         />
                         <span className="ms-2 text-sm text-gray-600">
-                            Remember me
+                            Recordarme
                         </span>
                     </label>
                 </div>
 
-                <div className="mt-4 flex items-center justify-end">
+                <div className="mt-4 flex items-center justify-center space-x-4">
+                    <PrimaryButton className="ms-4" disabled={processing}>
+                        Iniciar Sesión
+                    </PrimaryButton>
+                    
+                </div>
+                <div>
                     {canResetPassword && (
                         <Link
                             href={route('password.request')}
                             className="rounded-md text-sm text-gray-600 underline hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
                         >
-                            Forgot your password?
+                            ¿Olvidaste tu contraseña?
                         </Link>
                     )}
-
-                    <PrimaryButton className="ms-4" disabled={processing}>
-                        Log in
-                    </PrimaryButton>
                 </div>
             </form>
         </GuestLayout>
+
     );
 }
