@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Inscripcion;
+use App\Http\Requests\StoreInscripcionRequest;
+use App\Http\Requests\UpdateInscripcionRequest;
 
 class InscripcionController extends Controller
 {
@@ -25,7 +27,7 @@ class InscripcionController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StoreInscripcionRequest $request)
     {
         //
     }
@@ -33,7 +35,7 @@ class InscripcionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Inscripcion $inscripcion)
     {
         //
     }
@@ -41,7 +43,7 @@ class InscripcionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Inscripcion $inscripcion)
     {
         //
     }
@@ -49,7 +51,7 @@ class InscripcionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdateInscripcionRequest $request, Inscripcion $inscripcion)
     {
         //
     }
@@ -57,7 +59,7 @@ class InscripcionController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Inscripcion $inscripcion)
     {
         //
     }

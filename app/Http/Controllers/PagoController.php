@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Pago;
+use App\Http\Requests\StorePagoRequest;
+use App\Http\Requests\UpdatePagoRequest;
 
 class PagoController extends Controller
 {
@@ -25,7 +27,7 @@ class PagoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(StorePagoRequest $request)
     {
         //
     }
@@ -33,7 +35,7 @@ class PagoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(string $id)
+    public function show(Pago $pago)
     {
         //
     }
@@ -41,7 +43,7 @@ class PagoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit(Pago $pago)
     {
         //
     }
@@ -49,7 +51,7 @@ class PagoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(UpdatePagoRequest $request, Pago $pago)
     {
         //
     }
@@ -57,7 +59,7 @@ class PagoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Pago $pago)
     {
         //
     }
