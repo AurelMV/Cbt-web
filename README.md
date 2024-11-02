@@ -8,7 +8,8 @@
 </p>
 
 
-CREACIÓN DE MODELOS PARA USARIO Y ROLES
+<h1>CREACIÓN DE MODELOS PARA USARIO Y ROLES</h1>
+<br>
 Para crear el modelo de Usuario y Roles instale la librería Spatie que se encargará de crear roles y asignar permisos a esos roles, asociando ambos desde la migraciones que se generarán automáticamente al publicar el provider de Spatie
 
 1. composer require spatie/laravel-permission
@@ -45,6 +46,7 @@ Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {
 
 
 /*Otros*/
+<br>
 php artisan permission:create-role nombre-rol (Crear nuevo rol)
 php artisan permission:show (Mostrar roles)
     
