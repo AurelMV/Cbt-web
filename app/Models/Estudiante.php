@@ -15,8 +15,17 @@ class Estudiante extends Model
      *
      * @var array<int, string>
      */
+    public $timestamps=false;
+    use HasFactory;
+
+    protected $table = 'estudiantes';
+    protected $primaryKey = 'idEstudiante';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
-        'nombre',
+        'idEstudiante',
+        'nombres',
         'aPaterno',
         'aMaterno',
         'sexo',
@@ -28,9 +37,14 @@ class Estudiante extends Model
         'Nrodocumento',
         'tipodocumento',
         'direccion',
-        'foto'
-
+        'foto',
+        
     ];
+
+    public function inscripciones()
+    {
+        return $this->hasMany(Inscripcion::class, 'idEstudiante', 'idEstudiante');
+    }
 
 
 }

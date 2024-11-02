@@ -17,12 +17,24 @@ class Pago extends Model
      *
      * @var array<int, string>
      */
+    public $timestamps=false;
+    protected $table = 'pagos';
+    protected $primaryKey = 'idPagos';
+    public $incrementing = false;
+    protected $keyType = 'string';
+
     protected $fillable = [
+       'idPagos',
         'fecha',
         'monto',
         'medioPago',
-        'nroVoucher'
-        
+        'nroVoucher',
+        'idInscripcion',
     ];
+
+    public function inscripcion()
+    {
+        return $this->belongsTo(Inscripcion::class, 'idInscripcion', 'idInscripcion');
+    }
 
 }
