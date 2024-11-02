@@ -5,6 +5,9 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Http\Controllers\AdminController;
+use App\Http\Controllers\EmpleadoController;
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -23,5 +26,20 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// Rutas accesibles para usuario con el rol admin
+Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
+    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+});
+
+
+// Rutas accesibles para usuarios con el rol trabajador
+Route::group(['middleware' => ['auth', 'verified', 'role:empleado']], function () {
+    Route::get('/empleado', [EmpleadoController::class, 'index'])->name('empleado');
+});
+
+
+
+
 
 require __DIR__.'/auth.php';
