@@ -7,7 +7,6 @@ export default function GuestLayout({ children }) {
      
             <div className="absolute inset-0 bg-cover bg-center" style={{ backgroundImage: 'url(https://img.freepik.com/vector-premium/imagenes-fondo-lineal-hd-1080p-descargar-gratis-hd_822642-403.jpg)' }}></div>
             
- 
             <div className="relative flex w-full max-w-2xl overflow-hidden bg-white shadow-lg rounded-lg">
                 <div className="w-full p-6">
                     {children}
