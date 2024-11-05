@@ -7,6 +7,7 @@ use Inertia\Inertia;
 
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\CicloController;
 
 Route::get('/', function () {
     return Inertia::render('Welcome', [
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+    Route::resource('ciclos', CicloController::class);
 });
 
 
