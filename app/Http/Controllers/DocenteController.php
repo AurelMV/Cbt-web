@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Docente;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class DocenteController extends Controller
 {
@@ -11,7 +13,11 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        //
+        $docentes = Docente::all();
+
+        return Inertia::render('NombreDeComponente', [
+            'docentes' => $docentes
+        ]);
     }
 
     /**
@@ -27,7 +33,21 @@ class DocenteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'nombre' => 'required|string',
+            'aPaterno' => 'required|string',
+            'aMaterno' => 'required|string',
+            'dni' => 'required|string',
+            'sexo' => 'required|string',
+            'celular' => 'required|string',
+            'fechaNacimiento' => 'required|date',
+            'email' => 'required|string',
+            'estado' => 'required|boolean',
+        ]);
+
+        Docente::create($validate);
+
+        return redirect()->route('docentes.index');
     }
 
     /**
@@ -35,7 +55,11 @@ class DocenteController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $docente = Docente::findOrFail($id);
+
+        return Inertia::render('NombreDeComponente', [
+            'docente' => $docente
+        ]);
     }
 
     /**
@@ -51,7 +75,22 @@ class DocenteController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validate = $request->validate([
+            'nombre' => 'required|string',
+            'aPaterno' => 'required|string',
+            'aMaterno' => 'required|string',
+            'dni' => 'required|string',
+            'sexo' => 'required|string',
+            'celular' => 'required|string',
+            'fechaNacimiento' => 'required|date',
+            'email' => 'required|string',
+            'estado' => 'required|boolean',
+        ]);
+
+        $docente = Docente::findOrFail($id);
+        $docente->update($validate);
+
+        return redirect()->route('docentes.index');
     }
 
     /**
@@ -59,6 +98,9 @@ class DocenteController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $docente = Docente::findOrFail($id);
+        $docente->delete();
+
+        return redirect()->route('docentes.index');
     }
 }

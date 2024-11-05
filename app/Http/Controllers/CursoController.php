@@ -32,7 +32,13 @@ class CursoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'nombreCurso' => 'required|string',
+        ]);
+
+        Curso::create($validate);
+
+        return redirect()->route('cursos.index');
     }
 
     /**
@@ -40,7 +46,10 @@ class CursoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $curso = Curso::findOrFail($id);
+        return Inertia::render('Curso', [
+            'curso' => $curso
+        ]);
     }
 
     /**
@@ -56,7 +65,14 @@ class CursoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validate = $request->validate([
+            'nombreCurso' => 'required|string',
+        ]);
+
+        $curso = Curso::findOrFail($id);
+        $curso->update($validate);
+
+        return redirect()->route('cursos.index');
     }
 
     /**
@@ -64,6 +80,9 @@ class CursoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $curso = Curso::findOrFail($id);
+        $curso->delete();
+
+        return redirect()->route('cursos.index');
     }
 }
