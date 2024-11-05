@@ -9,7 +9,6 @@ use Illuminate\Support\Facades\Validator;
 
 class DepartamentoController extends Controller
 {
-
     public function index()
     {
         $departamento=Departamento::all();
@@ -22,6 +21,16 @@ class DepartamentoController extends Controller
     }
 
     public function show(string $id)
+    {
+        $departamento=Departamento::findOrFail($id);
+        return response()->json([
+            'status'=>true,
+            'message'=>'listado de datos',
+            'data'=>$departamento,
+        ],200
+        );
+    }
+    public function consulta(string $id)
     {
         $departamento=Departamento::findOrFail($id);
         return response()->json([

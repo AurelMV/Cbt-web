@@ -3,8 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use NunoMaduro\Collision\Provider;
 
 class Distrito extends Model
 {
-    protected $fillable = ['nombrecolegio','Distrito_idDistrito'];
+    
+    private function Provincia(){
+        return $this->belongsTo(Provincia::class); 
+    }
+    private function Colegio(){
+        return $this->hasMany(Colegio::class); 
+    }
+
 }
+
