@@ -5,6 +5,7 @@ use App\Http\Controllers\CicloController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\ProfileController;
+use App\Models\Ciclo;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -30,6 +31,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
+Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
 
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
