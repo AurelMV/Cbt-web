@@ -1,7 +1,12 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function Dashboard() {
+    const [modalOpen, setModalOpen] = useState(false); 
+    const openModal = () => setModalOpen(true); 
+    const closeModal = () => setModalOpen(false);  
+
     return (
         <AuthenticatedLayout
         >

@@ -41,7 +41,7 @@ export default function AuthenticatedLayout({ header, children }) {
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
                     <img src="https://svgsilh.com/svg/303116.svg" width={30} height={30} />
                         <NavLink
-                            href={route('cliclos.index')}
+                            href={route('ciclos.index')}
                             active={route().current('ciclos.index')}
                         >
                             Ciclos

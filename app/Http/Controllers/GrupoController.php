@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Grupo;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class GrupoController extends Controller
 {
@@ -11,7 +13,10 @@ class GrupoController extends Controller
      */
     public function index()
     {
-        //
+        $grupos = Grupo::all();
+        return Inertia::render('NombreDeComponente', [
+            'grupos' => $grupos
+        ]);
     }
 
     /**
@@ -27,7 +32,16 @@ class GrupoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validate = $request->validate([
+            'nombreGrupo' => 'required|string',
+            'aforo' => 'required|int',
+            'estado' => 'required|boolean',
+            'idciclo' => 'required|int'
+        ]);
+
+        Grupo::create($validate);
+
+        return redirect()->route('grupos.index');
     }
 
     /**
@@ -35,7 +49,11 @@ class GrupoController extends Controller
      */
     public function show(string $id)
     {
-        //
+        $grupo = Grupo::findOrFail($id);
+
+        return Inertia::render('NombreDeComponente', [
+            'grupo' => $grupo
+        ]);
     }
 
     /**
@@ -51,7 +69,16 @@ class GrupoController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $validate = $request->validate([
+            'nombreGrupo' => 'required|string',
+            'aforo' => 'required|int',
+            'estado' => 'required|boolean',
+            'idciclo' => 'required|int'
+        ]);
+
+        Grupo::findOrFail($id)->update($validate);
+
+        return redirect()->route('grupos.index');
     }
 
     /**
@@ -59,6 +86,9 @@ class GrupoController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $grupo = Grupo::findOrFail($id);
+        $grupo->delete();
+
+        return redirect()->route('grupos.index');
     }
 }
