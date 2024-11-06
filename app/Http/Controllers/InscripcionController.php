@@ -14,7 +14,15 @@ class InscripcionController extends Controller
      */
     public function index()
     {
-        $inscripcion = Inscripcion::all();
+        $inscripcion = Inscripcion::select( 'turno',
+        'fechaInscripcion',
+        'estadopa',
+        'idEstudiante',
+        'idprogramaestudios',
+        'idciclo',
+        'idGrupos')->get();
+
+        
         return response()->json([
             'status' => true,
             'message' => 'Pagos Establecidos con exito :)',
@@ -65,9 +73,23 @@ class InscripcionController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Inscripcion $inscripcion)
+    public function show($id)
     {
-        //
+        $inscripcion = Inscripcion::select('turno',
+        'fechaInscripcion',
+        'estadopa',
+        'idEstudiante',
+        'idprogramaestudios',
+        'idciclo',
+        'idGrupos',)
+        
+        ->findOrFail($id);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Estudiante localizado',
+            'data' => $inscripcion
+        ], 200);
     }
 
     /**

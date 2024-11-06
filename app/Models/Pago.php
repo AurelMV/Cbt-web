@@ -19,12 +19,12 @@ class Pago extends Model
      */
     public $timestamps=false;
     protected $table = 'pagos';
-    protected $primaryKey = 'idPagos';
+    protected $primaryKey = 'id';
     public $incrementing = false;
     protected $keyType = 'string';
 
     protected $fillable = [
-       'idPagos',
+   
         'fecha',
         'monto',
         'medioPago',

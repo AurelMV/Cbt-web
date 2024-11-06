@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\Validator;
 use App\Models\Pago;
 use Illuminate\Http\Request;
@@ -14,7 +15,16 @@ class PagoController extends Controller
      */
     public function index()
     {
-        $pago = Pago::all();
+        $pago = Pago::select(
+            'fecha',
+            'monto',
+            'medioPago',
+            'nroVoucher',
+            'idInscripcion'
+        )->get();
+
+
+
         return response()->json([
             'status' => true,
             'message' => 'Pagos Establecidos con exito :)',
@@ -35,7 +45,7 @@ class PagoController extends Controller
      */
     public function store(Request $request)
     {
-        $validator =Validator::make($request->all(), [
+        $validator = Validator::make($request->all(), [
             'idPagos' => 'required|string|max:20',
             'fecha' => 'required|date',
             'monto' => 'required|integer',
@@ -63,9 +73,21 @@ class PagoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Pago $pago)
+    public function show($id)
     {
-        //
+        $pago = Pago::select(  'fecha',
+        'monto',
+        'medioPago',
+        'nroVoucher',
+        'idInscripcion',)
+        
+        ->findOrFail($id);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Estudiante localizado',
+            'data' => $pago
+        ], 200);
     }
 
     /**
@@ -115,7 +137,7 @@ class PagoController extends Controller
     {
         $pago = Pago::findOrFail($id);
         $pago->delete();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Pago Eliminado? successfully'

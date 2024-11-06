@@ -18,13 +18,10 @@ class Estudiante extends Model
     public $timestamps=false;
     use HasFactory;
 
-    protected $table = 'estudiantes';
-    protected $primaryKey = 'idEstudiante';
-    public $incrementing = false;
-    protected $keyType = 'string';
+
 
     protected $fillable = [
-        'idEstudiante',
+    
         'nombres',
         'aPaterno',
         'aMaterno',

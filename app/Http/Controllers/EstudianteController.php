@@ -15,12 +15,26 @@ class EstudianteController extends Controller
      */
     public function index()
     {
-        $estudiante = Estudiante::all();
-        return response()->json([
-            'status' => true,
-            'message' => 'Estudiantes Establecidos con exito :)',
-            'data' => $estudiante
-        ], 200);
+        $estudiantes = Estudiante::select( 'nombres',
+        'aPaterno',
+        'aMaterno',
+        'sexo',
+        'celularestudiante',
+        'celularapoderado',
+        'fechaNacimiento',
+        'email',
+        'anoculminado',
+        'Nrodocumento',
+        'tipodocumento',
+        'direccion',
+        'foto')  
+                              ->get();
+
+    return response()->json([
+        'status' => true,
+        'message' => 'Estudiantes Establecidos con exito :)',
+        'data' => $estudiantes
+    ], 200);
     }
 
     /**
@@ -76,7 +90,21 @@ class EstudianteController extends Controller
      */
     public function show($id)
     {
-        $estudiante = Estudiante::findOrFail($id);
+        $estudiante = Estudiante::select('nombres',
+        'aPaterno',
+        'aMaterno',
+        'sexo',
+        'celularestudiante',
+        'celularapoderado',
+        'fechaNacimiento',
+        'email',
+        'anoculminado',
+        'Nrodocumento',
+        'tipodocumento',
+        'direccion',
+        'foto')
+        
+        ->findOrFail($id);
         return response()->json([
             'status' => true,
             'message' => 'Estudiante localizado',
