@@ -15,7 +15,7 @@ class DocenteController extends Controller
     {
         $docentes = Docente::all();
 
-        return Inertia::render('NombreDeComponente', [
+        return Inertia::render('Docentes', [
             'docentes' => $docentes
         ]);
     }
