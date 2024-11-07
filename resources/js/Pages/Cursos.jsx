@@ -3,8 +3,7 @@ import { Head } from '@inertiajs/react';
 
 export default function Cursos() {
     return (
-        <AuthenticatedLayout
-        >
+        <AuthenticatedLayout>
             <Head title="Cursos" />
             
                 <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
