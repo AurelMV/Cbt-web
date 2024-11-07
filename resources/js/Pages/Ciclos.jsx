@@ -1,13 +1,14 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
-export default function Docentes() {
+export default function Ciclos() {
     return (
-        <AuthenticatedLayout>
-            <Head title="Docentes" />
+        <AuthenticatedLayout
+        >
+            <Head title="Ciclos" />
             
             <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
-                Docentes
+                Ciclos 
             </h2>
 
             <div className="py-12">
@@ -15,61 +16,30 @@ export default function Docentes() {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6">
                         <div className="grid grid-cols-2 gap-8">
 
+
                             <div>
-                                <h3 className="text-md font-medium mb-4">Datos del Docente</h3>
+                                <h3 className="text-md font-medium mb-4">Datos del Ciclo</h3>
                                 <form className="space-y-4">
                                     <input
                                         type="text"
-                                        placeholder="Nombre"
+                                        placeholder="Nombre del Ciclo"
                                         className="w-full border p-2 rounded-md"
                                         required
                                     />
-                                    <input
-                                        type="text"
-                                        placeholder="Apellido Paterno"
-                                        className="w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="Apellido Materno"
-                                        className="w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="DNI"
-                                        className="w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                    <select
-                                        className="w-full border p-2 rounded-md"
-                                        required
-                                    >
-                                        <option value="">Sexo</option>
-                                        <option value="Masculino">Masculino</option>
-                                        <option value="Femenino">Femenino</option>
-                                    </select>
+                                    <h1 className="text-md font-medium mb-4">Fecha de Incio</h1>
                                     <input
                                         type="date"
-                                        placeholder="Fecha de Nacimiento"
+                                        placeholder="Fecha de Inicio"
                                         className="w-full border p-2 rounded-md"
                                         required
                                     />
+                                    <h1 className="text-md font-medium mb-4">Fecha de Finalizacion</h1>
                                     <input
-                                        type="email"
-                                        placeholder="Email"
+                                        type="date"
+                                        placeholder="Fecha de Finalización"
                                         className="w-full border p-2 rounded-md"
                                         required
                                     />
-                                    <select
-                                        className="w-full border p-2 rounded-md"
-                                        required
-                                    >
-                                        <option value="">Estado</option>
-                                        <option value="Activo">Activo</option>
-                                        <option value="Inactivo">Inactivo</option>
-                                    </select>
                                     <div className="space-x-2">
                                         <button
                                             type="submit"
@@ -93,68 +63,51 @@ export default function Docentes() {
                                 </form>
                             </div>
 
+
                             <div>
-                                <h3 className="text-md font-medium mb-4">Listado de Docentes</h3>
+                                <h3 className="text-md font-medium mb-4">Listado de Ciclos</h3>
                                 <table className="min-w-full divide-y divide-gray-200 border">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Nombre
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                            >
+                                                Nombre del Ciclo
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Apellido Paterno
+                                            
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                            >
+                                                Fecha de Inicio
                                             </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Apellido Materno
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                DNI
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Sexo
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Fecha de Nacimiento
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Email
-                                            </th>
-                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Estado
+                                  
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                            >
+                                                Fecha de Finalización
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
+ 
                                         <tr>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                Juan
+                                                Ciclo 2024
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                Pérez
+                                                01-03-2024
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                García
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                12345678
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                Masculino
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                01-01-1980
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                juan.perez@example.com
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                Activo
+                                                30-06-2024
                                             </td>
                                         </tr>
+
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
                     </div>
                 </div>
