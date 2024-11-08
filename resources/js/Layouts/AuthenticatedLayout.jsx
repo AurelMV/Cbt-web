@@ -14,7 +14,7 @@ export default function AuthenticatedLayout({ header, children }) {
     return (
     <div className="flex min-h-screen">
     
-        <nav className="w-64 border-r border-gray-100 bg-red-200">
+        <nav className="w-64 border-r border-gray-100 bg-blue-200">
             <div className="mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex flex-col h-screen">
                     <div className="flex items-center justify-center mt-4">
@@ -30,6 +30,7 @@ export default function AuthenticatedLayout({ header, children }) {
                         </NavLink>
                     </div>
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                        <img src="https://e7.pngegg.com/pngimages/265/858/png-clipart-computer-icons-teacher-professor-education-lecturer-teacher-angle-logo-thumbnail.png" width={30} height={30} />
                         <NavLink
                             href={route('docentes.index')}
                             active={route().current('docentes.index')}
@@ -49,6 +50,17 @@ export default function AuthenticatedLayout({ header, children }) {
                     </div>
 
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                        <img src="https://static.vecteezy.com/system/resources/previews/016/267/452/non_2x/graduation-cap-or-graduate-hat-icon-isolated-flat-design-illustration-vector.jpg" width={30} height={30} />
+                        <NavLink
+                            href={route('programasEstudio.index')}
+                            active={route().current('programasEstudio.index')}
+                        >
+
+                            Programas de Estudio
+                        </NavLink>
+                    </div>
+
+                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
                         <NavLink
                             href={route('dashboard')}
                             active={route().current('dashboard')}
@@ -56,6 +68,7 @@ export default function AuthenticatedLayout({ header, children }) {
                             Docentes y cursos
                         </NavLink>
                     </div>
+
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
                     <img src="https://cdn-icons-png.flaticon.com/512/40/40494.png" width={30} height={30} />
                         <NavLink
@@ -65,6 +78,18 @@ export default function AuthenticatedLayout({ header, children }) {
                             Cursos
                         </NavLink>
                     </div>
+
+                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                    <img src="https://cdn-icons-png.flaticon.com/512/40/40494.png" width={30} height={30} />
+                        <NavLink
+                        href={route('grupos.index')}
+                        active={route().current('grupos.index')}
+                        >
+                            Grupos de Estudios
+                        </NavLink>
+                    </div>
+                    
+
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
                         <NavLink
                             href={route('dashboard')}
