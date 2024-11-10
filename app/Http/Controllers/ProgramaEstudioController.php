@@ -14,7 +14,7 @@ class ProgramaEstudioController extends Controller
     public function index()
     {
         $programasEstudio = ProgramaEstudio::all();
-        return Inertia::render('programaestudio/Index', [
+        return Inertia::render('ProgramasEstudio', [
             'programasEstudio' => $programasEstudio
         ]);
     }

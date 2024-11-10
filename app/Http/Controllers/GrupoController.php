@@ -14,7 +14,7 @@ class GrupoController extends Controller
     public function index()
     {
         $grupos = Grupo::all();
-        return Inertia::render('NombreDeComponente', [
+        return Inertia::render('GruposEstudio', [
             'grupos' => $grupos
         ]);
     }
