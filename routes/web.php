@@ -33,7 +33,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+// Rutas para pruebas
 Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
+Route::post('/cursos', [CursoController::class, 'store'])->name('cursos.store');
 Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
 Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
 Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');

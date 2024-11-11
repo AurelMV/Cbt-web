@@ -33,7 +33,8 @@ class CursoController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'nombreCurso' => 'required|string',
+            'nombre' => 'required|string',
+            'descripcion' => 'nullable|string',
         ]);
 
         Curso::create($validate);
@@ -67,6 +68,7 @@ class CursoController extends Controller
     {
         $validate = $request->validate([
             'nombreCurso' => 'required|string',
+            'descripcion' => 'nullable|string',
         ]);
 
         $curso = Curso::findOrFail($id);
