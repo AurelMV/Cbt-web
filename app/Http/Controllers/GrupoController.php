@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Ciclo;
 use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -13,9 +14,21 @@ class GrupoController extends Controller
      */
     public function index()
     {
-        $grupos = Grupo::all();
+        $grupos = Grupo::with('ciclo')->get()->map(function ($grupo) {
+            return [
+                'id' => $grupo->id,
+                'nombre' => $grupo->nombre,
+                'aforo' => $grupo->aforo,
+                'estado' => $grupo->estado ? 'Activo' : 'Inactivo',
+                'ciclo' => $grupo->ciclo ? $grupo->ciclo->nombre : 'Sin ciclo',
+            ];
+        });
+
+        $ciclos = Ciclo::all();
+
         return Inertia::render('GruposEstudio', [
-            'grupos' => $grupos
+            'grupos' => $grupos,
+            'ciclos' => $ciclos
         ]);
     }
 
@@ -33,7 +46,7 @@ class GrupoController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'nombreGrupo' => 'required|string',
+            'nombre' => 'required|string',
             'aforo' => 'required|int',
             'estado' => 'required|boolean',
             'idciclo' => 'required|int'
@@ -51,7 +64,7 @@ class GrupoController extends Controller
     {
         $grupo = Grupo::findOrFail($id);
 
-        return Inertia::render('NombreDeComponente', [
+        return Inertia::render('GruposEstudio', [
             'grupo' => $grupo
         ]);
     }
@@ -70,7 +83,7 @@ class GrupoController extends Controller
     public function update(Request $request, string $id)
     {
         $validate = $request->validate([
-            'nombreGrupo' => 'required|string',
+            'nombre' => 'required|string',
             'aforo' => 'required|int',
             'estado' => 'required|boolean',
             'idciclo' => 'required|int'

@@ -6,12 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Ciclo extends Model
 {
-    protected $table = 'Ciclos';
+    protected $table = 'ciclos';
     protected $primaryKey = 'id';
     protected $fillable = ['nombre', 'fecha_inicio', 'fecha_fin'];
 
     public function grupos() {
-        return $this->hasMany(Grupo::class);
+        return $this->hasMany(Grupo::class, 'idciclo');
     }
 
     public function inscripciones() {
