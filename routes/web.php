@@ -38,6 +38,7 @@ Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
 Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
 Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
+Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
 
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
