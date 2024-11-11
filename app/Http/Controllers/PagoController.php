@@ -7,6 +7,7 @@ use App\Http\Requests\StorePagoRequest;
 use App\Http\Requests\UpdatePagoRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class PagoController extends Controller
 {
@@ -22,11 +23,14 @@ class PagoController extends Controller
 
 
 
-        return response()->json([
+        /*return response()->json([
             'status' => true,
             'message' => 'Pagos Establecidos con exito :)',
             'data' => $pago
-        ], 200);
+        ], 200);*/
+        return Inertia::render('GestiondePagos', [
+            'ciclos' => $pago
+        ]);
     }
 
     /**

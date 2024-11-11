@@ -5,7 +5,10 @@ use App\Http\Controllers\CicloController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GrupoController;
+use App\Http\Controllers\InscripcionController;
+use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramaEstudioController;
 use App\Models\Ciclo;
@@ -29,6 +32,9 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index');
+    Route::get('/Estudiantes', [EstudianteController::class, 'index'])->name('estudiantes.index');
+    Route::get('/GestionIncripciones', [InscripcionController::class, 'index'])->name('gestInscripcion.index');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
@@ -39,10 +45,11 @@ Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.ind
 Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
 
+
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-    Route::resource('ciclos', CicloController::class);
+    //Route::resource('ciclos', CicloController::class);
 });
 
 
