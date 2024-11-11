@@ -17,8 +17,8 @@ return new class extends Migration
             $table->string('codModular');
             $table->string('modalidad');
             $table->string('gestion');
-            $table->int('latitud');
-            $table->int('longitud');
+            $table->integer('latitud');
+            $table->integer('longitud');
             $table->foreignId('Distrito_idDistrito')->constrained('distritos');
         });
     }

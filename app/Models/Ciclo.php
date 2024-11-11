@@ -8,7 +8,7 @@ class Ciclo extends Model
 {
     protected $table = 'Ciclos';
     protected $primaryKey = 'id';
-    protected $fillable = ['nombre, fecha_incio, fecha_fin'];
+    protected $fillable = ['nombre', 'fecha_inicio', 'fecha_fin'];
 
     public function grupos() {
         return $this->hasMany(Grupo::class);
