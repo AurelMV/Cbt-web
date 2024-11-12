@@ -11,7 +11,6 @@ use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramaEstudioController;
-use App\Models\Ciclo;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,10 +38,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
-Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
+//Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
+//Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
 Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
-Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
+//Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
 Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
 
@@ -50,7 +49,9 @@ Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
-    //Route::resource('ciclos', CicloController::class);
+    Route::resource('ciclos', CicloController::class);
+    Route::resource('cursos', CursoController::class);
+    Route::resource('programasEstudio', ProgramaEstudioController::class);
 });
 
 
