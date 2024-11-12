@@ -2,12 +2,12 @@
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 
-import {usePage } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 
 
-export default function AuthenticatedLayout({children }) {
+export default function AuthenticatedLayout({ children }) {
     const user = usePage().props.auth.user;
- 
+
     return (
         <div className="flex flex-col min-h-screen">
 
@@ -68,126 +68,126 @@ export default function AuthenticatedLayout({children }) {
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Inscripciones
                                 </NavLink>
-                                    <Dropdown>
-                                        <Dropdown.Trigger>
-                                            <span className="inline-flex w-full rounded-md">
-                                                <button
-                                                    type="button"
-                                                    className="inline-flex w-full"
+                                <Dropdown>
+                                    <Dropdown.Trigger>
+                                        <span className="inline-flex w-full rounded-md">
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full"
+                                            >
+                                                <svg
+                                                    className="h-4 w-4 ml-2"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
                                                 >
-                                                    <svg
-                                                        className="h-4 w-4 ml-2"
-                                                        xmlns="http://www.w3.org/2000/svg"
-                                                        viewBox="0 0 20 20"
-                                                        fill="currentColor"
-                                                    >
-                                                        <path
-                                                            fillRule="evenodd"
-                                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                            clipRule="evenodd"
-                                                        />
-                                                    </svg>
-                                                </button>
-                                            </span>
-                                        </Dropdown.Trigger>
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clipRule="evenodd"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </span>
+                                    </Dropdown.Trigger>
 
-                                        <Dropdown.Content>
-                                            <Dropdown.Link href={route('dashboard')}
+                                    <Dropdown.Content>
+                                        <Dropdown.Link href={route('dashboard')}
                                             as="button">
-                                                Inscripciones
-                                            </Dropdown.Link>
-                                            <Dropdown.Link href={route('estudiantes.index')}
+                                            Inscripciones
+                                        </Dropdown.Link>
+                                        <Dropdown.Link href={route('estudiantes.index')}
                                             as="button">
-                                                Estudiantes
-                                            </Dropdown.Link>
-                                            <Dropdown.Link
-                                                as="button"
-                                                href={route('pagos.index')}
-                                            >
-                                                Gestion Pagos
-                                            </Dropdown.Link>
-                                            <Dropdown.Link
-                                                href={route('gestInscripcion.index')}
-                                                as="button"
-                                            >
-                                                Gestion Inscripciones
-                                            </Dropdown.Link>
-                                        </Dropdown.Content>
-                                    </Dropdown>
-                               
+                                            Estudiantes
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            as="button"
+                                            href={route('pagos.index')}
+                                        >
+                                            Gestion Pagos
+                                        </Dropdown.Link>
+                                        <Dropdown.Link
+                                            href={route('gestInscripcion.index')}
+                                            as="button"
+                                        >
+                                            Gestion Inscripciones
+                                        </Dropdown.Link>
+                                    </Dropdown.Content>
+                                </Dropdown>
+
                             </div>
                             <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                        <img src="https://e7.pngegg.com/pngimages/265/858/png-clipart-computer-icons-teacher-professor-education-lecturer-teacher-angle-logo-thumbnail.png" width={30} height={30} />
-                        <NavLink
-                            href={route('docentes.index')}
-                            active={route().current('docentes.index')}
-                        >
-                            Docentes
-                        </NavLink>
-                    </div>
+                                <img src="https://e7.pngegg.com/pngimages/265/858/png-clipart-computer-icons-teacher-professor-education-lecturer-teacher-angle-logo-thumbnail.png" width={30} height={30} />
+                                <NavLink
+                                    href={route('docentes.index')}
+                                    active={route().current('docentes.index')}
+                                >
+                                    Docentes
+                                </NavLink>
+                            </div>
 
-                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                    <img src="https://svgsilh.com/svg/303116.svg" width={30} height={30} />
-                        <NavLink
-                            href={route('ciclos.index')}
-                            active={route().current('ciclos.index')}
-                        >
-                            Ciclos
-                        </NavLink>
-                    </div>
+                            <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                                <img src="https://svgsilh.com/svg/303116.svg" width={30} height={30} />
+                                <NavLink
+                                    href={route('ciclos.index')}
+                                    active={route().current('ciclos.index')}
+                                >
+                                    Ciclos
+                                </NavLink>
+                            </div>
 
-                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                        <img src="https://static.vecteezy.com/system/resources/previews/016/267/452/non_2x/graduation-cap-or-graduate-hat-icon-isolated-flat-design-illustration-vector.jpg" width={30} height={30} />
-                        <NavLink
-                            href={route('programasEstudio.index')}
-                            active={route().current('programasEstudio.index')}
-                        >
+                            <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                                <img src="https://static.vecteezy.com/system/resources/previews/016/267/452/non_2x/graduation-cap-or-graduate-hat-icon-isolated-flat-design-illustration-vector.jpg" width={30} height={30} />
+                                <NavLink
+                                    href={route('programasEstudio.index')}
+                                    active={route().current('programasEstudio.index')}
+                                >
 
-                            Programas de Estudio
-                        </NavLink>
-                    </div>
+                                    Programas de Estudio
+                                </NavLink>
+                            </div>
 
-                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                            <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
 
-                        <NavLink
-                            href={route('docenteCursos.index')}
-                            active={route().current('docenteCursos.index')}
-                        >
-                            Relacion Docentes,Cursos y Grupos
-                        </NavLink>
-                    </div>
+                                <NavLink
+                                    href={route('docenteCursos.index')}
+                                    active={route().current('docenteCursos.index')}
+                                >
+                                    Relacion Docentes,Cursos y Grupos
+                                </NavLink>
+                            </div>
 
-                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                            <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
 
-                    <img src="https://cdn-icons-png.flaticon.com/512/40/40494.png" width={30} height={30} />
-                        <NavLink
-                        href={route('cursos.index')}
-                        active={route().current('cursos.index')}
-                        >
-                            Cursos
-                        </NavLink>
-                    </div>
+                                <img src="https://cdn-icons-png.flaticon.com/512/40/40494.png" width={30} height={30} />
+                                <NavLink
+                                    href={route('cursos.index')}
+                                    active={route().current('cursos.index')}
+                                >
+                                    Cursos
+                                </NavLink>
+                            </div>
 
-                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                    <img src="https://cdn-icons-png.flaticon.com/512/40/40494.png" width={30} height={30} />
-                        <NavLink
-                        href={route('grupos.index')}
-                        active={route().current('grupos.index')}
-                        >
-                            Grupos de Estudios
-                        </NavLink>
-                    </div>
+                            <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                                <img src="https://cdn-icons-png.flaticon.com/512/40/40494.png" width={30} height={30} />
+                                <NavLink
+                                    href={route('grupos.index')}
+                                    active={route().current('grupos.index')}
+                                >
+                                    Grupos de Estudios
+                                </NavLink>
+                            </div>
 
-                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                        <NavLink
-                            href={route('dashboard')}
-                            active={route().current('dashboard')}
-                        >
-                            Reportes
-                        </NavLink>
-                    </div>
-
-                    </div>
+                            <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                                <NavLink
+                                    href={route('dashboard')}
+                                    active={route().current('dashboard')}
+                                >
+                                    Reportes
+                                </NavLink>
+                            </div>
+                            </div>
+                        </div>
                 </nav>
 
                 <main className="flex-1 p-6 bg-white">
