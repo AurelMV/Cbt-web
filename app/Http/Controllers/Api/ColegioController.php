@@ -103,7 +103,7 @@ class ColegioController extends Controller
                 'status' => false,
                 'message' => 'No se encontraron provincias para este departamento',
                 'data' => [''],
-            ], 200);
+            ], 404);
         }
 
         return response()->json([
