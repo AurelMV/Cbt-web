@@ -1,11 +1,74 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import ColegioServicio from '@/Components/ColegioServicio';
+import Listado from '@/Components/DepartamentoServicio';
 
 export default function Dashboard() {
+    const [distritos, setdistritos] = useState([]);
+    const [provincias, setProvincias] = useState([]);
+    const [departamentos, setlistados] = useState([]);
+    const [colegios, setColegios] = useState([]);
+    const [error, setError] = useState(null);
+    const [MensajeError, setMensajeError] = useState("");
+
     const [modalOpen, setModalOpen] = useState(false); 
     const openModal = () => setModalOpen(true); 
     const closeModal = () => setModalOpen(false);  
+
+    const handleDepartamentoChange = async (event) => {
+        const idDepartamento = event.target.value;
+
+        try {
+            const data = await Listado.ConsultaProvi(idDepartamento);
+            setProvincias(data); 
+        } catch (error) {
+            console.error("Error al cargar provincias:", error);
+        }
+    };
+    const handleProvinciaChange = async (event) => {
+        const idProvincia = event.target.value;
+
+        try {
+            const data = await Listado.ConsultaDistri(idProvincia);
+            setdistritos(data); 
+        } catch (error) {
+            console.error("Error al cargar provincias:", error);
+        }
+    };
+        const handleColegioChange = async (event) => {
+            const idDistrito = event.target.value;
+
+            try {
+                const data = await Listado.ConsultaColegio(idDistrito);
+                if (data.status === false) {
+                    // Si no hay resultados, muestra el mensaje de error y limpia el listado
+                    setColegios([]);
+                    setMensajeError(data.message); // Actualiza el mensaje de error
+                } else {
+                    // Si hay datos, actualiza el listado de colegios
+                    setColegios(data.data);
+                    setMensajeError(""); // Limpia el mensaje de error
+                }
+            } catch (error) {
+                console.error("Error al cargar colegios:", error);
+                setColegios([]);
+                setMensajeError("Ocurrió un error al intentar cargar los colegios");
+            }
+        };
+    useEffect(() => {
+        const listadoservice = async () => {
+            try {
+                const data = await Listado.indexDepa();
+                setlistados(data);
+            } catch (error) {
+                setError("Error al obtener los datos: " + error.message);
+            }
+        };
+
+        listadoservice();
+    }, []);
+
 
     return (
         <AuthenticatedLayout
@@ -52,32 +115,46 @@ export default function Dashboard() {
                                         
 
                                         <div className="space-y-4">
-                                            <select className="w-full border p-2 rounded-md" required>
-                                                <option value="" disabled selected>Departamento</option>
-                                                <option value="departamento1">Departamento 1</option>
-                                                <option value="departamento2">Departamento 2</option>
+                                        <select className="w-full border p-2 rounded-md" required onChange={handleDepartamentoChange}>
+                                                <option value="">Departamento</option>
+                                                {departamentos.map((depa) => (
+                                                    <option key={depa.id} value={depa.id}>
+                                                        {depa.nombredepartamento}
+                                                    </option>
+                                                ))}
                                             </select>
-                                            <select className="w-full border p-2 rounded-md" required>
+                                            <select className="w-full border p-2 rounded-md" required onChange={handleProvinciaChange}>
                                                 <option value="" disabled selected>Provincia</option>
-                                                <option value="provincia1">Provincia 1</option>
-                                                <option value="provincia2">Provincia 2</option>
+                                                {provincias.map((lista) => (
+                                                <option key={lista.id} value={lista.id}>
+                                                {lista.nombreprovincia}
+                                                </option>
+                                            ))}
                                             </select>
-                                            <select className="w-full border p-2 rounded-md" required>
+                                            <select className="w-full border p-2 rounded-md" required onChange={handleColegioChange}>
                                                 <option value="" disabled selected>Distrito</option>
-                                                <option value="distrito1">Distrito 1</option>
-                                                <option value="distrito2">Distrito 2</option>
+                                                {distritos.map((lista) => (
+                                                <option key={lista.id} value={lista.id}>
+                                                {lista.nombredistrito}
+                                                </option>
+                                            ))}
                                             </select>
                                             
 
                                             <input type="text" placeholder="Buscar Colegio" className="w-full border p-2 rounded-md" />
                                             <div className="h-32 overflow-y-auto border rounded-md p-2">
-                                                <p>Colegio 1</p>
-                                                <p>Colegio 2</p>
-                                                <p>Colegio 3</p>
-
+                                            {MensajeError ? (
+                                            <p>{MensajeError}</p>  // Muestra el mensaje de error si existe
+                                            ) : (
+                                            Array.isArray(colegios) && colegios.length > 0 ? (  // Verifica si es un array y tiene elementos
+                                            colegios.map((colegio) => (
+                                            <option key={colegio.id} value={colegio.id}>
+                                                {colegio.nombrecolegio}
+                                            </option>
+                                            ))) : (
+                                            <p>No se encontraron colegios.</p>  // Mensaje alternativo si no hay colegios
+                                            ))}
                                             </div>
-
-
                                             <button
                                                 className="w-full bg-indigo-600 text-white p-2 rounded-md mt-2"
                                             >

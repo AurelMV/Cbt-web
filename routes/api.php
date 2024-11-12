@@ -13,6 +13,9 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 Route::apiResource('/Colegio',ColegioController::class);
+Route::get('/Colegio/Consulta/{id}',[ColegioController::class,'Consulta']);
 Route::apiResource('/Distrito',DistritoController::class);
+Route::get('/Distrito/Consulta/{id}',[DistritoController::class,'Consulta']);
 Route::apiResource('/Provincia',ProvinciaController::class);
+Route::get('/Provincia/Consulta/{id}',[ProvinciaController::class,'Consulta']);
 Route::apiResource('/Departamento',DepartamentoController::class);

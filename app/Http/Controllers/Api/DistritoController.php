@@ -31,4 +31,23 @@ class DistritoController extends Controller
         ],200
         );
     }
+    public function Consulta(string $id)
+    {
+        $distrito = Distrito::where('Provincia_idProvincia', $id)->get();
+
+        // Verificar si se encontraron resultados
+        if ($distrito->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No se encontraron provincias para este departamento',
+                'data' => [],
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Listado de provincias',
+            'data' => $distrito,
+        ], 200);
+    }
 }
