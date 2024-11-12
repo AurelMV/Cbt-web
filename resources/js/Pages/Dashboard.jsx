@@ -11,7 +11,7 @@ export default function Dashboard() {
         <AuthenticatedLayout
         >
             <Head title="Dashboard" />
-            
+           
             <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
                 Inscripción Estudiantes
             </h2>
