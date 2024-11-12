@@ -7,25 +7,29 @@ use App\Http\Requests\StoreInscripcionRequest;
 use App\Http\Requests\UpdateInscripcionRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class InscripcionController extends Controller
 {
     public function index()
     {
-        $inscripcion = Inscripcion::select( 'turno',
+        /*$inscripcion = Inscripcion::select( 'turno',
         'fechaInscripcion',
         'estadopa',
         'idEstudiante',
         'idprogramaestudios',
         'idciclo',
-        'idGrupos')->get();
+        'idGrupos')->get();*/
 
         
-        return response()->json([
+        /*return response()->json([
             'status' => true,
             'message' => 'Pagos Establecidos con exito :)',
             'data' => $inscripcion
-        ], 200);
+        ], 200);*/
+        return Inertia::render('GestionInscripciones'/*,[
+            //'inscripcion'=>$inscripcion
+        ]*/);
     }
 
     /**
