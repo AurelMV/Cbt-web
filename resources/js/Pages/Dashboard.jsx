@@ -41,19 +41,16 @@ export default function Dashboard() {
 
             try {
                 const data = await Listado.ConsultaColegio(idDistrito);
-                if (data.status === false) {
-                    // Si no hay resultados, muestra el mensaje de error y limpia el listado
-                    setColegios([]);
-                    setMensajeError(data.message); // Actualiza el mensaje de error
-                } else {
-                    // Si hay datos, actualiza el listado de colegios
-                    setColegios(data.data);
+                console.log(data);
+                
+                    setColegios(data);
                     setMensajeError(""); // Limpia el mensaje de error
-                }
+                    console.log(colegios); 
+                
+                console.log(colegios); 
             } catch (error) {
-                console.error("Error al cargar colegios:", error);
+                
                 setColegios([]);
-                setMensajeError("Ocurrió un error al intentar cargar los colegios");
             }
         };
     useEffect(() => {
@@ -142,6 +139,7 @@ export default function Dashboard() {
                                             
 
                                             <input type="text" placeholder="Buscar Colegio" className="w-full border p-2 rounded-md" />
+                                            
                                             <div className="h-32 overflow-y-auto border rounded-md p-2">
                                             {MensajeError ? (
                                             <p>{MensajeError}</p>  // Muestra el mensaje de error si existe
