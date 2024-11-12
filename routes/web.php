@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\CicloController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DocenteController;
+use App\Http\Controllers\DocenteCursoController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GrupoController;
@@ -46,8 +47,8 @@ Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.ind
 Route::post('/docentes', [DocenteController::class, 'store'])->name('docentes.store');
 //Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
+Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('docenteCursos.index');
 Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
-
 
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  

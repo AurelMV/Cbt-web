@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/inertia-react'; 
+import { Link } from '@inertiajs/inertia-react';
 import '../../css/Welcome.css';
 
 const images = [
@@ -78,12 +78,15 @@ const Inicio = ({ auth }) => {
     <div>
       {/* Barra de Navegación */}
       <nav className="navbar">
-        <img src="CBT.png" alt="Logo" className="navbar-logo" />
-        <h1 className="navbar-brand">CBT</h1>
+        
+          <img src="CBT.png" alt="Logo" className="navbar-logo" />
+          <h1 className="navbar-brand">CBT</h1>
+        
+
         <ul className="navbar-nav">
           <li><a href="#home">Inicio</a></li>
           <li><a href="#features">Información</a></li>
-          <li><a href="#pricing">Estadísticas</a></li>
+          <li><a href="#pricing">Nosotros</a></li>
         </ul>
 
         {/* Enlaces de autenticación */}
@@ -99,13 +102,13 @@ const Inicio = ({ auth }) => {
             <>
               <Link
                 href={route('login')}
-                className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                className="rounded-md px-3 py-2 text-gray ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
               >
                 Log in
               </Link>
               <Link
                 href={route('register')}
-                className="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
+                className="rounded-md px-3 py-2 text-gray ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white"
               >
                 Register
               </Link>

@@ -1,173 +1,222 @@
-/* src/MainComponent.css */
-
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Arial', sans-serif;
-  }
-  
-  body {
-    background-color: #f9f9f9;
-    color: #333;
-  }
-  
-  .navbar {
-    background-color: #1f2937;
-    color: #ffffff;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
 
-  .navbar-logo {
-    height: 60px; 
-    margin-right: 10px;
-  }
+.body {
+  background: linear-gradient(135deg, #e6dedc, #e03c1f);
+  color: #333;
+  font-family: 'Arial', sans-serif;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.navbar {
+  background-color: rgba(132, 13, 7, 0.9);
+  color: #ffffff;
+  padding: 15px;
+  margin: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 4px solid #d3b50a;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  width: 100vw;
+  box-sizing: border-box;
+}
+
+.navbar-logo {
+  height: 60px; 
+  margin-right: -400px;
+  transition: transform 0.3s;
+}
+.navbar-logo:hover {
+  transform: scale(1.1);
+}
+
+.navbar-brand {
+  font-size: 2.8rem;
+  font-weight: bold;
+  color: #e5e7eb;
+  margin-left: 10px;
+}
+
+.h2 {
+  font-size: 2.8rem;  
+  color: #1f2937;
+}
+
+.p {
+  font-size: 1.2rem;  
+  color: #6b7280;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+@media (max-width: 768px) {
   .navbar-brand {
-    font-size: 1.8rem;
-    font-weight: bold;
-    color: #e5e7eb;
-  }
-  
-  .navbar-nav {
-    list-style-type: none;
-    display: flex;
-    gap: 15px;
-  }
-  
-  .navbar-nav a {
-    color: #e5e7eb;
-    text-decoration: none;
-    font-size: 1rem;
-    transition: color 0.3s;
-  }
-  
-  .navbar-nav a:hover {
-    color: #60a5fa;
+    font-size: 2rem;  
   }
 
-  .auth-links {
-    display: flex;
-    gap: 10px;
+  .h2 {
+    font-size: 2rem;  
   }
-  
-  .auth-link {
-    color: #60a5fa;
-    text-decoration: none;
-    font-weight: bold;
-    transition: color 0.3s;
-  }
-  
-  .auth-link:hover {
-    color: #ffffff;
-  }
-  
-  .carousel {
-    position: relative;
-    max-width: 90%;
-    margin: 40px auto;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-  }
-  
-  .carousel-item {
-    display: none;
-    position: relative;
-    text-align: center;
-  }
-  
-  .carousel-item.active {
-    display: block;
-  }
-  
-  .carousel img {
-    width: 100%;
-    height: auto;
-    display: block;
-  }
-  
-  .carousel-caption {
-    position: absolute;
-    bottom: 20px;
-    left: 20px;
-    color: #ffffff;
-    background: rgba(0, 0, 0, 0.6);
-    padding: 10px 20px;
-    border-radius: 5px;
-  }
-  
-  .carousel-control {
-    position: absolute;
-    top: 50%;
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    padding: 12px;
-    cursor: pointer;
-    font-size: 1.5rem;
-    border-radius: 50%;
-    transform: translateY(-50%);
-    transition: background-color 0.3s;
-  }
-  
-  .carousel-control:hover {
-    background: rgba(0, 0, 0, 0.8);
-  }
-  
-  .carousel-control.prev {
-    left: 15px;
-    background-color: rgba(128, 0, 64, 0.5);
-    top: 50%;
-    transform: translateY(-50%);
-    width: 5%;
-  }
-  
-  .carousel-control.next {
-    right: 15px;
-    background-color: rgba(128, 0, 64, 0.5);
-    top: 50%;
-    transform: translateY(-50%);
-    width: 5%;
-  }
-  
-  .carousel-control-next-icon {
-    background-image: none; 
-    color: white;
-    font-size: 24px;
-  }
-  .carousel-control-prev::before {
-    content: "<"; 
-    color: white;
-    font-size: 24px;
-  }
-  
-  .carousel-control-next::before {
-    content: ">"; 
-    color: white;
-    font-size: 24px;
-  }
-  .container {
-    max-width: 80%;
-    margin: 40px auto;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  .container h2 {
-    font-size: 1.8rem;
-    margin-bottom: 15px;
-    color: #1f2937;
-  }
-  
-  .container p {
-    font-size: 1rem;
-    color: #4b5563;
-    line-height: 1.6;
-  }
-  
-  
+}
+.navbar-nav {
+  list-style-type: none;
+  display: flex;
+  gap: 15px;
+  margin: 20px;
+}
+
+.navbar-nav a {
+  color: #e5e7eb;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease, transform 0.3s;
+}
+
+.navbar-nav a:hover {
+  color: #0c0c0c;
+  transform: scale(1.05);
+}
+
+.auth-links {
+  display: flex;
+  gap: 10px;
+}
+
+.auth-link {
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.auth-link:hover {
+  color: #ffffff;
+}
+
+.carousel {
+  width: 100%;
+  height: 1000px;
+  position: relative;
+  max-width: 90%;
+  margin: 40px auto;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+  transition: box-shadow 0.3s ease;
+}
+
+.carousel-item {
+  display: none;
+  position: relative;
+  text-align: center;
+}
+
+.carousel-item.active {
+  display: block;
+}
+
+.carousel img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.carousel-caption {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: #ffffff;
+  background: rgba(0, 0, 0, 0.6);
+  padding: 10px 20px;
+  border-radius: 5px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+}
+
+.carousel-control {
+  position: absolute;
+  top: 50%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  padding: 12px;
+  cursor: pointer;
+  font-size: 1.5rem;
+  border-radius: 50%;
+  transform: translateY(-50%);
+  transition: background-color 0.3s;
+}
+
+.carousel-control:hover {
+  background: rgba(0, 0, 0, 0.8);
+}
+
+.carousel-control.prev {
+  left: 15px;
+  background-color: rgba(128, 0, 64, 0.7);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5%;
+}
+
+.carousel-control.next {
+  right: 15px;
+  background-color: rgba(128, 0, 64, 0.7);
+  top: 50%;
+  transform: translateY(-50%);
+  width: 5%;
+}
+
+.carousel-control-next-icon, .carousel-control-prev-icon {
+  font-size: 24px;
+  color: white;
+}
+
+.container {
+  max-width: 80%;
+  margin: 40px auto;
+  background-color: #ffffff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 8px 12px rgba(0, 0, 0, 0.15);
+}
+
+.h2 {
+  font-size: 1.8rem;
+  color: #1f2937;
+}
+
+.p {
+  color: #6b7280;
+  line-height: 1.6;
+  font-size: 1rem;
+  margin-top: 10px;
+}
+.auth-links {
+  display: flex;
+  gap: 10px;
+  margin: 0 20px; 
+}
+
+.auth-link {
+  color: #60a5fa;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s;
+}
+
+.auth-link:hover {
+  color: #ffffff;
+}
+
+.auth-links {
+  padding: 0 30px; 
+}
+
