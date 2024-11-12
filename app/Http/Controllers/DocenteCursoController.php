@@ -15,7 +15,7 @@ class DocenteCursoController extends Controller
     {
         $docenteCursos = DocenteCurso::all();
 
-        return Inertia::render('NombreDeComponente', [
+        return Inertia::render('DocentesCursosGrupos', [
             'docenteCursos' => $docenteCursos
         ]);
     }
