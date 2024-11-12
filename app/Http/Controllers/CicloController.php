@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Ciclo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
 
 class CicloController extends Controller
 {
@@ -15,7 +16,7 @@ class CicloController extends Controller
     {
         $ciclos = Ciclo::all();
 
-        return Inertia::render('Ciclos', [
+        return Inertia::render('Ciclos/Ciclos', [
             'ciclos' => $ciclos
         ]);
     }
@@ -39,9 +40,13 @@ class CicloController extends Controller
             'fecha_fin' => 'required|date'
         ]);
 
-        Ciclo::create($request->all());
+        $ciclo = Ciclo::create($request->all());
 
-        return redirect()->route('ciclos.index')->with('succes', 'Ciclo registrado exitósamente');
+        // return Inertia::render('Ciclos', [
+        //     'ciclos' => Ciclo::all(),
+        //     'succes', 'Ciclo registrado exitósamente'
+        // ]);
+        return response()->json($ciclo);
     }
 
     /**
@@ -77,7 +82,8 @@ class CicloController extends Controller
 
         $ciclo->update($request->all());
 
-        return redirect()->route('ciclos.index')->with('succes', 'Ciclo actualizado exitosamente');
+        //return redirect()->route('ciclos.index')->with('succes', 'Ciclo actualizado exitosamente');
+        return response()->json(['success' => true, 'message' => 'Ciclo actualizado exitosamente', 'ciclo' => $ciclo]);
     }
 
     /**
@@ -86,7 +92,7 @@ class CicloController extends Controller
     public function destroy(Ciclo $ciclo)
     {
         $ciclo->delete();
-
-        return redirect()->route('ciclos.index')->with('succes', 'Ciclo eliminado correctamete');
+        //Log::info('Ciclo de estudio eliminado exitosamente', ['programaEstudio' => $ciclo]);
+        return response()->json(['message' => 'Ciclo eliminado exitosamente']);
     }
 }

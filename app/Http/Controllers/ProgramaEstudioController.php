@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Models\ProgramaEstudio;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Log;
+
 
 class ProgramaEstudioController extends Controller
 {
@@ -14,7 +16,8 @@ class ProgramaEstudioController extends Controller
     public function index()
     {
         $programasEstudio = ProgramaEstudio::all();
-        return Inertia::render('ProgramasEstudio', [
+
+        return Inertia::render('ProgramasEstudio/ProgramasEstudio', [
             'programasEstudio' => $programasEstudio
         ]);
     }
@@ -24,7 +27,7 @@ class ProgramaEstudioController extends Controller
      */
     public function create()
     {
-        return Inertia::render('programaestudio/frmProgramaCreate');
+        return Inertia::render('programasestudio/frmProgramaCreate');
     }
 
     /**
@@ -36,9 +39,10 @@ class ProgramaEstudioController extends Controller
             'nombre_programa' => 'required|string|max:255'
         ]);
 
-        ProgramaEstudio::create($request->all());
+        $programaEstudio = ProgramaEstudio::create($request->all());
 
-        return redirect()->route('programaestudio.index')->with('succes', 'Programa de estudio registrado exitósamente');
+        //return redirect()->route('programaestudio.index')->with('succes', 'Programa de estudio registrado exitósamente');
+        return response ()->json($programaEstudio);
     }
 
     /**
@@ -46,7 +50,7 @@ class ProgramaEstudioController extends Controller
      */
     public function show(ProgramaEstudio $programaEstudio)
     {
-        return Inertia::render('ProgramaEstudio/show', [
+        return Inertia::render('ProgramasEstudio/Show', [
             'programaEstudio' => $programaEstudio
         ]);
     }
@@ -56,7 +60,7 @@ class ProgramaEstudioController extends Controller
      */
     public function edit(ProgramaEstudio $programaEstudio)
     {
-        return Inertia::render('ProgramaEstudio/frmProgramaEdit', [
+        return Inertia::render('ProgramasEstudio/frmProgramaEdit', [
             'programaEstudio' => $programaEstudio
         ]);
     }
@@ -72,7 +76,8 @@ class ProgramaEstudioController extends Controller
 
         $programaEstudio->update($request->all());
 
-        return redirect()->route('programaestudio.index')->with('succes', 'Programa de estudio actualizado exitosamente');
+        //return redirect()->route('programaestudio.index')->with('succes', 'Programa de estudio actualizado exitosamente');
+        return response()->json(['success' => true, 'message' => 'Programa de estudio actualizado exitosamente', 'programaEstudio' => $programaEstudio]);
     }
 
     /**
@@ -81,6 +86,9 @@ class ProgramaEstudioController extends Controller
     public function destroy(ProgramaEstudio $programaEstudio)
     {
         $programaEstudio->delete();
-        return redirect()->route('programaestudio.index')->with('succes', 'Programa de estudio eliminado exitosamente');
+
+        Log::info('Programa de estudio eliminado exitosamente', ['programaEstudio' => $programaEstudio]);
+        //return redirect()->route('programaestudio.index')->with('succes', 'Programa de estudio eliminado exitosamente');
+        return response()->json(['message' => 'Programa de estudio eliminado exitosamente']);
     }
 }

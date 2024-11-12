@@ -5,9 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\Colegio;
 use Illuminate\Http\Request;
-use App\Models\Departamento;
-use App\Models\Distrito;
-use App\Models\Provincia;
+
 use Illuminate\Support\Facades\Validator;
 
 
@@ -94,5 +92,24 @@ class ColegioController extends Controller
             'data'=>$colegio,
         ],204
     );
+    }
+    public function Consulta(string $id)
+    {
+        $colegio = Colegio::where('Distrito_idDistrito', $id)->get();
+
+        // Verificar si se encontraron resultados
+        if ($colegio->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No se encontraron provincias para este departamento',
+                'data' => [''],
+            ], 404);
+        }
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Listado de provincias',
+            'data' => $colegio,
+        ], 200);
     }
 }

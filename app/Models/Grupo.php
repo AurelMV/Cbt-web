@@ -2,16 +2,19 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class Grupo extends Model
 {
-    protected $table = 'Grupos';
-    protected $primaryKey = 'id';
-    protected $fillable = ['nombreGrupo', 'aforo', 'estado', 'idciclo'];
+    use HasFactory;
 
-    public function ciclos() {
-        return $this->belongsTo(Ciclo::class);
+    protected $table = 'grupos';
+    protected $primaryKey = 'id';
+    protected $fillable = ['nombre', 'aforo', 'estado', 'idciclo'];
+
+    public function ciclo() {
+        return $this->belongsTo(Ciclo::class, 'idciclo');
     }
 
     public function docenteCurso() {
