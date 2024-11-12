@@ -14,6 +14,9 @@ export default function Docentes() {
     const [fecha_nacimiento, setFechaNacimiento] = useState("");
     const [email, setEmail] = useState("");
     const [estado, setEstado] = useState("");
+    const [idDocente, setIdDocente] = useState("");
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
     const handleSubmit = (e) => {
         e.preventDefault();
         Inertia.post(route("docentes.store"), {
@@ -26,17 +29,44 @@ export default function Docentes() {
             fechaNacimiento: fecha_nacimiento,
             email,
             estado,
-        });  
+        });
+    };
+
+    const handleSubmitEdit = (e) => {
+        e.preventDefault();
+        Inertia.put(route("docentes.update", idDocente), {
+            nombre,
+            aPaterno: apellido_paterno,
+            aMaterno: apellido_materno,
+            dni,
+            sexo,
+            celular,
+            fechaNacimiento: fecha_nacimiento,
+            email,
+            estado,
+        });
+    };   
+
+    const handleEdit = (docente) => {
+        setIdDocente(docente.id);
+        setNombre(docente.nombre);
+        setApellidoPaterno(docente.aPaterno);
+        setApellidoMaterno(docente.aMaterno);
+        setDni(docente.dni);
+        setSexo(docente.sexo);
+        setCelular(docente.celular);
+        setFechaNacimiento(docente.fechaNacimiento);
+        setEmail(docente.email);
+        setEstado(docente.estado === "Activo" ? "1" : "0");
+        setIsModalOpen(true);
     };
 
     return (
         <AuthenticatedLayout>
             <Head title="Docentes" />
-
             <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
                 Docentes
             </h2>
-
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6">
@@ -54,7 +84,9 @@ export default function Docentes() {
                                         placeholder="Nombre"
                                         value={nombre}
                                         className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) => setNombre(e.target.value)}
+                                        onChange={(e) =>
+                                            setNombre(e.target.value)
+                                        }
                                         required
                                     />
                                     <input
@@ -62,7 +94,9 @@ export default function Docentes() {
                                         placeholder="Apellido Paterno"
                                         value={apellido_paterno}
                                         className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) => setApellidoPaterno(e.target.value)}
+                                        onChange={(e) =>
+                                            setApellidoPaterno(e.target.value)
+                                        }
                                         required
                                     />
                                     <input
@@ -70,7 +104,9 @@ export default function Docentes() {
                                         placeholder="Apellido Materno"
                                         value={apellido_materno}
                                         className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) => setApellidoMaterno(e.target.value)}
+                                        onChange={(e) =>
+                                            setApellidoMaterno(e.target.value)
+                                        }
                                         required
                                     />
                                     <input
@@ -81,13 +117,18 @@ export default function Docentes() {
                                         onChange={(e) => setDni(e.target.value)}
                                         pattern="[0-9]{8}"
                                         inputMode="numeric"
-                                        onInput={(e) => e.target.value = e.target.value.slice(0, 8)}
+                                        onInput={(e) =>
+                                            (e.target.value =
+                                                e.target.value.slice(0, 8))
+                                        }
                                         required
                                     />
                                     <select
                                         value={sexo}
                                         className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) => setSexo(e.target.value)}
+                                        onChange={(e) =>
+                                            setSexo(e.target.value)
+                                        }
                                         required
                                     >
                                         <option value="" selected disabled>
@@ -105,10 +146,15 @@ export default function Docentes() {
                                         placeholder="Número de Celular"
                                         value={celular}
                                         className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) => setCelular(e.target.value)}
+                                        onChange={(e) =>
+                                            setCelular(e.target.value)
+                                        }
                                         pattern="[0-9]{9}"
                                         inputMode="numeric"
-                                        onInput={(e) => e.target.value = e.target.value.slice(0, 9)}
+                                        onInput={(e) =>
+                                            (e.target.value =
+                                                e.target.value.slice(0, 9))
+                                        }
                                         required
                                     />
                                     <input
@@ -116,7 +162,9 @@ export default function Docentes() {
                                         placeholder="Fecha de Nacimiento"
                                         value={fecha_nacimiento}
                                         className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) => setFechaNacimiento(e.target.value)}
+                                        onChange={(e) =>
+                                            setFechaNacimiento(e.target.value)
+                                        }
                                         required
                                     />
                                     <input
@@ -124,12 +172,16 @@ export default function Docentes() {
                                         placeholder="Email"
                                         value={email}
                                         className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) => setEmail(e.target.value)}
+                                        onChange={(e) =>
+                                            setEmail(e.target.value)
+                                        }
                                         required
                                     />
                                     <select
                                         value={estado}
-                                        onChange={(e) => setEstado(e.target.value)}
+                                        onChange={(e) =>
+                                            setEstado(e.target.value)
+                                        }
                                         className="col-span-1 border p-2 rounded-md"
                                         required
                                     >
@@ -145,18 +197,6 @@ export default function Docentes() {
                                             className="rounded-md border border-transparent bg-green-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-green-500 focus:outline-none"
                                         >
                                             Guardar
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-yellow-500 focus:outline-none"
-                                        >
-                                            Modificar
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-500 focus:outline-none"
-                                        >
-                                            Eliminar
                                         </button>
                                     </div>
                                 </form>
@@ -196,6 +236,9 @@ export default function Docentes() {
                                             <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-500">
                                                 Estado
                                             </th>
+                                            <th className="px-6 py-3 text-center text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                Acciones
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
@@ -228,6 +271,16 @@ export default function Docentes() {
                                                 <td className="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                     {docente.estado}
                                                 </td>
+                                                <td
+                                                    onClick={() =>
+                                                        handleEdit(docente)
+                                                    }
+                                                    className="text-center px-6 py-4 whitespace-nowrap text-sm text-gray-500"
+                                                >
+                                                    <button className="text-indigo-600 hover:text-indigo-900">
+                                                        Editar
+                                                    </button>
+                                                </td>
                                             </tr>
                                         ))}
                                     </tbody>
@@ -237,6 +290,194 @@ export default function Docentes() {
                     </div>
                 </div>
             </div>
+
+            {isModalOpen && (
+                <div
+                    className="fixed z-10 inset-0 overflow-y-auto"
+                    aria-labelledby="modal-title"
+                    role="dialog"
+                    aria-modal="true"
+                >
+                    <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+                        <div
+                            className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                            aria-hidden="true"
+                        ></div>
+                        <span
+                            className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                            aria-hidden="true"
+                        >
+                            &#8203;
+                        </span>
+                        <div
+                            className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full"
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="modal-headline"
+                        >
+                            <div className="bg-white px-6 pt-5 pb-4 sm:p-6 sm:pb-6">
+                                <div className="sm:flex sm:items-start">
+                                    <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full">
+                                        <h3
+                                            className="text-lg leading-6 font-medium text-gray-900"
+                                            id="modal-headline"
+                                        >
+                                            Editar Docente
+                                        </h3>
+                                        <div>
+                                            <form
+                                                onSubmit={handleSubmitEdit}
+                                                className="space-y-4 mt-4"
+                                            >
+                                                <input
+                                                    type="hidden"
+                                                    value={idDocente}
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Nombre"
+                                                    value={nombre}
+                                                    onChange={(e) =>
+                                                        setNombre(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Apellido Paterno"
+                                                    value={apellido_paterno}
+                                                    onChange={(e) =>
+                                                        setApellidoPaterno(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="Apellido Materno"
+                                                    value={apellido_materno}
+                                                    onChange={(e) =>
+                                                        setApellidoMaterno(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                />
+                                                <input
+                                                    type="text"
+                                                    placeholder="DNI"
+                                                    value={dni}
+                                                    onChange={(e) =>
+                                                        setDni(e.target.value)
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                />
+                                                <select
+                                                    value={sexo}
+                                                    onChange={(e) =>
+                                                        setSexo(e.target.value)
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                >
+                                                    <option value="" disabled>
+                                                        Sexo
+                                                    </option>
+                                                    <option value="Masculino">
+                                                        Masculino
+                                                    </option>
+                                                    <option value="Femenino">
+                                                        Femenino
+                                                    </option>
+                                                </select>
+                                                <input
+                                                    type="text"
+                                                    placeholder="Celular"
+                                                    value={celular}
+                                                    onChange={(e) =>
+                                                        setCelular(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                />
+                                                <input
+                                                    type="date"
+                                                    value={fecha_nacimiento}
+                                                    onChange={(e) =>
+                                                        setFechaNacimiento(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                />
+                                                <input
+                                                    type="email"
+                                                    placeholder="Email"
+                                                    value={email}
+                                                    onChange={(e) =>
+                                                        setEmail(e.target.value)
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                />
+                                                <select
+                                                    value={estado}
+                                                    onChange={(e) =>
+                                                        setEstado(
+                                                            e.target.value
+                                                        )
+                                                    }
+                                                    className="w-full border p-3 rounded-md"
+                                                    required
+                                                >
+                                                    <option value="" disabled>
+                                                        Estado
+                                                    </option>
+                                                    <option value="1">
+                                                        Activo
+                                                    </option>
+                                                    <option value="0">
+                                                        Inactivo
+                                                    </option>
+                                                </select>
+                                                <div className="flex justify-end space-x-3 mt-6">
+                                                    <button
+                                                        type="button"
+                                                        onClick={() =>
+                                                            setIsModalOpen(
+                                                                false
+                                                            )
+                                                        }
+                                                        className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
+                                                    >
+                                                        Cancelar
+                                                    </button>
+                                                    <button
+                                                        type="submit"
+                                                        className="bg-green-600 text-white px-4 py-2 rounded-md hover:bg-green-500"
+                                                    >
+                                                        Guardar
+                                                    </button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
         </AuthenticatedLayout>
     );
 }
