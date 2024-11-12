@@ -22,6 +22,7 @@ class ColegioController extends Controller
             'data'=>$colegio,
         ],200
         );
+        
     }
 
     
