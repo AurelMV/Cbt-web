@@ -13,85 +13,99 @@ class ColegioController extends Controller
 {
     public function index()
     {
-        $colegio=Colegio::all();
-        return response()->json([
-            'status'=>true,
-            'message'=>'listado de datos',
-            'data'=>$colegio,
-        ],200
+        $colegio = Colegio::all();
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'listado de datos',
+                'data' => $colegio,
+            ],
+            200
         );
     }
 
-    
+
     public function store(Request $request)
     {
-        $validator=Validator::make($request->all(),[
-            'nombrecolegio'=>'required|string|max:255',
-            'Distrito_idDistrito'=>'required|integer'
+        $validator = Validator::make($request->all(), [
+            'nombrecolegio' => 'required|string|max:255',
+            'Distrito_idDistrito' => 'required|integer'
         ]);
-        if($validator->fails()){
-            return response()->json([
-                'status'=>false,
-                'message'=>'ERor en la VAlidacion',
-                'data'=>$validator->errors(),
-            ],422
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => 'ERor en la VAlidacion',
+                    'data' => $validator->errors(),
+                ],
+                422
             );
         }
-        $colegio =colegio::create($request->all());
-        return response()->json([
-            'status'=>true,
-            'message'=>'Correcto creacion',
-            'data'=>$colegio,
-        ],201
-        );  
-    }
-
-    
-    public function show(string $id)
-    {
-        $colegio=Colegio::findOrFail($id);
-        return response()->json([
-            'status'=>true,
-            'message'=>'listado de datos',
-            'data'=>$colegio,
-        ],200
+        $colegio = colegio::create($request->all());
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'Correcto creacion',
+                'data' => $colegio,
+            ],
+            201
         );
     }
 
-    
+
+    public function show(string $id)
+    {
+        $colegio = Colegio::findOrFail($id);
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'listado de datos',
+                'data' => $colegio,
+            ],
+            200
+        );
+    }
+
+
     public function update(Request $request, string $id)
     {
-        $validator=Validator::make($request->all(),[
-            'nombrecolegio'=>'required|string|max:255',
-            'Distrito_idDistrito'=>'required|integer'
+        $validator = Validator::make($request->all(), [
+            'nombrecolegio' => 'required|string|max:255',
+            'Distrito_idDistrito' => 'required|integer'
         ]);
-        if($validator->fails()){
-            return response()->json([
-                'status'=>false,
-                'message'=>'ERor en la VAlidacion',
-                'data'=>$validator->errors(),
-            ],422
+        if ($validator->fails()) {
+            return response()->json(
+                [
+                    'status' => false,
+                    'message' => 'ERor en la VAlidacion',
+                    'data' => $validator->errors(),
+                ],
+                422
             );
         }
-        $colegio =Colegio::findOrFail($id);
+        $colegio = Colegio::findOrFail($id);
         $colegio->update($request->all());
-        return response()->json([
-            'status'=>true,
-            'message'=>'Correcto acutalizacioin',
-            'data'=>$colegio,
-        ],200
-        );  
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'Correcto acutalizacioin',
+                'data' => $colegio,
+            ],
+            200
+        );
     }
     public function destroy(string $id)
     {
-        $colegio =Colegio::findOrFail($id);
+        $colegio = Colegio::findOrFail($id);
         $colegio->delete();
-        return response()->json([
-            'status'=>true,
-            'message'=>'Correcto acutalizacioin',
-            'data'=>$colegio,
-        ],204
-    );
+        return response()->json(
+            [
+                'status' => true,
+                'message' => 'Correcto acutalizacioin',
+                'data' => $colegio,
+            ],
+            204
+        );
     }
     public function Consulta(string $id)
     {
@@ -111,5 +125,37 @@ class ColegioController extends Controller
             'message' => 'Listado de provincias',
             'data' => $colegio,
         ], 200);
+    }
+    public function BusquedaCodModular(string $id)
+    {
+        // Realizar una búsqueda para encontrar todas las coincidencias que contengan la subcadena
+        $colegio = Colegio::where('nombrecolegio', 'like', '%' . $id . '%')
+            ->take(5) // Limitar a los primeros 5 resultados
+            ->get();
+
+        // Filtrar los resultados: buscar solo aquellos que contienen la subcadena de forma válida
+        $colegioFiltrado = $colegio->filter(function ($item) use ($id) {
+            // Comprobar si la subcadena está contenida en una palabra completa, no solo parte incorrecta
+            return stripos($item->nombrecolegio, $id) !== false &&
+                strpos($item->nombrecolegio, $id) !== 0; // Evitar coincidencias no deseadas
+        });
+
+        // Si encontramos resultados después del filtrado
+        if ($colegioFiltrado->isNotEmpty()) {
+            return response()->json([
+                'status' => true,
+                'message' => 'Listado de colegios',
+                'data' => $colegioFiltrado,
+            ], 200);
+        }
+
+        // Verificar si se encontraron resultados
+        if ($colegio->isEmpty()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'No se encontro el Colegio',
+                'data' => [''],
+            ], 404);
+        }
     }
 }
