@@ -7,6 +7,7 @@ use App\Http\Requests\StoreEstudianteRequest;
 use App\Http\Requests\UpdateEstudianteRequest;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Inertia\Inertia;
 
 class EstudianteController extends Controller
 {
@@ -30,11 +31,14 @@ class EstudianteController extends Controller
         'foto')  
                               ->get();
 
-    return response()->json([
+    /*return response()->json([
         'status' => true,
         'message' => 'Estudiantes Establecidos con exito :)',
         'data' => $estudiantes
-    ], 200);
+    ], 200);*/
+    return Inertia::render('Estudiantes', [
+        'estudiantes' => $estudiantes
+    ]);
     }
 
     /**
