@@ -65,7 +65,9 @@ export default function AuthenticatedLayout({ children }) {
 
                             <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
                                 <img src="https://cdn-icons-png.flaticon.com/512/88/88450.png" width={30} height={30} />
-                                <NavLink href={route('dashboard')} active={route().current('dashboard')}>
+                                <NavLink 
+                                href={route('dashboard')} 
+                                active={route().current('dashboard')}>
                                     Inscripciones
                                 </NavLink>
                                 <Dropdown>
@@ -118,12 +120,46 @@ export default function AuthenticatedLayout({ children }) {
                             </div>
                             <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
                                 <img src="https://e7.pngegg.com/pngimages/265/858/png-clipart-computer-icons-teacher-professor-education-lecturer-teacher-angle-logo-thumbnail.png" width={30} height={30} />
-                                <NavLink
+                                <NavLink 
                                     href={route('docentes.index')}
                                     active={route().current('docentes.index')}
                                 >
                                     Docentes
+                                    <h1 className='text-gray-400'>_____</h1>
                                 </NavLink>
+
+                                <Dropdown>
+                                    <Dropdown.Trigger>
+                                        <span className="inline-flex w-full rounded-md">
+                                            <button
+                                                type="button"
+                                                className="inline-flex w-full"
+                                            >
+                                                <svg
+                                                    className="h-4 w-4 ml-2"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 20 20"
+                                                    fill="currentColor"
+                                                >
+                                                    <path
+                                                        fillRule="evenodd"
+                                                        d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                        clipRule="evenodd"
+                                                    />
+                                                </svg>
+                                            </button>
+                                        </span>
+                                    </Dropdown.Trigger>
+
+                                    <Dropdown.Content>
+                                
+                                        <Dropdown.Link href={route('docenteCursos.index')}
+                                            as="button">
+                                            Gestion De relaciones
+                                        </Dropdown.Link>
+                            
+                                    </Dropdown.Content>
+                                </Dropdown>
                             </div>
 
                             <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
@@ -144,16 +180,6 @@ export default function AuthenticatedLayout({ children }) {
                                 >
 
                                     Programas de Estudio
-                                </NavLink>
-                            </div>
-
-                            <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent bg-white px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-
-                                <NavLink
-                                    href={route('docenteCursos.index')}
-                                    active={route().current('docenteCursos.index')}
-                                >
-                                    Relacion Docentes,Cursos y Grupos
                                 </NavLink>
                             </div>
 

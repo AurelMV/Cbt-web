@@ -18,6 +18,20 @@ export default function DocentesCursosGrupos() {
         { id: 1, nombre: 'Docente A', estado: 'Activo' },
         { id: 2, nombre: 'Docente B', estado: 'Activo' },
     ];
+    // Datos de ejemplo para cursos
+    const cursos = [
+        { id: 1, nombre: 'Matemáticas' },
+        { id: 2, nombre: 'Historia' },
+        { id: 3, nombre: 'Ciencia' },
+    ];
+
+    // Datos de ejemplo para grupos
+    const grupos = [
+        { id: 1, nombre: 'Grupo 1' },
+        { id: 2, nombre: 'Grupo 2' },
+        { id: 3, nombre: 'Grupo 3' },
+    ];
+    
 
     // Datos de ejemplo para la tabla de relaciones (esto debería venir de una fuente de datos real)
     const relacionesDocenteCursoGrupo = [
@@ -72,22 +86,32 @@ export default function DocentesCursosGrupos() {
                         {/* Formulario de Registro de Curso, Grupo, Docente */}
                         <h3 className="text-md font-medium mb-4">Registro de Curso, Grupo y Docente</h3>
                         <form className="space-y-4">
-                            <input
-                                type="text"
-                                placeholder="Curso"
+                        <select
                                 value={curso}
                                 onChange={(e) => setCurso(e.target.value)}
                                 className="w-full border p-2 rounded-md"
                                 required
-                            />
-                            <input
-                                type="text"
-                                placeholder="Grupo"
+                            >
+                                <option value="">Selecciona un Curso</option>
+                                {cursos.map((curso) => (
+                                    <option key={curso.id} value={curso.nombre}>
+                                        {curso.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                            <select
                                 value={grupo}
                                 onChange={(e) => setGrupo(e.target.value)}
                                 className="w-full border p-2 rounded-md"
                                 required
-                            />
+                            >
+                                <option value="">Selecciona un Grupo</option>
+                                {grupos.map((grupo) => (
+                                    <option key={grupo.id} value={grupo.nombre}>
+                                        {grupo.nombre}
+                                    </option>
+                                ))}
+                            </select>
                             <select
                                 value={docente}
                                 onChange={(e) => setDocente(e.target.value)}
