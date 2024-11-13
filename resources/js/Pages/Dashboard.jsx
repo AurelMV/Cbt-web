@@ -5,6 +5,7 @@ import ColegioServicio from '@/Components/ColegioServicio';
 import Listado from '@/Components/DepartamentoServicio';
 
 export default function Dashboard() {
+
     const [inputValue, setInputValue] = useState('');
     const [distritos, setdistritos] = useState([]);
     const [provincias, setProvincias] = useState([]);
@@ -85,13 +86,17 @@ export default function Dashboard() {
     const [modalOpen2, setModalOpen2] = useState(false);
     const openModal2 = () => setModalOpen2(true);
     const closeModal2 = () => setModalOpen2(false);
+
+    
+
+>>>>>>> main
     return (
         <AuthenticatedLayout
         >
             <Head title="Dashboard" />
 
             <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-blue-900">
-                INSCRIPCÍON ESTUDIANTES
+                INSCRIPCIÓN ESTUDIANTES
             </h2>
 
             <div className="py-12">
@@ -237,6 +242,7 @@ export default function Dashboard() {
                                                     </tr>
                                                 </thead>
                                                 <tbody>
+
                                                     {Cole.length > 0 && Cole.map((resultado, index) => (
                                                         <tr key={index}>
                                                             <td className="border px-4 py-2">{resultado.nombrecolegio}</td>
@@ -248,6 +254,8 @@ export default function Dashboard() {
                                                             </td>
                                                         </tr>
                                                     ))}
+
+
                                                 </tbody>
                                                 
                                             </table>
@@ -365,7 +373,6 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-
 
                             <div className="mb-8p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
                                 <h3 className="text-md font-medium mb-4">Datos de Inscripción</h3>
