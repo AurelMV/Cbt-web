@@ -19,9 +19,9 @@ class InscripcionController extends Controller
     public function index()
     {
         $inscripciones = Inscripcion::paginate(10);  // O puedes usar all() si no usas paginación
-    return Inertia::render('GestionInscripciones', [
-        'inscripciones' => $inscripciones  // Pasar los datos a React
-    ]);
+        return Inertia::render('GestionInscripciones', [
+            'inscripciones' => $inscripciones  // Pasar los datos a React
+        ]);
     }
 
 
@@ -39,7 +39,7 @@ class InscripcionController extends Controller
      */
     public function store(Request $request)
     {
-       /* $validator =Validator::make($request->all(), [
+        /* $validator =Validator::make($request->all(), [
             'turno' => 'required|string|max:40',
             'fechaInscripcion' => 'required|date',
             'estadopa' => 'required|boolean',
@@ -76,7 +76,7 @@ class InscripcionController extends Controller
             'fechaNacimiento' => 'required|date',
             'email' => 'required|email',
             'anoculminado' => 'required|string',
-            'tipodocumento' =>'required|in:DNI,Pasaporte',
+            'tipodocumento' => 'required|in:DNI,Pasaporte',
             'direccion' => 'nullable|string', // Cambiado a nullable en caso de que sea opcional
             'Colegios_id' => 'required|numeric',
             'turno' => 'required|string',
@@ -91,9 +91,10 @@ class InscripcionController extends Controller
             'medioPago' => 'required|string',
             'nroVoucher' => 'nullable|string' // Cambiado a nullable en caso de que sea opcional
         ]);
-    
+
         // Llamada al procedimiento almacenado
-        DB::select('CALL registrarInscripcionYpago(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+        DB::select(
+            'CALL registrarInscripcionYpago(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
             [
                 $validatedData['nroDocumento'],
                 $validatedData['nombres'],
@@ -119,16 +120,17 @@ class InscripcionController extends Controller
                 $validatedData['monto'],
                 $validatedData['medioPago'],
                 $validatedData['nroVoucher'] ?? null // Valor opcional con `?? null`
-            ]);
-    
+            ]
+        );
+
         // Retornar respuesta adecuada (elige uno de los dos siguientes según tu preferencia)
-       // return redirect()->route('Page.Dashboard')->with('success', 'Inscripción realizada con éxito.');
+        // return redirect()->route('Page.Dashboard')->with('success', 'Inscripción realizada con éxito.');
 
         // Redirigir o retornar un mensaje de éxito
-      
-      //  return Inertia::render('GestionInscripciones'/*,[
-            //'inscripcion'=>$inscripcion
-       // ]*/);
+
+        //  return Inertia::render('GestionInscripciones'/*,[
+        //'inscripcion'=>$inscripcion
+        // ]*/);
 
 
     }
@@ -138,15 +140,17 @@ class InscripcionController extends Controller
      */
     public function show($id)
     {
-        $inscripcion = Inscripcion::select('turno',
-        'fechaInscripcion',
-        'estadopa',
-        'idEstudiante',
-        'idprogramaestudios',
-        'idciclo',
-        'idGrupos',)
-        
-        ->findOrFail($id);
+        $inscripcion = Inscripcion::select(
+            'turno',
+            'fechaInscripcion',
+            'estadopa',
+            'idEstudiante',
+            'idprogramaestudios',
+            'idciclo',
+            'idGrupos',
+        )
+
+            ->findOrFail($id);
 
         return response()->json([
             'status' => true,
@@ -176,7 +180,7 @@ class InscripcionController extends Controller
             'idprogramaestudios' => 'required|integer|exists:programaestudios,idprogramaestudios',
             'idciclo' => 'required|integer|exists:cicloInscripcion,idciclo',
             'idGrupos' => 'required|integer|exists:grupos,idGrupos'
-           
+
         ]);
 
         if ($validator->fails()) {
@@ -201,14 +205,14 @@ class InscripcionController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy($id)
-    { $inscripcion = Inscripcion::findOrFail($id);
+    {
+        $inscripcion = Inscripcion::findOrFail($id);
         $inscripcion->delete();
-        
+
         return response()->json([
             'status' => true,
             'message' => 'Inscripcion Eliminado ? '
         ], 204);
-        
     }
 
 
@@ -217,16 +221,16 @@ class InscripcionController extends Controller
 
 
 
-   
+
     public function registrarInscripcionYpago(Request $request)
     {
         DB::beginTransaction(); // Iniciar la transacción
-    
+
         try {
-       
+
             $estudiante = Estudiante::where('Nrodocumento', $request->input('p_nroDocumento'))->first();
-    
-      
+
+
             if (!$estudiante) {
                 // Crear un nuevo estudiante
                 $estudiante = Estudiante::create([
@@ -245,7 +249,7 @@ class InscripcionController extends Controller
                     'idcolegios' => $request->input('p_Colegios_id'),
                 ]);
             }
-    
+
             // Ahora, con el estudiante (nuevo o existente), registrar la inscripción
             $inscripcion = Inscripcion::create([
                 'turno' => $request->input('p_turno'),
@@ -257,7 +261,7 @@ class InscripcionController extends Controller
                 'idGrupos' => $request->input('p_Grupos_id'),
                 'idciclo' => $request->input('p_cicloinscripciones_id'),
             ]);
-    
+
             // Registrar el pago asociado a la inscripción
             Pago::create([
                 'fecha' => $request->input('p_fechaPago'),
@@ -266,32 +270,16 @@ class InscripcionController extends Controller
                 'nroVoucher' => $request->input('p_nroVoucher'),
                 'idInscripcion' => $inscripcion->id, // Asociar el pago a la inscripción creada
             ]);
-    
+
             DB::commit(); // Confirmar la transacción
-    
+
             return response()->json(['message' => 'Inscripción y pago registrados con éxito'], 201);
         } catch (\Exception $e) {
             DB::rollBack(); // Revertir la transacción en caso de error
-    
+
             return response()->json([
                 'message' => 'Error al registrar la inscripción y el pago: ' . $e->getMessage()
             ], 500);
         }
     }
-    
-
-        
-    }
-    
-
-
-
-
-
-
-
-
-
-
-
-
+}
