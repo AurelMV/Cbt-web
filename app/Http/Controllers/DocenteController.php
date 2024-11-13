@@ -13,7 +13,20 @@ class DocenteController extends Controller
      */
     public function index()
     {
-        $docentes = Docente::all();
+        $docentes = Docente::all()->map(function ($docente) {
+            return [
+                'id' => $docente->id,
+                'nombre' => $docente->nombre,
+                'aPaterno' => $docente->aPaterno,
+                'aMaterno' => $docente->aMaterno,
+                'dni' => $docente->dni,
+                'sexo' => $docente->sexo,
+                'celular' => $docente->celular,
+                'fechaNacimiento' => $docente->fechaNacimiento,
+                'email' => $docente->email,
+                'estado' => $docente->estado ? 'Activo' : 'Inactivo',
+            ];
+        });
 
         return Inertia::render('Docentes', [
             'docentes' => $docentes
@@ -37,7 +50,7 @@ class DocenteController extends Controller
             'nombre' => 'required|string',
             'aPaterno' => 'required|string',
             'aMaterno' => 'required|string',
-            'dni' => 'required|string',
+            'dni' => 'required|string|unique:docentes,dni',
             'sexo' => 'required|string',
             'celular' => 'required|string',
             'fechaNacimiento' => 'required|date',
@@ -79,7 +92,7 @@ class DocenteController extends Controller
             'nombre' => 'required|string',
             'aPaterno' => 'required|string',
             'aMaterno' => 'required|string',
-            'dni' => 'required|string',
+            'dni' => 'required|string|unique:docentes,dni,' . $id,
             'sexo' => 'required|string',
             'celular' => 'required|string',
             'fechaNacimiento' => 'required|date',

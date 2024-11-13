@@ -12,9 +12,10 @@ export default function GruposEstudio() {
     const [idciclo, setCiclo] = useState("");
 
     const incrementarAforo = () => setAforo(aforo + 1);
+    const reducirAforo = () => setAforo((prev) => (prev > 0 ? prev - 1 : 0));
     const limpiarFormulario = () => {
         setNombreGrupo("");
-        setAforo(0);
+        setAforo(40);
         setEstadoGrupo("");
         setCiclo("");
     };
@@ -70,9 +71,9 @@ export default function GruposEstudio() {
                                                 type="number"
                                                 id="aforo"
                                                 value={aforo}
-                                                readOnly
-                                                className="w-full border p-2 rounded-md"
-                                                required
+                                                onChange={(e) => setAforo(Number(e.target.value))}
+                                                className="w-20 border p-2 text-center rounded-md"
+                                                min="0"
                                             />
                                             <button
                                                 type="button"
@@ -80,6 +81,13 @@ export default function GruposEstudio() {
                                                 className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-500"
                                             >
                                                 Aumentar Aforo
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={reducirAforo}
+                                                className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-500"
+                                            >
+                                                Reducir Aforo
                                             </button>
                                         </div>
                                     </div>
@@ -169,16 +177,16 @@ export default function GruposEstudio() {
                                     <thead className="bg-gray-50">
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Nombre del Grupo
+                                                Nombre del Grupo:
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Aforo
+                                                Aforo:
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Estado
+                                                Estado:
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Ciclo
+                                                Ciclo:
                                             </th>
                                         </tr>
                                     </thead>
