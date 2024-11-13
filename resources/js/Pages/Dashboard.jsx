@@ -88,8 +88,6 @@ export default function Dashboard() {
     const closeModal2 = () => setModalOpen2(false);
 
     
-
->>>>>>> main
     return (
         <AuthenticatedLayout
         >
