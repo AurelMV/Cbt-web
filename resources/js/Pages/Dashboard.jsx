@@ -3,6 +3,13 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
 export default function Dashboard() {
+    const [distritos, setdistritos] = useState([]);
+    const [provincias, setProvincias] = useState([]);
+    const [departamentos, setlistados] = useState([]);
+    const [colegios, setColegios] = useState([]);
+    const [error, setError] = useState(null);
+    const [MensajeError, setMensajeError] = useState("");
+
     const [modalOpen, setModalOpen] = useState(false); 
     const openModal = () => setModalOpen(true); 
     const closeModal = () => setModalOpen(false);  
@@ -10,13 +17,16 @@ export default function Dashboard() {
     const [modalOpen2, setModalOpen2] = useState(false); 
     const openModal2 = () => setModalOpen2(true); 
     const closeModal2 = () => setModalOpen2(false);  
+
+    
+
     return (
         <AuthenticatedLayout
         >
             <Head title="Dashboard" />
            
             <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-blue-900">
-                INSCRIPCÍON ESTUDIANTES
+                INSCRIPCIÓN ESTUDIANTES
             </h2>
 
             <div className="py-12">
@@ -87,7 +97,6 @@ export default function Dashboard() {
                             {modalOpen && (
                                 <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
                                     <div className="bg-white p-6 rounded-lg shadow-lg flex w-full max-w-4xl">
-                           
                                         <div className="w-1/2 pr-4 border-r">
                                             <h3 className="text-lg font-semibold mb-4">Seleccione Ubicación y Colegio</h3>
                                             <div className="space-y-4">
@@ -122,13 +131,16 @@ export default function Dashboard() {
                                             </div>
                                         </div>
 
-                                        <div className="w-1/2 pl-4">
+                                        <div className="w-1/2 pl-4 overflow-x-auto">
                                             <h3 className="text-lg font-semibold mb-4">Colegios Seleccionados</h3>
                                             <table className="min-w-full border">
                                                 <thead>
                                                     <tr className="bg-gray-200">
                                                         <th className="border px-4 py-2">Nombre</th>
                                                         <th className="border px-4 py-2">modalidad</th>
+                                                        <th className="border px-4 py-2">Departamento</th>
+                                                        <th className="border px-4 py-2">distrito</th>
+                                                        <th className="border px-4 py-2">provincia</th>
                                                         <th className="border px-4 py-2">Seleccion</th>
                                                         
                                                     </tr>
@@ -136,7 +148,11 @@ export default function Dashboard() {
                                                 <tbody>
                                                     <tr>
                                                         <td className="border px-4 py-2">Colegio </td>
-                                                        <td className="border px-4 py-2">tarde</td>
+                                                        <td className="border px-4 py-2">modalidad</td>
+                                                        <td className="border px-4 py-2">Departamento</td>
+                                                        <td className="border px-4 py-2">distrito</td>
+                                                        <td className="border px-4 py-2">provincia</td>
+
                                                         <td className="border px-4 py-2">
                                                         <button className="text-indigo-600 hover:text-indigo-900">Selecionar</button>
                                                         </td>
@@ -257,7 +273,6 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             </div>
-
 
                             <div className="mb-8p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
                                 <h3 className="text-md font-medium mb-4">Datos de Inscripción</h3>
