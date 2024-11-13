@@ -1,30 +1,98 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import React, { useEffect, useState } from 'react';
+import ColegioServicio from '@/Components/ColegioServicio';
+import Listado from '@/Components/DepartamentoServicio';
 
 export default function Dashboard() {
+
+    const [inputValue, setInputValue] = useState('');
     const [distritos, setdistritos] = useState([]);
     const [provincias, setProvincias] = useState([]);
     const [departamentos, setlistados] = useState([]);
-    const [colegios, setColegios] = useState([]);
+    const [Cole, setCole] = useState([]);
     const [error, setError] = useState(null);
     const [MensajeError, setMensajeError] = useState("");
 
-    const [modalOpen, setModalOpen] = useState(false); 
-    const openModal = () => setModalOpen(true); 
-    const closeModal = () => setModalOpen(false);  
+    const handleInputChange = async (e) => {
+        const value = e.target.value;
+        setCole([]);
+        setInputValue(value);
 
-    const [modalOpen2, setModalOpen2] = useState(false); 
-    const openModal2 = () => setModalOpen2(true); 
-    const closeModal2 = () => setModalOpen2(false);  
+        if (value.trim() === '') {
+            setCole([]);
+            return;
+        }
+
+        try {
+            const resultadosBusqueda = await Listado.BusquedaCodModular(value);
+            setCole(resultadosBusqueda.slice(0, 20)); // Limitar a los primeros 5 resultados
+            console.log(resultadosBusqueda);
+        } catch (error) {
+            console.error("Error al buscar los colegios:", error);
+        }
+    };
+
+    const handleDepartamentoChange = async (event) => {
+        const idDepartamento = event.target.value;
+
+        try {
+            const data = await Listado.ConsultaProvi(idDepartamento);
+            setProvincias(data);
+        } catch (error) {
+            console.error("Error al cargar provincias:", error);
+        }
+    };
+    const handleProvinciaChange = async (event) => {
+        const idProvincia = event.target.value;
+
+        try {
+            const data = await Listado.ConsultaDistri(idProvincia);
+            setdistritos(data);
+        } catch (error) {
+            console.error("Error al cargar provincias:", error);
+        }
+    };
+    const handleColegioChange = async (event) => {
+        const idDistrito = event.target.value;
+        setCole([]);
+        try {
+            const data = await Listado.ConsultaColegio(idDistrito);
+            setCole(data);
+            setMensajeError("");
+        } catch (error) {
+
+            setCole([]);
+        }
+    };
+    useEffect(() => {
+        const listadoservice = async () => {
+            try {
+                const data = await Listado.indexDepa();
+                setlistados(data);
+            } catch (error) {
+                setError("Error al obtener los datos: " + error.message);
+            }
+        };
+
+        listadoservice();
+    }, []);
+
+
+    const [modalOpen, setModalOpen] = useState(false);
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
+
+    const [modalOpen2, setModalOpen2] = useState(false);
+    const openModal2 = () => setModalOpen2(true);
+    const closeModal2 = () => setModalOpen2(false);
 
     
-
     return (
         <AuthenticatedLayout
         >
             <Head title="Dashboard" />
-           
+
             <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-blue-900">
                 INSCRIPCIÓN ESTUDIANTES
             </h2>
@@ -35,7 +103,7 @@ export default function Dashboard() {
                         <div className="p-2 text-gray-900">
                             <div className="mb-8 p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
                                 <h3 className="text-md font-medium mb-4">Ingrese Datos del Estudiante</h3>
-                                
+
                                 <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb6">
                                     <div className="col-span-1">
                                         <label htmlFor="nombre" className="block text-sm font-medium text-gray-700">Nombre</label>
@@ -67,7 +135,7 @@ export default function Dashboard() {
                                     </div>
                                     <div className="col-span-1">
                                         <label htmlFor="TApoderado" className="block text-sm font-medium text-gray-700">Teléfono Apoderado</label>
-                                        <input id='TApoderado' type="text" placeholder="Teléfono de Apoderado" className="col-span-1 border p-2 rounded-md"/>
+                                        <input id='TApoderado' type="text" placeholder="Teléfono de Apoderado" className="col-span-1 border p-2 rounded-md" />
                                     </div>
                                     <div className="col-span-1">
                                         <label htmlFor="AMaterno" className="block text-sm font-medium text-gray-700">Apellido Materno</label>
@@ -80,15 +148,16 @@ export default function Dashboard() {
                                     </div>
                                     <div className="col-span-1">
                                         <label htmlFor="Fnacimiento" className="block text-sm font-medium text-gray-700">Fecha de Nacimiento</label>
-                                        <input id="Fnacimiento"   type="date" placeholder="Fecha de Nacimiento" className="col-span-1 border p-2 rounded-md" required />
+                                        <input id="Fnacimiento" type="date" placeholder="Fecha de Nacimiento" className="col-span-1 border p-2 rounded-md" required />
                                     </div>
                                     <div className="col-span-1">
-                                    <button
-                                        onClick={openModal}
-                                        className="col-span-1 bg-indigo-600 text-white p-2 rounded-md"
-                                    >
-                                        Seleccionar Colegio
-                                    </button>
+
+                                        <button
+                                            onClick={openModal}
+                                            className="col-span-1 bg-indigo-600 text-white p-2 rounded-md"
+                                        >
+                                            Seleccionar Colegio
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -96,27 +165,53 @@ export default function Dashboard() {
 
                             {modalOpen && (
                                 <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+
                                     <div className="bg-white p-6 rounded-lg shadow-lg flex w-full max-w-4xl">
+
                                         <div className="w-1/2 pr-4 border-r">
                                             <h3 className="text-lg font-semibold mb-4">Seleccione Ubicación y Colegio</h3>
                                             <div className="space-y-4">
-                                                <select className="w-full border p-2 rounded-md" required>
-                                                    <option value="" disabled selected>Departamento</option>
-                                                    <option value="departamento1">Departamento 1</option>
-                                                    <option value="departamento2">Departamento 2</option>
+                                                <select className="w-full border p-2 rounded-md" required onChange={handleDepartamentoChange}>
+                                                    <option value="">Departamento</option>
+                                                    {departamentos.map((depa) => (
+                                                        <option key={depa.id} value={depa.id}>
+                                                            {depa.nombredepartamento}
+                                                        </option>
+                                                    ))}
                                                 </select>
-                                                <select className="w-full border p-2 rounded-md" required>
-                                                    <option value="" disabled selected>Provincia</option>
-                                                    <option value="provincia1">Provincia 1</option>
-                                                    <option value="provincia2">Provincia 2</option>
+                                                <select className="w-full border p-2 rounded-md" required onChange={handleProvinciaChange}>
+                                                    <option value="" >Provincia</option>
+                                                    {provincias.map((lista) => (
+                                                        <option key={lista.id} value={lista.id}>
+                                                            {lista.nombreprovincia}
+                                                        </option>
+                                                    ))}
                                                 </select>
-                                                <select className="w-full border p-2 rounded-md" required>
-                                                    <option value="" disabled selected>Distrito</option>
-                                                    <option value="distrito1">Distrito 1</option>
-                                                    <option value="distrito2">Distrito 2</option>
+                                                <select className="w-full border p-2 rounded-md" required onChange={handleColegioChange}>
+                                                    <option value="" >Distrito</option>
+                                                    {distritos.map((lista) => (
+                                                        <option key={lista.id} value={lista.id}>
+                                                            {lista.nombredistrito}
+                                                        </option>
+                                                    ))}
                                                 </select>
-                                                <input type="text" placeholder="Buscar Colegio" className="w-full border p-2 rounded-md" />
 
+                                                <div>
+                                                    <input
+                                                        type="text"
+                                                        value={inputValue}
+                                                        onChange={handleInputChange}
+                                                        placeholder="Buscar colegios..."
+                                                        className="input-class"
+                                                    />
+                                                    {Cole.length > 0 && (
+                                                        <ul>
+                                                            {Cole.map((resultado, index) => (
+                                                                <li key={index}>{resultado.nombrecolegio}</li>
+                                                            ))}
+                                                        </ul>
+                                                    )}
+                                                </div>
                                                 <button onClick={openModal2} className="w-full bg-indigo-600 text-white p-2 rounded-md mt-2">
                                                     Agregar Colegio
                                                 </button>
@@ -142,110 +237,113 @@ export default function Dashboard() {
                                                         <th className="border px-4 py-2">distrito</th>
                                                         <th className="border px-4 py-2">provincia</th>
                                                         <th className="border px-4 py-2">Seleccion</th>
-                                                        
                                                     </tr>
                                                 </thead>
                                                 <tbody>
-                                                    <tr>
-                                                        <td className="border px-4 py-2">Colegio </td>
-                                                        <td className="border px-4 py-2">modalidad</td>
-                                                        <td className="border px-4 py-2">Departamento</td>
-                                                        <td className="border px-4 py-2">distrito</td>
-                                                        <td className="border px-4 py-2">provincia</td>
 
-                                                        <td className="border px-4 py-2">
-                                                        <button className="text-indigo-600 hover:text-indigo-900">Selecionar</button>
-                                                        </td>
-                                                    </tr>
+                                                    {Cole.length > 0 && Cole.map((resultado, index) => (
+                                                        <tr key={index}>
+                                                            <td className="border px-4 py-2">{resultado.nombrecolegio}</td>
+                                                            <td className="border px-4 py-2">{resultado.modalidad}</td>
+                                                            <td className="border px-4 py-2">{resultado.Distrito_idDistrito}</td>
+                                                            <td className="border px-4 py-2">{resultado.gestion}</td>
+                                                            <td className="border px-4 py-2">
+                                                                <button className="text-indigo-600 hover:text-indigo-900">Seleccionar</button>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+
 
                                                 </tbody>
+                                                
                                             </table>
+                                            
                                         </div>
                                     </div>
                                 </div>
                             )}
 
-                              {modalOpen2 && (
-                                  <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                                      <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col w-full max-w-6xl overflow-hidden">
-                                          <div className="flex w-full">
+                            {modalOpen2 && (
+                                <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                                    <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col w-full max-w-6xl overflow-hidden">
+                                        <div className="flex w-full">
 
-                                              <div className="w-1/2 pr-4 border-r">
-                                                  <h3 className="text-lg font-semibold mb-4">Agregar Colegio</h3>
-                                                  <div className="space-y-4">
-                                                      <div>
-                                                          <label htmlFor="">Nombre del Colegio</label>
-                                                          <input type="text" className="w-full border p-2 rounded-md" />
-                                                      </div>
-                                                      <div className="grid grid-cols-2 gap-4 mb-6">
-                                                          <div className="col-span-1">
-                                                              <label htmlFor="">codModular</label>
-                                                              <input type="text" className="w-full border p-2 rounded-md" />
-                                                          </div>
-                                                          <div>
-                                                              <label htmlFor="">modalidad</label>
-                                                              <input type="text" className="w-full border p-2 rounded-md" />
-                                                          </div>
-                                                          <div>
-                                                              <label htmlFor="">Gestion</label>
-                                                              <input type="text" className="w-full border p-2 rounded-md" />
-                                                          </div>
-                                                          <div>
-                                                              <label htmlFor="">Latitud</label>
-                                                              <input type="text" className="w-full border p-2 rounded-md" />
-                                                          </div>
-                                                          <div>
-                                                              <label htmlFor="">longitud</label>
-                                                              <input type="text" className="w-full border p-2 rounded-md" />
-                                                          </div>
-                                                          <div>
-                                                              <label htmlFor="">Distrito</label>
-                                                              <input type="text" className="w-full border p-2 rounded-md" />
-                                                          </div>
-                                                      </div>
-                                                  </div>
-                                                  <div className="flex justify-end mt-4 space-x-2">
-                                                      <button onClick={closeModal2} className="px-4 py-2 bg-gray-300 rounded-md">
-                                                          Cancelar
-                                                      </button>
-                                                      <button onClick={closeModal2} className="px-4 py-2 bg-blue-600 text-white rounded-md">
-                                                          Guardar
-                                                      </button>
-                                                  </div>
-                                              </div>
+                                            <div className="w-1/2 pr-4 border-r">
+                                                <h3 className="text-lg font-semibold mb-4">Agregar Colegio</h3>
+                                                <div className="space-y-4">
+                                                    <div>
+                                                        <label htmlFor="">Nombre del Colegio</label>
+                                                        <input type="text" className="w-full border p-2 rounded-md" />
+                                                    </div>
+                                                    <div className="grid grid-cols-2 gap-4 mb-6">
+                                                        <div className="col-span-1">
+                                                            <label htmlFor="">codModular</label>
+                                                            <input type="text" className="w-full border p-2 rounded-md" />
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="">modalidad</label>
+                                                            <input type="text" className="w-full border p-2 rounded-md" />
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="">Gestion</label>
+                                                            <input type="text" className="w-full border p-2 rounded-md" />
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="">Latitud</label>
+                                                            <input type="text" className="w-full border p-2 rounded-md" />
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="">longitud</label>
+                                                            <input type="text" className="w-full border p-2 rounded-md" />
+                                                        </div>
+                                                        <div>
+                                                            <label htmlFor="">Distrito</label>
+                                                            <input type="text" className="w-full border p-2 rounded-md" />
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div className="flex justify-end mt-4 space-x-2">
+                                                    <button onClick={closeModal2} className="px-4 py-2 bg-gray-300 rounded-md">
+                                                        Cancelar
+                                                    </button>
+                                                    <button onClick={closeModal2} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                                                        Guardar
+                                                    </button>
+                                                </div>
+                                            </div>
 
 
-                                              <div className="w-1/2 pl-4 overflow-x-auto">
-                                                  <h3 className="text-lg font-semibold mb-4">Colegios Seleccionados</h3>
-                                                  <table className="min-w-full border">
-                                                      <thead>
-                                                          <tr className="bg-gray-200">
-                                                              <th className="border px-4 py-2">Nombre</th>
-                                                              <th className="border px-4 py-2">codModular</th>
-                                                              <th className="border px-4 py-2">modalidad</th>
-                                                              <th className="border px-4 py-2">gestion</th>
-                                                              <th className="border px-4 py-2">latitud</th>
-                                                              <th className="border px-4 py-2">longitud</th>
-                                                              <th className="border px-4 py-2">distrito</th>
-                                                          </tr>
-                                                      </thead>
-                                                      <tbody>
-                                                          <tr>
-                                                              <td className="border px-4 py-2">Colegio</td>
-                                                              <td className="border px-4 py-2">asdasd</td>
-                                                              <td className="border px-4 py-2">asdasd</td>
-                                                              <td className="border px-4 py-2">asdasd</td>
-                                                              <td className="border px-4 py-2">asdsad</td>
-                                                              <td className="border px-4 py-2">asdasd</td>
-                                                              <td className="border px-4 py-2">asdasd</td>
-                                                          </tr>
-                                                      </tbody>
-                                                  </table>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              )}
+                                            <div className="w-1/2 pl-4 overflow-x-auto">
+                                                <h3 className="text-lg font-semibold mb-4">Colegios Seleccionados</h3>
+                                                <table className="min-w-full border">
+                                                    <thead>
+                                                        <tr className="bg-gray-200">
+                                                            <th className="border px-4 py-2">Nombre</th>
+                                                            <th className="border px-4 py-2">codModular</th>
+                                                            <th className="border px-4 py-2">modalidad</th>
+                                                            <th className="border px-4 py-2">gestion</th>
+                                                            <th className="border px-4 py-2">latitud</th>
+                                                            <th className="border px-4 py-2">longitud</th>
+                                                            <th className="border px-4 py-2">distrito</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td className="border px-4 py-2">Colegio</td>
+                                                            <td className="border px-4 py-2">asdasd</td>
+                                                            <td className="border px-4 py-2">asdasd</td>
+                                                            <td className="border px-4 py-2">asdasd</td>
+                                                            <td className="border px-4 py-2">asdsad</td>
+                                                            <td className="border px-4 py-2">asdasd</td>
+                                                            <td className="border px-4 py-2">asdasd</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
 
 
                             <div className="mb-8 p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
@@ -261,11 +359,11 @@ export default function Dashboard() {
                                     </div>
                                     <div className="col-span-1">
                                         <label htmlFor="medio" className="block text-sm font-medium text-gray-700">Medio de pago</label>
-                                            <select id="medio" className="w-40 border p-2 rounded-md" required>
-                                                <option disabled selected>Medio de pago</option>
-                                                <option >paga el de atras</option>
-                                            </select>
-            
+                                        <select id="medio" className="w-40 border p-2 rounded-md" required>
+                                            <option disabled selected>Medio de pago</option>
+                                            <option >paga el de atras</option>
+                                        </select>
+
                                     </div>
                                     <div className="col-span-1">
                                         <label htmlFor="NVaoucher" className="block text-sm font-medium text-gray-700">Numero de Voucher</label>
@@ -295,11 +393,11 @@ export default function Dashboard() {
                                             <option value="" disabled selected>Seleccione Estado</option>
                                             <option value="pagado">Pagado</option>
                                             <option value="pendiente">Pendiente</option>
-                                         </select>
+                                        </select>
                                     </div>
                                     <div>
                                         <label htmlFor="Gestudio" className="block text-sm font-medium text-gray-700">Grupo de estudio</label>
-                                        <input id='Gestudio'  type="text" placeholder="Grupo de Estudio" className="col-span-1 border p-2 rounded-md" required />
+                                        <input id='Gestudio' type="text" placeholder="Grupo de Estudio" className="col-span-1 border p-2 rounded-md" required />
                                     </div>
                                     <div>
                                         <label htmlFor="PEstudio" className="block text-sm font-medium text-gray-700">Programa de estudio</label>
