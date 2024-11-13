@@ -12,6 +12,7 @@ use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramaEstudioController;
+use App\Http\Controllers\ReportesController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -42,6 +43,7 @@ Route::middleware('auth')->group(function () {
 // Rutas para pruebas
 Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
 Route::post('/cursos', [CursoController::class, 'store'])->name('cursos.store');
+Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
 Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
 Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
 Route::post('/docentes', [DocenteController::class, 'store'])->name('docentes.store');
