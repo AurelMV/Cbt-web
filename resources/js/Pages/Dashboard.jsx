@@ -20,18 +20,18 @@ export default function Dashboard() {
     
     const handleInputChange = async (e) => {
         const value = e.target.value;
+        setCole([]);
         setInputValue(value);
-
+        
         if (value.trim() === '') {
-            // Si el input está vacío, limpiar los resultados
             setCole([]);
             return;
         }
 
         try {
-            // Realizar la llamada a la API con la nueva búsqueda
             const resultadosBusqueda = await Listado.BusquedaCodModular(value);
-            setCole(resultadosBusqueda.slice(0, 5)); // Limitar a los primeros 5 resultados
+            setCole(resultadosBusqueda.slice(0, 20)); // Limitar a los primeros 5 resultados
+            console.log(resultadosBusqueda);
         } catch (error) {
             console.error("Error al buscar los colegios:", error);
         }
@@ -137,7 +137,7 @@ export default function Dashboard() {
                                                 ))}
                                             </select>
                                             <select className="w-full border p-2 rounded-md" required onChange={handleProvinciaChange}>
-                                                <option value="" disabled selected>Provincia</option>
+                                                <option value="" >Provincia</option>
                                                 {provincias.map((lista) => (
                                                     <option key={lista.id} value={lista.id}>
                                                         {lista.nombreprovincia}
@@ -145,7 +145,7 @@ export default function Dashboard() {
                                                 ))}
                                             </select>
                                             <select className="w-full border p-2 rounded-md" required onChange={handleColegioChange}>
-                                                <option value="" disabled selected>Distrito</option>
+                                                <option value="" >Distrito</option>
                                                 {distritos.map((lista) => (
                                                     <option key={lista.id} value={lista.id}>
                                                         {lista.nombredistrito}

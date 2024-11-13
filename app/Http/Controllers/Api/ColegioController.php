@@ -29,7 +29,12 @@ class ColegioController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nombrecolegio' => 'required|string|max:255',
-            'Distrito_idDistrito' => 'required|integer'
+            'Distrito_idDistrito' => 'required|integer',
+            'codModular' => 'required|string|max:255',
+            'modalidad' => 'required|string|max:255',
+            'gestion' => 'required|string|max:255',
+            'latitud' => 'required|numeric|between:-90,90',
+            'longitud' => 'required|numeric|between:-180,180',
         ]);
         if ($validator->fails()) {
             return response()->json(
@@ -71,7 +76,12 @@ class ColegioController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'nombrecolegio' => 'required|string|max:255',
-            'Distrito_idDistrito' => 'required|integer'
+            'Distrito_idDistrito' => 'required|integer',
+            'codModular' => 'required|string|max:255',
+            'modalidad' => 'required|string|max:255',
+            'gestion' => 'required|string|max:255',
+            'latitud' => 'required|numeric|between:-90,90',
+            'longitud' => 'required|numeric|between:-180,180',
         ]);
         if ($validator->fails()) {
             return response()->json(
@@ -128,16 +138,14 @@ class ColegioController extends Controller
     }
     public function BusquedaCodModular(string $id)
     {
-        // Realizar una búsqueda para encontrar todas las coincidencias que contengan la subcadena
         $colegio = Colegio::where('nombrecolegio', 'like', '%' . $id . '%')
-            ->take(5) // Limitar a los primeros 5 resultados
+            ->take(20) // Limitar a los primeros 5 resultados
             ->get();
 
         // Filtrar los resultados: buscar solo aquellos que contienen la subcadena de forma válida
         $colegioFiltrado = $colegio->filter(function ($item) use ($id) {
-            // Comprobar si la subcadena está contenida en una palabra completa, no solo parte incorrecta
             return stripos($item->nombrecolegio, $id) !== false &&
-                strpos($item->nombrecolegio, $id) !== 0; // Evitar coincidencias no deseadas
+                strpos($item->nombrecolegio, $id) !== 0; 
         });
 
         // Si encontramos resultados después del filtrado
