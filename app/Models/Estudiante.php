@@ -21,10 +21,11 @@ class Estudiante extends Model
         'tipodocumento',
         'direccion',
         'foto',
+        'idcolegios',
         
     ];
     public function inscripciones()
     {
-        return $this->hasMany(Inscripcion::class, 'idEstudiante', 'idEstudiante');
+        return $this->hasMany(Inscripcion::class, 'estudiante_id', 'id');
     }
 }

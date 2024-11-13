@@ -16,30 +16,18 @@ class EstudianteController extends Controller
      */
     public function index()
     {
-        $estudiantes = Estudiante::select( 'nombres',
-        'aPaterno',
-        'aMaterno',
-        'sexo',
-        'celularestudiante',
-        'celularapoderado',
-        'fechaNacimiento',
-        'email',
-        'anoculminado',
-        'Nrodocumento',
-        'tipodocumento',
-        'direccion',
-        'foto')  
-                              ->get();
-
-    /*return response()->json([
-        'status' => true,
-        'message' => 'Estudiantes Establecidos con exito :)',
-        'data' => $estudiantes
-    ], 200);*/
-    return Inertia::render('Estudiantes', [
-        'estudiantes' => $estudiantes
-    ]);
+      // Obtener todos los estudiantes
+      $estudiantes = Estudiante::all();
+    
+      // Retornar los datos a la vista de React usando Inertia
+   
+    
+        // Pasar los estudiantes a la vista de Inertia
+        return Inertia::render('Estudiantes', [
+            'estudiantes' => $estudiantes
+        ]);
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -108,11 +96,7 @@ class EstudianteController extends Controller
         'foto')
         
         ->findOrFail($id);
-        return response()->json([
-            'status' => true,
-            'message' => 'Estudiante localizado',
-            'data' => $estudiante
-        ], 200);
+        return Inertia::render('Estudiantes');
     }
 
     /**
@@ -128,40 +112,44 @@ class EstudianteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'idEstudiante'=>'required|string|max:80',
-            'nombres' => 'required|string|max:80',
-            'aPaterno' => 'required|string|max:120',
-            'aMaterno' => 'required|string|max:120',
-            'sexo' => 'required|string|max:1',
-            'celularestudiante' => 'required|string|max:9',
-            'celularapoderado' => 'required|string|max:9',
-            'fechaNacimiento' => 'nullable|date',
-            'email' => 'required|email|max:220',
-            'anoculminado' => 'required|string|max:45',
-            'Nrodocumento' => 'nullable|string|max:45',
-            'tipodocumento' => 'nullable|string|max:45',
-            'direccion' => 'required|string|max:45',
-            'foto' => 'nullable|binary',
-           
+        $request->validate([
+            'nombres' => 'required|string|max:255',
+            'aPaterno' => 'required|string|max:255',
+            'aMaterno' => 'required|string|max:255',
+            'sexo' => 'required|string',
+            'Nrodocumento' => 'required|string|max:255',
+            'celularestudiante' => 'required|string|max:15',
+            'celularapoderado' => 'required|string|max:15',
+            'fechaNacimiento' => 'required|date',
+            'email' => 'required|email',
+            'anoculminado' => 'required|string|max:4',
+            'idcolegios' => 'required|string|max:255',
+            'tipodocumento' => 'required|string|max:10',
+            'direccion' => 'required|string|max:255',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Error en actualizar Estudiante',
-                'errors' => $validator->errors()
-            ], 422);
-        }
-
+        // Buscar el estudiante por su ID
         $estudiante = Estudiante::findOrFail($id);
-        $estudiante->update($request->all());
 
-        return response()->json([
-            'status' => true,
-            'message' => 'Estudiante Actualizado ',
-            'data' => $estudiante
-        ], 200);
+        // Actualizar los datos del estudiante
+        $estudiante->update([
+            'nombres' => $request->nombres,
+            'aPaterno' => $request->aPaterno,
+            'aMaterno' => $request->aMaterno,
+            'sexo' => $request->sexo,
+            'Nrodocumento' => $request->Nrodocumento,
+            'celularestudiante' => $request->celularestudiante,
+            'celularapoderado' => $request->celularapoderado,
+            'fechaNacimiento' => $request->fechaNacimiento,
+            'email' => $request->email,
+            'anoculminado' => $request->anoculminado,
+            'idcolegios' => $request->idcolegios,
+            'tipodocumento' => $request->tipodocumento,
+            'direccion' => $request->direccion,
+        ]);
+
+        // Redirigir a la lista de estudiantes con un mensaje de éxito
+        return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado con éxito');
     }
     /**
      * Remove the specified resource from storage.

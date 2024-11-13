@@ -1,14 +1,11 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
-
-export default function Edit({ mustVerifyEmail, status }) {
-
+export default function Edit({ estudiantes }) {
     return (
-        <AuthenticatedLayout
-        >
+        <AuthenticatedLayout>
             <Head title="Estudiantes" />
-            
+
             <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
                 Gestión de Estudiantes Inscritos
             </h2>
@@ -16,12 +13,13 @@ export default function Edit({ mustVerifyEmail, status }) {
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                        <div className='grid grid-cols-6'></div>
+                            <div className="grid grid-cols-6"></div>
                             <div className="grid grid-cols-5 gap-8">
-                                <div className='col-span-1'>
+                                <div className="col-span-1">
                                     <h3 className="text-md font-medium mb-4">Formulario de Estudiante</h3>
+
                                     <form className="space-y-4">
-                                        <input type="text" placeholder="Nombre" className="w-full border p-2 rounded-md" required />
+                                    <input type="text" placeholder="Nombre" className="w-full border p-2 rounded-md" required />
                                         <input type="text" placeholder="Apellido Paterno" className="w-full border p-2 rounded-md" required />
                                         <input type="text" placeholder="Apellido Materno" className="w-full border p-2 rounded-md" required />
                                         <select className="w-full border p-2 rounded-md" required>
@@ -46,14 +44,14 @@ export default function Edit({ mustVerifyEmail, status }) {
                                             Modificar Estudiante
                                         </button>
                                     </form>
+                                   
+
+
+
+
                                 </div>
 
-           
-                                <div className='col-span-4'>
-                                    <h3 className="text-md font-medium mb-4">Foto del Estudiante</h3>
-                                    <div className="mb-4">
-                                        <img src="https://i.pinimg.com/originals/90/b2/6a/90b26ac18df70f2e8eaa45627fb4aa47.jpg" alt="Foto del Estudiante" className="w-52 h-52 object-cover rounded-md" />
-                                    </div>
+                                <div className="col-span-4">
                                     <h3 className="text-md font-medium mb-4">Lista de Estudiantes</h3>
                                     <table className="min-w-full divide-y divide-gray-200 border">
                                         <thead className="bg-gray-50">
@@ -63,25 +61,26 @@ export default function Edit({ mustVerifyEmail, status }) {
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Materno</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Sexo</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Celular</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Celular_Apoderado</th>
+                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Celular Apoderado</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nacimiento</th>
                                                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Acción</th>
                                             </tr>
                                         </thead>
                                         <tbody className="bg-white divide-y divide-gray-200">
- 
-                                            <tr>
-                                                <td className="px-6 py-4 text-sm text-gray-900">Royer</td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">Quispe</td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">Delgado</td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">Todos los dias... (...La vida me coge) </td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">xiaomi 9 </td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">calidad-precio papa</td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">si</td>
-                                                <td className="px-6 py-4 text-sm text-gray-500">
-                                                    <button className="text-indigo-600 hover:text-indigo-900">Editar</button>
-                                                </td>
-                                            </tr>
+                                            {estudiantes.map((estudiante) => (
+                                                <tr key={estudiante.id}>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{estudiante.nombres}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{estudiante.aPaterno}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{estudiante.aMaterno}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{estudiante.sexo}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{estudiante.celularestudiante}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{estudiante.celularapoderado}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-900">{estudiante.fechaNacimiento}</td>
+                                                    <td className="px-6 py-4 text-sm text-gray-500">
+                                                        <button className="text-indigo-600 hover:text-indigo-900">Editar</button>
+                                                    </td>
+                                                </tr>
+                                            ))}
                                         </tbody>
                                     </table>
                                 </div>

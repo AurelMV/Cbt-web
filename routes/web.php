@@ -62,8 +62,20 @@ Route::group(['middleware' => ['auth', 'verified', 'role:empleado']], function (
     Route::get('/empleado', [EmpleadoController::class, 'index'])->name('empleado');
 });
 
+//canvios que se estan asiendo en Inscripciones ... 
+Route::post('/web/inscripciones', [InscripcionController::class, 'store']);
+
+
+
+
+
+
+
 
 
 
 
 require __DIR__.'/auth.php';
+
+
+
