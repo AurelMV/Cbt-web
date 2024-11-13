@@ -1,12 +1,17 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
+
+
+
+
+
 export default function Edit({ estudiantes }) {
     return (
         <AuthenticatedLayout>
             <Head title="Estudiantes" />
-
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
+            
+            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-yellow-600">
                 Gestión de Estudiantes Inscritos
             </h2>
             <div className="py-12">
@@ -44,6 +49,11 @@ export default function Edit({ estudiantes }) {
                                             Modificar Estudiante
                                         </button>
                                     </form>
+                                   
+
+
+
+
                                    
 
 

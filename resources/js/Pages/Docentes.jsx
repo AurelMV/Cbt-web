@@ -4,6 +4,8 @@ import { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
 
 export default function Docentes() {
+
+
     const { docentes } = usePage().props;
     const [nombre, setNombre] = useState("");
     const [apellido_paterno, setApellidoPaterno] = useState("");
@@ -17,6 +19,8 @@ export default function Docentes() {
     const [idDocente, setIdDocente] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
+
+    
     const handleSubmit = (e) => {
         e.preventDefault();
         Inertia.post(route("docentes.store"), {
@@ -32,6 +36,15 @@ export default function Docentes() {
         });
     };
 
+
+
+
+
+
+
+
+
+
     const handleSubmitEdit = (e) => {
         e.preventDefault();
         Inertia.put(route("docentes.update", idDocente), {
@@ -46,6 +59,14 @@ export default function Docentes() {
             estado,
         });
     };   
+
+
+
+
+
+
+
+
 
     const handleEdit = (docente) => {
         setIdDocente(docente.id);
@@ -290,6 +311,10 @@ export default function Docentes() {
                     </div>
                 </div>
             </div>
+
+
+
+
 
             {isModalOpen && (
                 <div
