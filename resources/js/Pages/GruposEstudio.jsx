@@ -1,25 +1,38 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import { Inertia } from "@inertiajs/inertia";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import { useState } from "react";
+import { usePage } from "@inertiajs/react";
 
 export default function GruposEstudio() {
+    const { ciclos, grupos } = usePage().props;
     const [aforo, setAforo] = useState(0);
-    const [nombreGrupo, setNombreGrupo] = useState('');
-    const [estadoGrupo, setEstadoGrupo] = useState('');
-    const [ciclo, setCiclo] = useState('');
+    const [nombre, setNombreGrupo] = useState("");
+    const [estado, setEstadoGrupo] = useState("");
+    const [idciclo, setCiclo] = useState("");
 
     const incrementarAforo = () => setAforo(aforo + 1);
+    const reducirAforo = () => setAforo((prev) => (prev > 0 ? prev - 1 : 0));
     const limpiarFormulario = () => {
-        setNombreGrupo('');
-        setAforo(0);
-        setEstadoGrupo('');
-        setCiclo('');
+        setNombreGrupo("");
+        setAforo(40);
+        setEstadoGrupo("");
+        setCiclo("");
+    };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        Inertia.post(route("grupos.store"), {
+            nombre,
+            aforo,
+            estado,
+            idciclo,
+        });
     };
 
     return (
         <AuthenticatedLayout>
             <Head title="Grupos de Estudio" />
-            
+
             <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
                 Grupos de Estudio
             </h2>
@@ -29,70 +42,118 @@ export default function GruposEstudio() {
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6">
                         <div className="grid grid-cols-2 gap-8">
                             <div>
-                                <h3 className="text-md font-medium mb-4">Datos del Grupo de Estudio</h3>
-                                <form className="space-y-4">
-                                    <input
-                                        type="text"
-                                        placeholder="Nombre del Grupo"
-                                        value={nombreGrupo}
-                                        onChange={(e) => setNombreGrupo(e.target.value)}
-                                        className="w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                    <div className="flex items-center space-x-2">
+                                <h3 className="text-md font-medium mb-4">
+                                    Datos del Grupo de Estudio
+                                </h3>
+                                <form
+                                    className="space-y-4"
+                                    onSubmit={handleSubmit}
+                                >
+                                    <div>
+                                        <label htmlFor="nombre">
+                                            Nombre del Grupo
+                                        </label>
                                         <input
-                                            type="number"
-                                            value={aforo}
-                                            readOnly
+                                            type="text"
+                                            id="nombre"
+                                            value={nombre}
+                                            onChange={(e) =>
+                                                setNombreGrupo(e.target.value)
+                                            }
                                             className="w-full border p-2 rounded-md"
                                             required
                                         />
-                                        <button
-                                            type="button"
-                                            onClick={incrementarAforo}
-                                            className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-500"
-                                        >
-                                            Aumentar Aforo
-                                        </button>
                                     </div>
-                                    <select
-                                        value={estadoGrupo}
-                                        onChange={(e) => setEstadoGrupo(e.target.value)}
-                                        className="w-full border p-2 rounded-md"
-                                        required
-                                    >
-                                        <option value="">Estado del Grupo</option>
-                                        <option value="Activo">Activo</option>
-                                        <option value="Inactivo">Inactivo</option>
-                                    </select>
-                                    <input
-                                        type="text"
-                                        placeholder="Ciclo al que pertenece"
-                                        value={ciclo}
-                                        onChange={(e) => setCiclo(e.target.value)}
-                                        className="w-full border p-2 rounded-md"
-                                        required
-                                    />
+                                    <div >
+                                        <label htmlFor="aforo">Aforo</label>
+                                        <div className="flex items-center space-x-2">
+                                            <input
+                                                type="number"
+                                                id="aforo"
+                                                value={aforo}
+                                                onChange={(e) => setAforo(Number(e.target.value))}
+                                                className="w-20 border p-2 text-center rounded-md"
+                                                min="0"
+                                            />
+                                            <button
+                                                type="button"
+                                                onClick={incrementarAforo}
+                                                className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-500"
+                                            >
+                                                Aumentar Aforo
+                                            </button>
+                                            <button
+                                                type="button"
+                                                onClick={reducirAforo}
+                                                className="inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-xs font-semibold text-white hover:bg-blue-500"
+                                            >
+                                                Reducir Aforo
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="estado">Estado</label>
+                                        <select
+                                            value={estado}
+                                            onChange={(e) =>
+                                                setEstadoGrupo(e.target.value)
+                                            }
+                                            className="w-full border p-2 rounded-md"
+                                            required
+                                        >
+                                            <option value="" disabled selected>
+                                                Estado del Grupo
+                                            </option>
+                                            <option value="1">Activo</option>
+                                            <option value="0">Inactivo</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label htmlFor="ciclo">Ciclo</label>
+                                        <select
+                                            id="ciclo"
+                                            value={idciclo}
+                                            onChange={(e) =>
+                                                setCiclo(e.target.value)
+                                            }
+                                            className="w-full border p-2 rounded-md"
+                                            required
+                                        >
+                                            <option value="" disabled selected>
+                                                Seleccione Ciclo
+                                            </option>
+                                            {ciclos.map((ciclo) => (
+                                                <option
+                                                    key={ciclo.id}
+                                                    value={ciclo.id}
+                                                >
+                                                    {ciclo.nombre}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    </div>
                                     <div className="space-x-2">
                                         <button
                                             type="submit"
                                             className="inline-flex items-center rounded-md bg-green-600 px-4 py-2 text-xs font-semibold text-white hover:bg-green-500"
                                         >
-                                            Agregar
+                                            Guardar Grupo
                                         </button>
                                         <button
                                             type="button"
                                             onClick={limpiarFormulario}
-                                            className="inline-flex items-center rounded-md bg-yellow-600 px-4 py-2 text-xs font-semibold text-white hover:bg-yellow-500"
+                                            className="inline-flex items-center rounded-md bg-red-600 px-4 py-2 text-xs font-semibold text-white hover:bg-red-500"
                                         >
-                                            Limpiar
+                                            Limpiar Formulario
                                         </button>
                                     </div>
                                 </form>
                             </div>
 
                             <div>
-                                <h3 className="text-md font-medium mb-4">Grupos de Estudio Registrados</h3>
+                                <h3 className="text-md font-medium mb-4">
+                                    Grupos de Estudio Registrados
+                                </h3>
                                 <div className="flex items-center space-x-2 mb-4">
                                     <input
                                         type="text"
@@ -116,34 +177,36 @@ export default function GruposEstudio() {
                                     <thead className="bg-gray-50">
                                         <tr>
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Nombre del Grupo
+                                                Nombre del Grupo:
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Aforo
+                                                Aforo:
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Estado
+                                                Estado:
                                             </th>
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
-                                                Ciclo
+                                                Ciclo:
                                             </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
-                                        <tr>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                Grupo 1
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                25
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                Activo
-                                            </td>
-                                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                2024-A
-                                            </td>
-                                        </tr>
+                                        {grupos.map((grupo) => (
+                                            <tr key={grupo.id}>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    {grupo.nombre}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {grupo.aforo}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {grupo.estado}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    {grupo.ciclo}
+                                                </td>
+                                            </tr>
+                                        ))}
                                     </tbody>
                                 </table>
 

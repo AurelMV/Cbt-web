@@ -149,87 +149,87 @@ export default function Dashboard() {
                                 </div>
                             )}
 
-{modalOpen2 && (
-    <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-        <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col w-full max-w-6xl overflow-hidden">
-            <div className="flex w-full">
-                {/* Contenido de la izquierda */}
-                <div className="w-1/2 pr-4 border-r">
-                    <h3 className="text-lg font-semibold mb-4">Agregar Colegio</h3>
-                    <div className="space-y-4">
-                        <div>
-                            <label htmlFor="">Nombre del Colegio</label>
-                            <input type="text" className="w-full border p-2 rounded-md" />
-                        </div>
-                        <div className="grid grid-cols-2 gap-4 mb-6">
-                            <div className="col-span-1">
-                                <label htmlFor="">codModular</label>
-                                <input type="text" className="w-full border p-2 rounded-md" />
-                            </div>
-                            <div>
-                                <label htmlFor="">modalidad</label>
-                                <input type="text" className="w-full border p-2 rounded-md" />
-                            </div>
-                            <div>
-                                <label htmlFor="">Gestion</label>
-                                <input type="text" className="w-full border p-2 rounded-md" />
-                            </div>
-                            <div>
-                                <label htmlFor="">Latitud</label>
-                                <input type="text" className="w-full border p-2 rounded-md" />
-                            </div>
-                            <div>
-                                <label htmlFor="">longitud</label>
-                                <input type="text" className="w-full border p-2 rounded-md" />
-                            </div>
-                            <div>
-                                <label htmlFor="">Distrito</label>
-                                <input type="text" className="w-full border p-2 rounded-md" />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="flex justify-end mt-4 space-x-2">
-                        <button onClick={closeModal2} className="px-4 py-2 bg-gray-300 rounded-md">
-                            Cancelar
-                        </button>
-                        <button onClick={closeModal2} className="px-4 py-2 bg-blue-600 text-white rounded-md">
-                            Guardar
-                        </button>
-                    </div>
-                </div>
+                              {modalOpen2 && (
+                                  <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
+                                      <div className="bg-white p-6 rounded-lg shadow-lg flex flex-col w-full max-w-6xl overflow-hidden">
+                                          <div className="flex w-full">
 
-                {/* Tabla de la derecha */}
-                <div className="w-1/2 pl-4 overflow-x-auto">
-                    <h3 className="text-lg font-semibold mb-4">Colegios Seleccionados</h3>
-                    <table className="min-w-full border">
-                        <thead>
-                            <tr className="bg-gray-200">
-                                <th className="border px-4 py-2">Nombre</th>
-                                <th className="border px-4 py-2">codModular</th>
-                                <th className="border px-4 py-2">modalidad</th>
-                                <th className="border px-4 py-2">gestion</th>
-                                <th className="border px-4 py-2">latitud</th>
-                                <th className="border px-4 py-2">longitud</th>
-                                <th className="border px-4 py-2">distrito</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td className="border px-4 py-2">Colegio</td>
-                                <td className="border px-4 py-2">asdasd</td>
-                                <td className="border px-4 py-2">asdasd</td>
-                                <td className="border px-4 py-2">asdasd</td>
-                                <td className="border px-4 py-2">asdsad</td>
-                                <td className="border px-4 py-2">asdasd</td>
-                                <td className="border px-4 py-2">asdasd</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-)}
+                                              <div className="w-1/2 pr-4 border-r">
+                                                  <h3 className="text-lg font-semibold mb-4">Agregar Colegio</h3>
+                                                  <div className="space-y-4">
+                                                      <div>
+                                                          <label htmlFor="">Nombre del Colegio</label>
+                                                          <input type="text" className="w-full border p-2 rounded-md" />
+                                                      </div>
+                                                      <div className="grid grid-cols-2 gap-4 mb-6">
+                                                          <div className="col-span-1">
+                                                              <label htmlFor="">codModular</label>
+                                                              <input type="text" className="w-full border p-2 rounded-md" />
+                                                          </div>
+                                                          <div>
+                                                              <label htmlFor="">modalidad</label>
+                                                              <input type="text" className="w-full border p-2 rounded-md" />
+                                                          </div>
+                                                          <div>
+                                                              <label htmlFor="">Gestion</label>
+                                                              <input type="text" className="w-full border p-2 rounded-md" />
+                                                          </div>
+                                                          <div>
+                                                              <label htmlFor="">Latitud</label>
+                                                              <input type="text" className="w-full border p-2 rounded-md" />
+                                                          </div>
+                                                          <div>
+                                                              <label htmlFor="">longitud</label>
+                                                              <input type="text" className="w-full border p-2 rounded-md" />
+                                                          </div>
+                                                          <div>
+                                                              <label htmlFor="">Distrito</label>
+                                                              <input type="text" className="w-full border p-2 rounded-md" />
+                                                          </div>
+                                                      </div>
+                                                  </div>
+                                                  <div className="flex justify-end mt-4 space-x-2">
+                                                      <button onClick={closeModal2} className="px-4 py-2 bg-gray-300 rounded-md">
+                                                          Cancelar
+                                                      </button>
+                                                      <button onClick={closeModal2} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                                                          Guardar
+                                                      </button>
+                                                  </div>
+                                              </div>
+
+
+                                              <div className="w-1/2 pl-4 overflow-x-auto">
+                                                  <h3 className="text-lg font-semibold mb-4">Colegios Seleccionados</h3>
+                                                  <table className="min-w-full border">
+                                                      <thead>
+                                                          <tr className="bg-gray-200">
+                                                              <th className="border px-4 py-2">Nombre</th>
+                                                              <th className="border px-4 py-2">codModular</th>
+                                                              <th className="border px-4 py-2">modalidad</th>
+                                                              <th className="border px-4 py-2">gestion</th>
+                                                              <th className="border px-4 py-2">latitud</th>
+                                                              <th className="border px-4 py-2">longitud</th>
+                                                              <th className="border px-4 py-2">distrito</th>
+                                                          </tr>
+                                                      </thead>
+                                                      <tbody>
+                                                          <tr>
+                                                              <td className="border px-4 py-2">Colegio</td>
+                                                              <td className="border px-4 py-2">asdasd</td>
+                                                              <td className="border px-4 py-2">asdasd</td>
+                                                              <td className="border px-4 py-2">asdasd</td>
+                                                              <td className="border px-4 py-2">asdsad</td>
+                                                              <td className="border px-4 py-2">asdasd</td>
+                                                              <td className="border px-4 py-2">asdasd</td>
+                                                          </tr>
+                                                      </tbody>
+                                                  </table>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              )}
 
 
                             <div className="mb-8 p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">

@@ -1,7 +1,20 @@
+import { Inertia } from '@inertiajs/inertia';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 
 export default function Cursos() {
+    const { cursos } = usePage().props;
+    const [nombre, setNombre] = useState('');
+    const [descripcion, setDescripcion] = useState('');
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        Inertia.post(route("cursos.store"), {
+            nombre,
+            descripcion,
+        });
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Cursos" />
@@ -17,16 +30,22 @@ export default function Cursos() {
 
                                 <div>
                                     <h3 className="text-md font-medium mb-4">Nombre del Curso</h3>
-                                    <form className="space-y-4">
+                                    <form onSubmit={handleSubmit} className="space-y-4">
                                         <input
+                                            id="nombre"
                                             type="text"
                                             placeholder="Nombre del Curso"
+                                            value={nombre}
+                                            onChange={(e) => setNombre(e.target.value)}
                                             className="w-full border p-2 rounded-md"
                                             required
                                         />
                                         <textarea
+                                            id="descripcion"
                                             placeholder="Descripción del Curso"
                                             className="w-full border p-2 rounded-md"
+                                            value={descripcion}
+                                            onChange={(e) => setDescripcion(e.target.value)}
                                             rows="4"
                                         ></textarea>
                                         <button
@@ -71,17 +90,18 @@ export default function Cursos() {
                                             </tr>
                                         </thead>
                                         <tbody className="divide-y divide-gray-200 bg-white">
-
-                                            <tr>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    Aqui le haces su map con los datos de la bd
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    <button className="text-indigo-600 hover:text-indigo-900">
-                                                        Ver Detalles
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                            {cursos.map((curso) => (
+                                                <tr>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                        {curso.nombre}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <button className="text-indigo-600 hover:text-indigo-900">
+                                                            Ver Detalles
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
                                         </tbody>
                                     </table>
                                 </div>
