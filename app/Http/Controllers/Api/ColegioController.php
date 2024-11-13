@@ -22,6 +22,7 @@ class ColegioController extends Controller
             ],
             200
         );
+        
     }
 
 
