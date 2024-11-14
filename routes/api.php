@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\ColegioController;
 use App\Http\Controllers\Api\DepartamentoController;
 use App\Http\Controllers\Api\DistritoController;
 use App\Http\Controllers\Api\ProvinciaController;
+use App\Http\Controllers\InscripcionController;
 use App\Models\Distrito;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -18,5 +19,8 @@ Route::get('/Colegio/Busqueda/{id}',[ColegioController::class,'BusquedaCodModula
 Route::apiResource('/Distrito',DistritoController::class);
 Route::get('/Distrito/Consulta/{id}',[DistritoController::class,'Consulta']);
 Route::apiResource('/Provincia',ProvinciaController::class);
-Route::get('/Provincia/Consulta/{id}',[ProvinciaController::class,'Consulta']);
 Route::apiResource('/Departamento',DepartamentoController::class);
+
+Route::post('/registrar-inscripcion-pago', [InscripcionController::class, 'registrarInscripcionYpago']);
+
+
