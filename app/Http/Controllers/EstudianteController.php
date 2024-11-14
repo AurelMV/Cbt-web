@@ -110,47 +110,34 @@ class EstudianteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
-        $request->validate([
-            'nombres' => 'required|string|max:255',
-            'aPaterno' => 'required|string|max:255',
-            'aMaterno' => 'required|string|max:255',
-            'sexo' => 'required|string',
-            'Nrodocumento' => 'required|string|max:255',
-            'celularestudiante' => 'required|string|max:15',
-            'celularapoderado' => 'required|string|max:15',
-            'fechaNacimiento' => 'required|date',
-            'email' => 'required|email',
-            'anoculminado' => 'required|string|max:4',
-            'idcolegios' => 'required|string|max:255',
-            'tipodocumento' => 'required|string|max:10',
-            'direccion' => 'required|string|max:255',
-        ]);
+       
+            $request->validate([
+                'nombres' => 'required|string|max:255',
+                'aPaterno' => 'required|string|max:255',
+                'aMaterno' => 'required|string|max:255',
+                'sexo' => 'required|string',
+                'Nrodocumento' => 'required|string|max:255',
+                'celularestudiante' => 'required|string|max:15',
+                'celularapoderado' => 'required|string|max:15',
+                'fechaNacimiento' => 'required|date',
+                'email' => 'required|email',
+                'anoculminado' => 'required|string',
+                'idcolegios' => 'required|integer',
+                'tipodocumento' => 'required|string',
+                'direccion' => 'required|string|max:255',
+            ]);
+        
+            $estudiante = Estudiante::findOrFail($id);
+            $estudiante->update($request->all());
+        
+            return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado con éxito');
 
-        // Buscar el estudiante por su ID
-        $estudiante = Estudiante::findOrFail($id);
+        
+        
 
-        // Actualizar los datos del estudiante
-        $estudiante->update([
-            'nombres' => $request->nombres,
-            'aPaterno' => $request->aPaterno,
-            'aMaterno' => $request->aMaterno,
-            'sexo' => $request->sexo,
-            'Nrodocumento' => $request->Nrodocumento,
-            'celularestudiante' => $request->celularestudiante,
-            'celularapoderado' => $request->celularapoderado,
-            'fechaNacimiento' => $request->fechaNacimiento,
-            'email' => $request->email,
-            'anoculminado' => $request->anoculminado,
-            'idcolegios' => $request->idcolegios,
-            'tipodocumento' => $request->tipodocumento,
-            'direccion' => $request->direccion,
-        ]);
-
-        // Redirigir a la lista de estudiantes con un mensaje de éxito
-        return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado con éxito');
-    }
+     }
     /**
      * Remove the specified resource from storage.
      */

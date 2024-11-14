@@ -5,8 +5,11 @@ namespace App\Http\Controllers;
 use App\Models\Inscripcion;
 use App\Http\Requests\StoreInscripcionRequest;
 use App\Http\Requests\UpdateInscripcionRequest;
+use App\Models\Ciclo;
 use App\Models\Estudiante;
+use App\Models\Grupo;
 use App\Models\Pago;
+use App\Models\ProgramaEstudio;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -17,11 +20,23 @@ use Illuminate\Support\Facades\DB;
 class InscripcionController extends Controller
 {
     public function index()
-    {
-        $inscripciones = Inscripcion::paginate(10);  // O puedes usar all() si no usas paginación
+    {  $inscripciones = Inscripcion::with(['estudiante', 'programaEstudios', 'cicloInscripcion', 'grupo'])->paginate(10);
+        
+
+        
+        $estudiantes = Estudiante::all();
+        $programaEstudio=ProgramaEstudio::all();
+        $ciclosInscripcion= Ciclo::all();
+        $grupos=Grupo::all();
+    
         return Inertia::render('GestionInscripciones', [
-            'inscripciones' => $inscripciones  // Pasar los datos a React
+            'inscripciones' => $inscripciones,
+            'estudiantes' => $estudiantes, 
+            'programaEstudio'=> $programaEstudio,
+            'ciclosInscripcion'=>$ciclosInscripcion,
+            'grupos'=>$grupos,
         ]);
+      
     }
 
 
