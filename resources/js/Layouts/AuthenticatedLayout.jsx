@@ -216,6 +216,15 @@ export default function AuthenticatedLayout({children }) {
                             Reportes
                         </NavLink>
                     </div>
+                    <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                        <img src="https://cdn-icons-png.flaticon.com/512/69/69517.png" width={30} height={30} />
+                        <NavLink
+                            href={route('diagrama.index')}
+                            active={route().current('diagrama.index')}
+                        >
+                            Estadisticas
+                        </NavLink>
+                    </div>
                         </div>
                     </div>
                 </nav>

@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 
-export default function Edit({ mustVerifyEmail, status }) {
+export default function GestionPagos() {
     const [showStudentList, setShowStudentList] = useState(false);
 
     const handleNewPayment = () => {
