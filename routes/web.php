@@ -6,6 +6,7 @@ use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\DocenteCursoController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\InscripcionController;
@@ -53,7 +54,7 @@ Route::put('/docentes/{docente}', [DocenteController::class, 'update'])->name('d
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
 Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('docenteCursos.index');
 Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
-
+Route::get('/enrollment-data', [EnrollmentController::class, 'index'])->name('diagrama.index');
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
