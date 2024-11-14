@@ -104,35 +104,56 @@ const Inicio = ({ auth }) => {
         </div>
       </nav>
 
-      {/* Carrusel */}
-      <div className="carousel relative w-full max-w-2xl mx-auto mt-8">
-        <div className="relative w-full h-64 overflow-hidden rounded-lg">
-          <img
-            src={images[currentIndex].src}
-            alt={images[currentIndex].alt}
-            className="w-full h-full object-contain rounded-lg"
-          />
-          <div className="absolute bottom-4 left-4 bg-gray-900 bg-opacity-50 text-white p-2 rounded">
-            <h3 className="font-bold">{images[currentIndex].alt}</h3>
-            <p>{images[currentIndex].caption}</p>
-          </div>
-        </div>
+    {/* Carrusel */}
+<div className="carousel relative w-full max-w-3xl mx-auto mt-8">
+  <div className="relative w-full h-96 overflow-hidden rounded-lg flex items-center justify-center">
+    
+    {/* Imagen anterior borrosa */}
+    <img
+      src={images[(currentIndex - 1 + images.length) % images.length].src}
+      alt={images[(currentIndex - 1 + images.length) % images.length].alt}
+      className="absolute left-0 w-1/3 h-full object-cover opacity-50 blur-sm transform -translate-x-1/2"
+    />
 
-        <button
-          onClick={goToPrevious}
-          className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-900 bg-opacity-50 rounded-full text-white focus:outline-none"
-          aria-label="Previous"
-        >
-          ❮
-        </button>
-        <button
-          onClick={goToNext}
-          className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-900 bg-opacity-50 rounded-full text-white focus:outline-none"
-          aria-label="Next"
-        >
-          ❯
-        </button>
-      </div>
+    {/* Imagen actual */}
+    <img
+      src={images[currentIndex].src}
+      alt={images[currentIndex].alt}
+      className="w-1/2 h-full object-contain rounded-lg"
+    />
+
+    {/* Imagen siguiente borrosa */}
+    <img
+      src={images[(currentIndex + 1) % images.length].src}
+      alt={images[(currentIndex + 1) % images.length].alt}
+      className="absolute right-0 w-1/3 h-full object-cover opacity-50 blur-sm transform translate-x-1/2"
+    />
+
+    {/* Título y subtítulo de la imagen actual */}
+    <div className="absolute bottom-4 left-4 bg-gray-900 bg-opacity-50 text-white p-2 rounded">
+      <h3 className="font-bold">{images[currentIndex].alt}</h3>
+      <p>{images[currentIndex].caption}</p>
+    </div>
+  </div>
+
+  {/* Botón de retroceso */}
+  <button
+    onClick={goToPrevious}
+    className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-900 bg-opacity-50 rounded-full text-white focus:outline-none"
+    aria-label="Previous"
+  >
+    ❮
+  </button>
+
+  {/* Botón de avance */}
+  <button
+    onClick={goToNext}
+    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-900 bg-opacity-50 rounded-full text-white focus:outline-none"
+    aria-label="Next"
+  >
+    ❯
+  </button>
+</div>
 
 
 
