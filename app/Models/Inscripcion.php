@@ -8,7 +8,7 @@ class Inscripcion extends Model
 {
 
     public $timestamps=false;
-    protected $table = 'inscripcion';
+    protected $table = 'inscripcions';
     protected $primaryKey = 'id';
 
     protected $fillable = [

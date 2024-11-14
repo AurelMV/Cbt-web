@@ -2,7 +2,7 @@ import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
 
-export default function Edit({ mustVerifyEmail, status }) {
+export default function Estudiantes() {
 
     return (
         <AuthenticatedLayout
