@@ -23,4 +23,9 @@ Route::apiResource('/Departamento',DepartamentoController::class);
 
 Route::post('/registrar-inscripcion-pago', [InscripcionController::class, 'registrarInscripcionYpago']);
 
+Route::get('/api/inscripcion/{id}', [InscripcionController::class, 'editarInscripcion']);
+
+
+
+
 

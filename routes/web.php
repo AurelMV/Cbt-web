@@ -69,6 +69,10 @@ Route::group(['middleware' => ['auth', 'verified', 'role:empleado']], function (
     Route::get('/empleado', [EmpleadoController::class, 'index'])->name('empleado');
 });
 
+
+
+
+
 //canvios que se estan asiendo en Inscripciones ... 
 Route::post('/web/inscripciones', [InscripcionController::class, 'store']);
 
@@ -76,6 +80,8 @@ Route::post('/web/inscripciones', [InscripcionController::class, 'store']);
 Route::put('/estudiantes/{id}', [EstudianteController::class, 'update'])->name('estudiantes.update');
 
 
+
+Route::put('/inscripciones/{id}', [InscripcionController::class, 'update'])->name('inscripciones.update');
 
 
 

@@ -1,7 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
-
+use Illuminate\Support\Facades\DB;
 use App\Models\Pago;
 use App\Http\Requests\StorePagoRequest;
 use App\Http\Requests\UpdatePagoRequest;
@@ -13,25 +13,52 @@ class PagoController extends Controller
 {
     public function index()
     {
-        $pago = Pago::select(
-            'fecha',
-            'monto',
-            'medioPago',
-            'nroVoucher',
-            'idInscripcion'
-        )->get();
-
-
-
-        /*return response()->json([
-            'status' => true,
-            'message' => 'Pagos Establecidos con exito :)',
-            'data' => $pago
-        ], 200);*/
-        return Inertia::render('GestiondePagos', [
-            'ciclos' => $pago
-        ]);
+        $inscripciones = DB::table('inscripcions')
+        ->join('estudiantes', 'inscripcions.idEstudiante', '=', 'estudiantes.id')
+        ->join('programa_estudios', 'inscripcions.idprogramaestudios', '=', 'programa_estudios.id')
+        ->join('ciclos', 'inscripcions.idciclo', '=', 'ciclos.id')
+        ->join('grupos', 'inscripcions.idGrupos', '=', 'grupos.id')
+        ->select(
+            'inscripcions.id',
+            'inscripcions.turno',
+            'inscripcions.fechaInscripcion',
+            DB::raw("CASE WHEN inscripcions.estadopago = 1 THEN 'Pagado' ELSE 'Deudor' END as estadopago"),  // Transformar el valor de estadopago
+            'estudiantes.nombres as estudiante_nombres',
+            'ciclos.nombre as ciclo_nombre',
+            'programa_estudios.nombre_programa as programa_nombre',
+            'grupos.nombre as grupo_nombre'
+        )
+        ->paginate(10);
+    
+    // Consultar los datos adicionales necesarios para el formulario o lista de selección
+    $estudiantes = DB::table('estudiantes')->select('id', 'nombres', 'aPaterno', 'aMaterno')->get();
+    $programaEstudio = DB::table('programa_estudios')->select('id', 'nombre_programa')->get();
+    $ciclosInscripcion = DB::table('ciclos')->select('id', 'nombre')->get();
+    $grupos = DB::table('grupos')->select('id', 'nombre')->get();
+    
+    // Retornar los datos a la vista con Inertia
+    return Inertia::render('GestiondePagos', [
+        'inscripciones' => $inscripciones,
+        'estudiantes' => $estudiantes,
+        'programaEstudio' => $programaEstudio,
+        'ciclosInscripcion' => $ciclosInscripcion,
+        'grupos' => $grupos,
+    ]);
+    
     }
+
+public function listadoInscripcion(){
+
+   
+
+
+
+
+
+
+}
+
+
 
     /**
      * Show the form for creating a new resource.
