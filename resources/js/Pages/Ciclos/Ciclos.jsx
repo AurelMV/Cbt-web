@@ -103,21 +103,28 @@ export default function Ciclos({ ciclos: initialCiclos }) {
         <AuthenticatedLayout>
             <Head title="Ciclos" />
 
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
-                Ciclos
+            <h2 className=" text-xl font-semibold leading-tight text-black">
+                CICLOS
             </h2>
+            <p className='leading-tight text-gray-400'>Registre periodos de tiempo por el cual los estudiantes asistira a clases</p>
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 border border-gray-300">
                         <div className="grid grid-cols-2 gap-8">
 
                             {/* Formulario de creación */}
                             <div>
-                                <h3 className="text-md font-medium mb-4">Datos del Ciclo</h3>
+                                <h3 className="text-md font-medium mb-4 text-blue-900">Datos del Ciclo</h3>
                                 <form className="space-y-4" onSubmit={handleSubmit}>
                                     {/* Campos de entrada */}
+                                    <div>
+                                    <label
+                                                htmlFor="nombre"
+                                                className="block text-sm font-medium text-gray-800"
+                                            >nombre</label>
                                     <input
+                                        id="nombre"
                                         type="text"
                                         placeholder="Nombre del Ciclo"
                                         className="w-full border p-2 rounded-md"
@@ -125,8 +132,14 @@ export default function Ciclos({ ciclos: initialCiclos }) {
                                         onChange={(e) => setNombre(e.target.value)}
                                         required
                                     />
-                                    <h1 className="text-md font-medium mb-4">Fecha de Incio</h1>
+                                    </div>
+                                   
+                                    <label
+                                                htmlFor="finico"
+                                                className="block text-sm font-medium text-gray-800"
+                                            >Fecha de inicio</label>
                                     <input
+                                        id="finico"
                                         type="date"
                                         placeholder="Fecha de Inicio"
                                         className="w-full border p-2 rounded-md"
@@ -134,8 +147,12 @@ export default function Ciclos({ ciclos: initialCiclos }) {
                                         onChange={(e) => setFechaInicio(e.target.value)}
                                         required
                                     />
-                                    <h1 className="text-md font-medium mb-4">Fecha de Finalizacion</h1>
+                                    <label
+                                                htmlFor="ffinal"
+                                                className="block text-sm font-medium text-gray-800"
+                                            >Fecha de finalización</label>
                                     <input
+                                        id='ffinal'
                                         type="date"
                                         placeholder="Fecha de Finalización"
                                         className="w-full border p-2 rounded-md"
@@ -170,7 +187,7 @@ export default function Ciclos({ ciclos: initialCiclos }) {
 
                             {/* Listado de ciclos */}
                             <div>
-                                <h3 className="text-md font-medium mb-4">Listado de Ciclos</h3>
+                                <h3 className="text-md font-medium mb-4 text-blue-900">Listado de Ciclos</h3>
                                 <table className="min-w-full divide-y divide-gray-200 border">
                                     <thead className="bg-gray-50">
                                         <tr>
