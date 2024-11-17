@@ -34,7 +34,7 @@ export default function GestionInscripciones({ inscripciones }) {
                         <p className="leading-tight text-gray-400">Para que se llene el formulario precione el boton de editar en la tabla en la fila correspondiente a su eleccion</p>
                             <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                             
-                                <div className="col-span-1">
+                            <div className="col-span-1">
                                     <label
                                         htmlFor="turno"
                                         className="block text-sm font-medium text-gray-700"
@@ -123,9 +123,9 @@ export default function GestionInscripciones({ inscripciones }) {
                                         required
                                     />
                                 </div>
-
+                                
                             </div>
-                            <button
+                                        <button
                                             type="submit"
                                             className="inline-flex items-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
                                         >

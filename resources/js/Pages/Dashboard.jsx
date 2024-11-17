@@ -1,6 +1,8 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
-import { useState } from 'react';
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head } from "@inertiajs/react";
+import React, { useEffect, useState } from "react";
+import ColegioServicio from "@/Components/ColegioServicio";
+import Listado from "@/Components/DepartamentoServicio";
 
 export default function Dashboard() {
     const [distritos, setdistritos] = useState([]);
@@ -18,7 +20,152 @@ export default function Dashboard() {
     const openModal2 = () => setModalOpen2(true); 
     const closeModal2 = () => setModalOpen2(false);  
 
-    
+    const [formData, setFormData] = useState({
+        p_nombres: "",
+        p_tipodocumento: "",
+        p_nroDocumento: "",
+        p_sexo: "",
+        p_aPaterno: "",
+        p_email: "",
+        p_celularestudiante: "",
+        p_fechaNacimiento: "",
+        p_aMaterno: "",
+        p_celularapoderado: "",
+
+        p_direccion: "",
+        p_Colegios_id: "",
+        p_fechaPago: "",
+        p_monto: "",
+        p_medioPago: "",
+        p_nroVoucher: "",
+        p_turno: "",
+        p_cicloinscripciones_id: "",
+        p_fechaInscripcion: "",
+        p_Usuarios_id: "",
+        p_anoculminado: "",
+
+        p_estadopago: "",
+        p_Grupos_id: "",
+        p_Programaestudios_id: "",
+        archivo: null,
+    });
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setFormData((prevData) => ({
+            ...prevData,
+            [name]: value,
+        }));
+    };
+
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        axios
+            .post("/api/registrar-inscripcion-pago", formData)
+            .then((response) => {
+                alert("Inscripción realizada con éxito!");
+            })
+            .catch((error) => {
+                if (error.response) {
+                    // Muestra detalles adicionales si el servidor respondió con un error
+                    console.error(
+                        "Error en la respuesta:",
+                        error.response.data
+                    );
+                    console.error("Código de estado:", error.response.status);
+                    console.error("Encabezados:", error.response.headers);
+
+                    alert(
+                        `Error al realizar la inscripción: ${
+                            error.response.data.message ||
+                            "Revise los datos ingresados."
+                        }`
+                    );
+                } else if (error.request) {
+                    // La solicitud fue hecha, pero no se recibió respuesta
+                    console.error(
+                        "No se recibió respuesta del servidor:",
+                        error.request
+                    );
+                    alert(
+                        "Error al conectar con el servidor. Por favor, intente más tarde."
+                    );
+                } else {
+                    // Otro error ocurrió durante la configuración de la solicitud
+                    console.error(
+                        "Error al configurar la solicitud:",
+                        error.message
+                    );
+                    alert("Ocurrió un error inesperado.");
+                }
+            });
+    };
+
+    const handleInputChange = async (e) => {
+        const value = e.target.value;
+        setCole([]);
+        setInputValue(value);
+
+        if (value.trim() === "") {
+            setCole([]);
+            return;
+        }
+
+        try {
+            const resultadosBusqueda = await Listado.BusquedaCodModular(value);
+            setCole(resultadosBusqueda.slice(0, 20)); // Limitar a los primeros 5 resultados
+            console.log(resultadosBusqueda);
+        } catch (error) {
+            console.error("Error al buscar los colegios:", error);
+        }
+    };
+
+    const handleDepartamentoChange = async (event) => {
+        const idDepartamento = event.target.value;
+
+        try {
+            const data = await Listado.ConsultaProvi(idDepartamento);
+            setProvincias(data);
+        } catch (error) {
+            console.error("Error al cargar provincias:", error);
+        }
+    };
+
+    const handleProvinciaChange = async (event) => {
+        const idProvincia = event.target.value;
+
+        try {
+            const data = await Listado.ConsultaDistri(idProvincia);
+            setdistritos(data);
+        } catch (error) {
+            console.error("Error al cargar provincias:", error);
+        }
+    };
+    const handleColegioChange = async (event) => {
+        const idDistrito = event.target.value;
+        setCole([]);
+        try {
+            const data = await Listado.ConsultaColegio(idDistrito);
+            setCole(data);
+            setMensajeError("");
+        } catch (error) {
+            setCole([]);
+        }
+    };
+    useEffect(() => {
+        const listadoservice = async () => {
+            try {
+                const data = await Listado.indexDepa();
+                setlistados(data);
+            } catch (error) {
+                setError("Error al obtener los datos: " + error.message);
+            }
+        };
+
+        listadoservice();
+    }, []);
+
 
     return (
         <AuthenticatedLayout>

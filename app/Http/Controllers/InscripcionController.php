@@ -5,31 +5,48 @@ namespace App\Http\Controllers;
 use App\Models\Inscripcion;
 use App\Http\Requests\StoreInscripcionRequest;
 use App\Http\Requests\UpdateInscripcionRequest;
+use App\Models\Pago;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
 class InscripcionController extends Controller
 {
     public function index()
     {
-        /*$inscripcion = Inscripcion::select( 'turno',
-        'fechaInscripcion',
-        'estadopa',
-        'idEstudiante',
-        'idprogramaestudios',
-        'idciclo',
-        'idGrupos')->get();*/
+        $pagos = Pago::all();    $inscripciones = DB::table('inscripcions')
+        ->join('estudiantes', 'inscripcions.idEstudiante', '=', 'estudiantes.id')
+        ->join('programa_estudios', 'inscripcions.idprogramaestudios', '=', 'programa_estudios.id')
+        ->join('ciclos', 'inscripcions.idciclo', '=', 'ciclos.id')
+        ->join('grupos', 'inscripcions.idGrupos', '=', 'grupos.id')
+        ->select(
+            'inscripcions.id',
+            'inscripcions.turno',
+            'inscripcions.fechaInscripcion',
+            DB::raw("CASE WHEN inscripcions.estadopago = 1 THEN 'Pagado' ELSE 'Deudor' END as estadopago"),  // Transformar el valor de estadopago
+            'estudiantes.nombres as estudiante_nombres',
+            'ciclos.nombre as ciclo_nombre',
+            'programa_estudios.nombre_programa as programa_nombre',
+            'grupos.nombre as grupo_nombre'
+        )
+        ->paginate(10);
 
-        
-        /*return response()->json([
-            'status' => true,
-            'message' => 'Pagos Establecidos con exito :)',
-            'data' => $inscripcion
-        ], 200);*/
-        return Inertia::render('GestionInscripciones'/*,[
-            //'inscripcion'=>$inscripcion
-        ]*/);
+    // Consultar los datos adicionales necesarios para el formulario o lista de selección
+    $estudiantes = DB::table('estudiantes')->select('id', 'nombres', 'aPaterno', 'aMaterno')->get();
+    $programaEstudio = DB::table('programa_estudios')->select('id', 'nombre_programa')->get();
+    $ciclosInscripcion = DB::table('ciclos')->select('id', 'nombre')->get();
+    $grupos = DB::table('grupos')->select('id', 'nombre')->get();
+
+    // Retornar los datos a la vista con Inertia
+    return Inertia::render('GestionInscripciones', [
+        'inscripciones' => $inscripciones,
+        'estudiantes' => $estudiantes,
+        'programaEstudio' => $programaEstudio,
+        'ciclosInscripcion' => $ciclosInscripcion,
+        'grupos' => $grupos,
+        'pagos' => $pagos
+    ]);
     }
 
     /**
