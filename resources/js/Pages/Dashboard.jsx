@@ -5,20 +5,21 @@ import ColegioServicio from "@/Components/ColegioServicio";
 import Listado from "@/Components/DepartamentoServicio";
 
 export default function Dashboard() {
+    const [inputValue, setInputValue] = useState("");
     const [distritos, setdistritos] = useState([]);
     const [provincias, setProvincias] = useState([]);
     const [departamentos, setlistados] = useState([]);
-    const [colegios, setColegios] = useState([]);
+    const [Cole, setCole] = useState([]);
     const [error, setError] = useState(null);
     const [MensajeError, setMensajeError] = useState("");
 
-    const [modalOpen, setModalOpen] = useState(false); 
-    const openModal = () => setModalOpen(true); 
-    const closeModal = () => setModalOpen(false);  
+    const [modalOpen, setModalOpen] = useState(false);
+    const openModal = () => setModalOpen(true);
+    const closeModal = () => setModalOpen(false);
 
-    const [modalOpen2, setModalOpen2] = useState(false); 
-    const openModal2 = () => setModalOpen2(true); 
-    const closeModal2 = () => setModalOpen2(false);  
+    const [modalOpen2, setModalOpen2] = useState(false);
+    const openModal2 = () => setModalOpen2(true);
+    const closeModal2 = () => setModalOpen2(false);
 
     const [formData, setFormData] = useState({
         p_nombres: "",
@@ -171,6 +172,7 @@ export default function Dashboard() {
         <AuthenticatedLayout>
             <Head title="Dashboard" />
 
+
             <h2 className="text-xl font-semibold leading-tight text-black">
                 INSCRIPCIÓNES
             </h2>
@@ -181,14 +183,18 @@ export default function Dashboard() {
                         <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
                             <div className="p-2 text-gray-900">
                                 <div className="mb-8 p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
+
                                     <h3 className="text-md font-semibold mb-4 text-blue-900">
+
                                         Ingrese Datos del Estudiante
-                                    </h3>{" "}
+                                    </h3>
                                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb6">
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="nombre"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Nombre
                                             </label>
@@ -206,14 +212,18 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="tpoDocumento"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Tipo de Documento
                                             </label>
                                             <select
                                                 id="tpoDocumento"
                                                 onChange={handleChange}
+
                                                 className="col-span-1 border p-2 rounded-md w-48"
+
                                                 required
                                                 name="p_tipodocumento" // Asegúrate de que el nombre sea exactamente "p_tipodocumento"
                                                 value={
@@ -221,6 +231,7 @@ export default function Dashboard() {
                                                     ""
                                                 } // Evita que quede sin valor
                                             >
+
                                                 <option value="" selected disabled>
                                                     Seleccione tipo
                                                 </option>
@@ -233,7 +244,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="dni"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Nro de Documento
                                             </label>
@@ -252,6 +265,7 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="sexo"
+
                                                 className="block text-sm font-medium text-gray-800"
                                             >
                                                 Sexo
@@ -270,7 +284,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="APaterno"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Apellido Paterno
                                             </label>
@@ -288,7 +304,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="Email"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Correo Electronico
                                             </label>
@@ -306,7 +324,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="Telefono"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Teléfono
                                             </label>
@@ -326,7 +346,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="TApoderado"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Teléfono Apoderado
                                             </label>
@@ -345,7 +367,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="AMaterno"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Apellido Materno
                                             </label>
@@ -363,7 +387,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="direccion"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Direccion
                                             </label>
@@ -381,7 +407,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="Fnacimiento"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Fecha de Nacimiento
                                             </label>
@@ -401,7 +429,9 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="Finscripcion"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Fecha de Inscripción
                                             </label>
@@ -421,7 +451,9 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="idusuario"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 idusuario
                                             </label>
@@ -439,9 +471,11 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="anoculminado"
+
                                                 className="block text-sm font-medium text-gray-800"
                                             >
                                                 Ultimo año cursado
+
                                             </label>
                                             <input
                                                 id="anoculminado"
@@ -449,7 +483,9 @@ export default function Dashboard() {
                                                 name="p_anoculminado"
                                                 onChange={handleChange}
                                                 value={formData.p_anoculminado}
+
                                                 placeholder="Ultimo año cursado"
+
                                                 className="col-span-1 border p-2 rounded-md"
                                                 required
                                             />
@@ -457,7 +493,9 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="idcolegio"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 idcolegio
                                             </label>
@@ -475,7 +513,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <button
                                                 onClick={openModal}
+
                                                 className="col-span-1 bg-blue-500 text-white p-2 rounded-md"
+
                                             >
                                                 Seleccionar Colegio
                                             </button>
@@ -861,14 +901,18 @@ export default function Dashboard() {
                                 )}
 
                                 <div className="mb-8 p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
+
                                     <h3 className="text-md font-medium mb-4 text-blue-900">
+
                                         Datos de Pago
                                     </h3>
                                     <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="fpago"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Fecha de pago
                                             </label>
@@ -886,7 +930,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="Monto"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Monto de Pago
                                             </label>
@@ -904,7 +950,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="medio"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Medio de pago
                                             </label>
@@ -922,7 +970,9 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="NVaucher"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Numero de Voucher
                                             </label>
@@ -941,7 +991,9 @@ export default function Dashboard() {
                                 </div>
 
                                 <div className="mb-8p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
+
                                     <h3 className="text-md font-medium mb-4 text-blue-900">
+
                                         Datos de Inscripción
                                     </h3>
 
@@ -949,19 +1001,25 @@ export default function Dashboard() {
                                         <div className="col-span-1">
                                             <label
                                                 htmlFor="turno"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Turno
                                             </label>
                                             <select
                                                 id="turno"
                                                 onChange={handleChange}
+
                                                 className="col-span-1 border p-2 rounded-md w-48"
+
                                                 required
                                                 name="p_turno"
                                                 value={formData.p_turno}
                                             >
+
                                                 <option value="" selected disabled>
+
                                                     Seleccione Turno
                                                 </option>
                                                 <option value="mañana">
@@ -975,7 +1033,9 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="finscripcion"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Fecha de Inscripcion
                                             </label>
@@ -995,19 +1055,25 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="Epago"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Estado de pago
                                             </label>
                                             <select
                                                 id="Epago"
                                                 onChange={handleChange}
+
                                                 className="col-span-1 border p-2 rounded-md w-48"
+
                                                 required
                                                 name="p_estadopago"
                                                 value={formData.p_estadopago}
                                             >
+
                                                 <option value="" selected disabled>
+
                                                     Estado de Pago
                                                 </option>
                                                 <option value="1">
@@ -1021,7 +1087,9 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="Gestudio"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Grupo de estudio
                                             </label>
@@ -1039,7 +1107,9 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="PEstudio"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Programa de estudio
                                             </label>
@@ -1059,7 +1129,9 @@ export default function Dashboard() {
                                         <div>
                                             <label
                                                 htmlFor="fotop"
+
                                                 className="block text-sm font-medium text-gray-800"
+
                                             >
                                                 Escaneo del comprobante de pago
                                             </label>
@@ -1073,6 +1145,7 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                         <div className="p-6">
                         <button
@@ -1081,7 +1154,14 @@ export default function Dashboard() {
                         >
                             Registrar Estudiante
                         </button>
+
                         </div>
+                        <button
+                            type="submit"
+                            className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
+                        >
+                            Registrar Estudiante
+                        </button>
                     </div>
                 </div>
             </form>

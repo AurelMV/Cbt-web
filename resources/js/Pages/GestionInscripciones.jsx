@@ -22,19 +22,23 @@ export default function GestionInscripciones({ inscripciones }) {
     return (
         <AuthenticatedLayout>
             <Head title="Gestión de Inscripciones" />
+
             <h2 className="text-xl font-semibold leading-tight text-black">
                 GESTION DE INSCRIPCIONES
+
             </h2>
             <p className="leading-tight text-gray-400">Modifica algunas campos de una inscripcion (este proceso solo se puede realizar antes de que el ciclo haya empezado)</p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg border border-gray-300">
                         <div className="p-6 text-gray-900">
+
                         <h3 className="text-md font-medium mb-4 text-blue-900">Campos que se pueden modificar</h3>
                         <p className="leading-tight text-gray-400">Para que se llene el formulario precione el boton de editar en la tabla en la fila correspondiente a su eleccion</p>
                             <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                             
                             <div className="col-span-1">
+
                                     <label
                                         htmlFor="turno"
                                         className="block text-sm font-medium text-gray-700"
@@ -125,6 +129,7 @@ export default function GestionInscripciones({ inscripciones }) {
                                 </div>
                                 
                             </div>
+
                                         <button
                                             type="submit"
                                             className="inline-flex items-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
@@ -132,6 +137,7 @@ export default function GestionInscripciones({ inscripciones }) {
                                             Actualizar
                                         </button>
                             <h3 className="mt-4 text-md font-medium mb-4">
+
                                 Lista de Inscripciones
                             </h3>
                             <table className="min-w-full divide-y divide-gray-200 border">

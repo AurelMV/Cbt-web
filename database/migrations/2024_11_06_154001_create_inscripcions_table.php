@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('turno', 40);
             $table->timestamp('fechaInscripcion');
-            $table->boolean('estadopago');
+            $table->string('estadopago',20);
             $table->unsignedBigInteger('idEstudiante');
             $table->unsignedBigInteger('idprogramaestudios');
             $table->unsignedBigInteger('idusuarios');

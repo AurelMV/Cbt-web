@@ -49,6 +49,7 @@ export default function Estudiantes() {
     return (
         <AuthenticatedLayout>
             <div>
+
                 <h2 className="text-xl font-semibold text-black">GESTION DE ESTUDIANTES</h2>
                 <p className="leading-tight text-gray-400">Administra a los estudiantes que se han inscrito</p>
                 <div>
@@ -56,6 +57,7 @@ export default function Estudiantes() {
                 </div>
                 {/* Tabla de estudiantes */}
               
+
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr>
