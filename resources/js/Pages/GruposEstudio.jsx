@@ -15,7 +15,7 @@ export default function GruposEstudio() {
     const reducirAforo = () => setAforo((prev) => (prev > 0 ? prev - 1 : 0));
     const limpiarFormulario = () => {
         setNombreGrupo("");
-        setAforo(40);
+        setAforo(0);
         setEstadoGrupo("");
         setCiclo("");
     };

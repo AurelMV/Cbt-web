@@ -4,8 +4,6 @@ import { useState } from "react";
 import { Inertia } from "@inertiajs/inertia";
 
 export default function Docentes() {
-
-
     const { docentes } = usePage().props;
     const [nombre, setNombre] = useState("");
     const [apellido_paterno, setApellidoPaterno] = useState("");
@@ -19,8 +17,6 @@ export default function Docentes() {
     const [idDocente, setIdDocente] = useState("");
     const [isModalOpen, setIsModalOpen] = useState(false);
 
-
-    
     const handleSubmit = (e) => {
         e.preventDefault();
         Inertia.post(route("docentes.store"), {
@@ -36,15 +32,6 @@ export default function Docentes() {
         });
     };
 
-
-
-
-
-
-
-
-
-
     const handleSubmitEdit = (e) => {
         e.preventDefault();
         Inertia.put(route("docentes.update", idDocente), {
@@ -58,15 +45,7 @@ export default function Docentes() {
             email,
             estado,
         });
-    };   
-
-
-
-
-
-
-
-
+    };
 
     const handleEdit = (docente) => {
         setIdDocente(docente.id);
@@ -82,13 +61,28 @@ export default function Docentes() {
         setIsModalOpen(true);
     };
 
+    const clearForm = () => {
+        setNombre("");
+        setApellidoPaterno("");
+        setApellidoMaterno("");
+        setDni("");
+        setSexo("");
+        setCelular("");
+        setFechaNacimiento("");
+        setEmail("");
+        setEstado("");
+        setIsModalOpen(false);
+    };
+
     return (
         <AuthenticatedLayout>
             <Head title="Docentes" />
             <h2 className="text-xl font-semibold leading-tight text-black">
                 DOCENTES
             </h2>
-            <p className="leading-tight text-gray-400">Registre y administre a sus docentes</p>
+            <p className="leading-tight text-gray-400">
+                Registre y administre a sus docentes
+            </p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 border border-gray-300">
@@ -101,118 +95,207 @@ export default function Docentes() {
                                     onSubmit={handleSubmit}
                                     className="grid grid-cols-3 gap-3"
                                 >
-                                    <input
-                                        type="text"
-                                        placeholder="Nombre"
-                                        value={nombre}
-                                        className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) =>
-                                            setNombre(e.target.value)
-                                        }
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="Apellido Paterno"
-                                        value={apellido_paterno}
-                                        className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) =>
-                                            setApellidoPaterno(e.target.value)
-                                        }
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="Apellido Materno"
-                                        value={apellido_materno}
-                                        className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) =>
-                                            setApellidoMaterno(e.target.value)
-                                        }
-                                        required
-                                    />
-                                    <input
-                                        type="text"
-                                        placeholder="DNI"
-                                        value={dni}
-                                        className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) => setDni(e.target.value)}
-                                        pattern="[0-9]{8}"
-                                        inputMode="numeric"
-                                        onInput={(e) =>
-                                            (e.target.value =
-                                                e.target.value.slice(0, 8))
-                                        }
-                                        required
-                                    />
-                                    <select
-                                        value={sexo}
-                                        className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) =>
-                                            setSexo(e.target.value)
-                                        }
-                                        required
-                                    >
-                                        <option value="" selected disabled>
+                                    <div>
+                                        <label
+                                            htmlFor="nombre"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
+                                            Nombres
+                                        </label>
+                                        <input
+                                            id="nombre"
+                                            type="text"
+                                            placeholder="Nombres"
+                                            value={nombre}
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            onChange={(e) =>
+                                                setNombre(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="apellido_paterno"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
+                                            Apellido Paterno
+                                        </label>
+                                        <input
+                                            id="apellido_paterno"
+                                            type="text"
+                                            placeholder="Apellido Paterno"
+                                            value={apellido_paterno}
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            onChange={(e) =>
+                                                setApellidoPaterno(
+                                                    e.target.value
+                                                )
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="apellido_materno"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
+                                            Apellido Materno
+                                        </label>
+                                        <input
+                                            id="apellido_materno"
+                                            type="text"
+                                            placeholder="Apellido Materno"
+                                            value={apellido_materno}
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            onChange={(e) =>
+                                                setApellidoMaterno(
+                                                    e.target.value
+                                                )
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="dni"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
+                                            DNI
+                                        </label>
+                                        <input
+                                            id="dni"
+                                            type="text"
+                                            placeholder="DNI"
+                                            value={dni}
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            onChange={(e) =>
+                                                setDni(e.target.value)
+                                            }
+                                            pattern="[0-9]{8}"
+                                            inputMode="numeric"
+                                            onInput={(e) =>
+                                                (e.target.value =
+                                                    e.target.value.slice(0, 8))
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="sexo"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
                                             Sexo
-                                        </option>
-                                        <option value="Masculino">
-                                            Masculino
-                                        </option>
-                                        <option value="Femenino">
-                                            Femenino
-                                        </option>
-                                    </select>
-                                    <input
-                                        type="tel"
-                                        placeholder="Número de Celular"
-                                        value={celular}
-                                        className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) =>
-                                            setCelular(e.target.value)
-                                        }
-                                        pattern="[0-9]{9}"
-                                        inputMode="numeric"
-                                        onInput={(e) =>
-                                            (e.target.value =
-                                                e.target.value.slice(0, 9))
-                                        }
-                                        required
-                                    />
-                                    <input
-                                        type="date"
-                                        placeholder="Fecha de Nacimiento"
-                                        value={fecha_nacimiento}
-                                        className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) =>
-                                            setFechaNacimiento(e.target.value)
-                                        }
-                                        required
-                                    />
-                                    <input
-                                        type="email"
-                                        placeholder="Email"
-                                        value={email}
-                                        className="col-span-1 border p-2 rounded-md"
-                                        onChange={(e) =>
-                                            setEmail(e.target.value)
-                                        }
-                                        required
-                                    />
-                                    <select
-                                        value={estado}
-                                        onChange={(e) =>
-                                            setEstado(e.target.value)
-                                        }
-                                        className="col-span-1 border p-2 rounded-md"
-                                        required
-                                    >
-                                        <option value="" selected disabled>
+                                        </label>
+                                        <select
+                                            id="sexo"
+                                            value={sexo}
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            onChange={(e) =>
+                                                setSexo(e.target.value)
+                                            }
+                                            required
+                                        >
+                                            <option value="" selected disabled>
+                                                Sexo
+                                            </option>
+                                            <option value="Masculino">
+                                                Masculino
+                                            </option>
+                                            <option value="Femenino">
+                                                Femenino
+                                            </option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="celular"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
+                                            Celular
+                                        </label>
+                                        <input
+                                            id="celular"
+                                            type="tel"
+                                            placeholder="Número de Celular"
+                                            value={celular}
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            onChange={(e) =>
+                                                setCelular(e.target.value)
+                                            }
+                                            pattern="[0-9]{9}"
+                                            inputMode="numeric"
+                                            onInput={(e) =>
+                                                (e.target.value =
+                                                    e.target.value.slice(0, 9))
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="fecha_nacimiento"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
+                                            Fecha de Nacimiento
+                                        </label>
+                                        <input
+                                            id="fecha_nacimiento"
+                                            type="date"
+                                            placeholder="Fecha de Nacimiento"
+                                            value={fecha_nacimiento}
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            onChange={(e) =>
+                                                setFechaNacimiento(
+                                                    e.target.value
+                                                )
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="email"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
+                                            Correo Electrónico
+                                        </label>
+                                        <input
+                                            id="email"
+                                            type="email"
+                                            placeholder="Email"
+                                            value={email}
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            onChange={(e) =>
+                                                setEmail(e.target.value)
+                                            }
+                                            required
+                                        />
+                                    </div>
+                                    <div>
+                                        <label
+                                            htmlFor="estado"
+                                            className="block text-sm font-medium text-gray-800"
+                                        >
                                             Estado
-                                        </option>
-                                        <option value="1">Activo</option>
-                                        <option value="0">Inactivo</option>
-                                    </select>
+                                        </label>
+                                        <select
+                                            id="estado"
+                                            value={estado}
+                                            onChange={(e) =>
+                                                setEstado(e.target.value)
+                                            }
+                                            className="col-span-1 border p-2 rounded-md w-full"
+                                            required
+                                        >
+                                            <option value="" selected disabled>
+                                                Estado
+                                            </option>
+                                            <option value="1">Activo</option>
+                                            <option value="0">Inactivo</option>
+                                        </select>
+                                    </div>
                                     <div className="space-x-2 grid grid-cols-3 items-center">
                                         <button
                                             type="submit"
@@ -313,10 +396,6 @@ export default function Docentes() {
                 </div>
             </div>
 
-
-
-
-
             {isModalOpen && (
                 <div
                     className="fixed z-10 inset-0 overflow-y-auto"
@@ -359,131 +438,241 @@ export default function Docentes() {
                                                     type="hidden"
                                                     value={idDocente}
                                                 />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Nombre"
-                                                    value={nombre}
-                                                    onChange={(e) =>
-                                                        setNombre(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Apellido Paterno"
-                                                    value={apellido_paterno}
-                                                    onChange={(e) =>
-                                                        setApellidoPaterno(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                />
-                                                <input
-                                                    type="text"
-                                                    placeholder="Apellido Materno"
-                                                    value={apellido_materno}
-                                                    onChange={(e) =>
-                                                        setApellidoMaterno(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                />
-                                                <input
-                                                    type="text"
-                                                    placeholder="DNI"
-                                                    value={dni}
-                                                    onChange={(e) =>
-                                                        setDni(e.target.value)
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                />
-                                                <select
-                                                    value={sexo}
-                                                    onChange={(e) =>
-                                                        setSexo(e.target.value)
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                >
-                                                    <option value="" disabled>
+                                                <div>
+                                                    <label
+                                                        htmlFor="nombre"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
+                                                        Nombres
+                                                    </label>
+                                                    <input
+                                                        id="nombre"
+                                                        type="text"
+                                                        placeholder="Nombres"
+                                                        value={nombre}
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        onChange={(e) =>
+                                                            setNombre(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor="apellido_paterno"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
+                                                        Apellido Paterno
+                                                    </label>
+                                                    <input
+                                                        id="apellido_paterno"
+                                                        type="text"
+                                                        placeholder="Apellido Paterno"
+                                                        value={apellido_paterno}
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        onChange={(e) =>
+                                                            setApellidoPaterno(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor="apellido_materno"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
+                                                        Apellido Materno
+                                                    </label>
+                                                    <input
+                                                        id="apellido_materno"
+                                                        type="text"
+                                                        placeholder="Apellido Materno"
+                                                        value={apellido_materno}
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        onChange={(e) =>
+                                                            setApellidoMaterno(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor="dni"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
+                                                        DNI
+                                                    </label>
+                                                    <input
+                                                        id="dni"
+                                                        type="text"
+                                                        placeholder="DNI"
+                                                        value={dni}
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        onChange={(e) =>
+                                                            setDni(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        pattern="[0-9]{8}"
+                                                        inputMode="numeric"
+                                                        onInput={(e) =>
+                                                            (e.target.value =
+                                                                e.target.value.slice(
+                                                                    0,
+                                                                    8
+                                                                ))
+                                                        }
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor="sexo"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
                                                         Sexo
-                                                    </option>
-                                                    <option value="Masculino">
-                                                        Masculino
-                                                    </option>
-                                                    <option value="Femenino">
-                                                        Femenino
-                                                    </option>
-                                                </select>
-                                                <input
-                                                    type="text"
-                                                    placeholder="Celular"
-                                                    value={celular}
-                                                    onChange={(e) =>
-                                                        setCelular(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                />
-                                                <input
-                                                    type="date"
-                                                    value={fecha_nacimiento}
-                                                    onChange={(e) =>
-                                                        setFechaNacimiento(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                />
-                                                <input
-                                                    type="email"
-                                                    placeholder="Email"
-                                                    value={email}
-                                                    onChange={(e) =>
-                                                        setEmail(e.target.value)
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                />
-                                                <select
-                                                    value={estado}
-                                                    onChange={(e) =>
-                                                        setEstado(
-                                                            e.target.value
-                                                        )
-                                                    }
-                                                    className="w-full border p-3 rounded-md"
-                                                    required
-                                                >
-                                                    <option value="" disabled>
+                                                    </label>
+                                                    <select
+                                                        id="sexo"
+                                                        value={sexo}
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        onChange={(e) =>
+                                                            setSexo(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        required
+                                                    >
+                                                        <option
+                                                            value=""
+                                                            selected
+                                                            disabled
+                                                        >
+                                                            Sexo
+                                                        </option>
+                                                        <option value="Masculino">
+                                                            Masculino
+                                                        </option>
+                                                        <option value="Femenino">
+                                                            Femenino
+                                                        </option>
+                                                    </select>
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor="celular"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
+                                                        Celular
+                                                    </label>
+                                                    <input
+                                                        id="celular"
+                                                        type="tel"
+                                                        placeholder="Número de Celular"
+                                                        value={celular}
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        onChange={(e) =>
+                                                            setCelular(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        pattern="[0-9]{9}"
+                                                        inputMode="numeric"
+                                                        onInput={(e) =>
+                                                            (e.target.value =
+                                                                e.target.value.slice(
+                                                                    0,
+                                                                    9
+                                                                ))
+                                                        }
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor="fecha_nacimiento"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
+                                                        Fecha de Nacimiento
+                                                    </label>
+                                                    <input
+                                                        id="fecha_nacimiento"
+                                                        type="date"
+                                                        placeholder="Fecha de Nacimiento"
+                                                        value={fecha_nacimiento}
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        onChange={(e) =>
+                                                            setFechaNacimiento(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor="email"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
+                                                        Correo Electrónico
+                                                    </label>
+                                                    <input
+                                                        id="email"
+                                                        type="email"
+                                                        placeholder="Email"
+                                                        value={email}
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        onChange={(e) =>
+                                                            setEmail(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        required
+                                                    />
+                                                </div>
+                                                <div>
+                                                    <label
+                                                        htmlFor="estado"
+                                                        className="block text-sm font-medium text-gray-800"
+                                                    >
                                                         Estado
-                                                    </option>
-                                                    <option value="1">
-                                                        Activo
-                                                    </option>
-                                                    <option value="0">
-                                                        Inactivo
-                                                    </option>
-                                                </select>
+                                                    </label>
+                                                    <select
+                                                        id="estado"
+                                                        value={estado}
+                                                        onChange={(e) =>
+                                                            setEstado(
+                                                                e.target.value
+                                                            )
+                                                        }
+                                                        className="col-span-1 border p-2 rounded-md w-full"
+                                                        required
+                                                    >
+                                                        <option
+                                                            value=""
+                                                            selected
+                                                            disabled
+                                                        >
+                                                            Estado
+                                                        </option>
+                                                        <option value="1">
+                                                            Activo
+                                                        </option>
+                                                        <option value="0">
+                                                            Inactivo
+                                                        </option>
+                                                    </select>
+                                                </div>
                                                 <div className="flex justify-end space-x-3 mt-6">
                                                     <button
                                                         type="button"
-                                                        onClick={() =>
-                                                            setIsModalOpen(
-                                                                false
-                                                            )
-                                                        }
+                                                        onClick={clearForm}
                                                         className="bg-red-600 text-white px-4 py-2 rounded-md hover:bg-red-500"
                                                     >
                                                         Cancelar
