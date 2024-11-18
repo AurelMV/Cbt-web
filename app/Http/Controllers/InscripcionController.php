@@ -21,25 +21,39 @@ use Illuminate\Support\Facades\DB;
 class InscripcionController extends Controller
 {
     public function index()
+    {
+        $pagos = Pago::all();    $inscripciones = DB::table('inscripcions')
+        ->join('estudiantes', 'inscripcions.idEstudiante', '=', 'estudiantes.id')
+        ->join('programa_estudios', 'inscripcions.idprogramaestudios', '=', 'programa_estudios.id')
+        ->join('ciclos', 'inscripcions.idciclo', '=', 'ciclos.id')
+        ->join('grupos', 'inscripcions.idGrupos', '=', 'grupos.id')
+        ->select(
+            'inscripcions.id',
+            'inscripcions.turno',
+            'inscripcions.fechaInscripcion',
+            DB::raw("CASE WHEN inscripcions.estadopago = 1 THEN 'Pagado' ELSE 'Deudor' END as estadopago"),  // Transformar el valor de estadopago
+            'estudiantes.nombres as estudiante_nombres',
+            'ciclos.nombre as ciclo_nombre',
+            'programa_estudios.nombre_programa as programa_nombre',
+            'grupos.nombre as grupo_nombre'
+        )
+        ->paginate(10);
 
-    {  $inscripciones = Inscripcion::with(['estudiante', 'programaEstudios', 'cicloInscripcion', 'grupo'])->paginate(10);
-        
+    // Consultar los datos adicionales necesarios para el formulario o lista de selección
+    $estudiantes = DB::table('estudiantes')->select('id', 'nombres', 'aPaterno', 'aMaterno')->get();
+    $programaEstudio = DB::table('programa_estudios')->select('id', 'nombre_programa')->get();
+    $ciclosInscripcion = DB::table('ciclos')->select('id', 'nombre')->get();
+    $grupos = DB::table('grupos')->select('id', 'nombre')->get();
 
-        
-        $estudiantes = Estudiante::all();
-        $programaEstudio=ProgramaEstudio::all();
-        $ciclosInscripcion= Ciclo::all();
-        $grupos=Grupo::all();
-    
-        return Inertia::render('GestionInscripciones', [
-            'inscripciones' => $inscripciones,
-            'estudiantes' => $estudiantes, 
-            'programaEstudio'=> $programaEstudio,
-            'ciclosInscripcion'=>$ciclosInscripcion,
-            'grupos'=>$grupos,
-        ]);
-      
-
+    // Retornar los datos a la vista con Inertia
+    return Inertia::render('GestionInscripciones', [
+        'inscripciones' => $inscripciones,
+        'estudiantes' => $estudiantes,
+        'programaEstudio' => $programaEstudio,
+        'ciclosInscripcion' => $ciclosInscripcion,
+        'grupos' => $grupos,
+        'pagos' => $pagos
+    ]);
     }
 
 
@@ -188,36 +202,37 @@ class InscripcionController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
-    {
-        $validator = Validator::make($request->all(), [
-            'turno' => 'required|string|max:40',
-            'fechaInscripcion' => 'required|date',
-            'estadopa' => 'required|boolean',
-            'idEstudiante' => 'required|string|exists:estudiantes,idEstudiante',
-            'idprogramaestudios' => 'required|integer|exists:programaestudios,idprogramaestudios',
-            'idciclo' => 'required|integer|exists:cicloInscripcion,idciclo',
-            'idGrupos' => 'required|integer|exists:grupos,idGrupos'
+    // En InscripcionController
+public function update(Request $request, $id)
+{
+    // Buscar la inscripción por ID
+    $inscripcion = Inscripcion::findOrFail($id);
 
-        ]);
+    // Validar los datos (opcional)
+    $request->validate([
+        'turno' => 'required|string|max:255',
+        'fechaInscripcion' => 'required|date',
+        'estadopago' => 'required|string|max:20',
+        'idEstudiante' => 'required|exists:estudiantes,id',
+        'idprogramaestudios' => 'required|exists:programa_estudios,id',
+        'idciclo' => 'required|exists:ciclos,id',
+        'idGrupos' => 'required|exists:grupos,id',
+    ]);
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Error en actualizar Inscripcion',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+    // Actualizar la inscripción
+    $inscripcion->update([
+        'turno' => $request->turno,
+        'fechaInscripcion' => $request->fechaInscripcion,
+        'estadopago' => $request->estadopago,
+        'idEstudiante' => $request->idEstudiante,
+        'idprogramaestudios' => $request->idprogramaestudios,
+        'idciclo' => $request->idciclo,
+        'idGrupos' => $request->idGrupos,
+    ]);
 
-        $inscripcion = Inscripcion::findOrFail($id);
-        $inscripcion->update($request->all());
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Inscripcion Actualizado ',
-            'data' => $inscripcion
-        ], 200);
-    }
+    // Redirigir con éxito
+    return redirect()->route('inscripciones.index')->with('success', 'Inscripción actualizada con éxito');
+}
 
     /**
      * Remove the specified resource from storage.
@@ -233,6 +248,19 @@ class InscripcionController extends Controller
         ], 204);
     }
 
+
+    public function editarInscripcion($id)
+{
+    // Obtener la inscripción por su ID
+    $inscripcion = Inscripcion::with('estudiante', 'programaEstudio', 'ciclo', 'grupo')
+        ->findOrFail($id);
+
+    // Retornar los datos al frontend (React)
+    return response()->json($inscripcion);
+}
+
+  
+    
 
 
 
