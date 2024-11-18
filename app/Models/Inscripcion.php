@@ -22,25 +22,40 @@ class Inscripcion extends Model
         'idGrupos',
     ];
 
+
+
     public function estudiante()
     {
         return $this->belongsTo(Estudiante::class, 'idEstudiante', 'id');
     }
-
-    public function programaEstudios()
+    
+    public function programaEstudio()
     {
         return $this->belongsTo(ProgramaEstudio::class, 'idprogramaestudios', 'id');
     }
-
+    
     public function cicloInscripcion()
     {
         return $this->belongsTo(Ciclo::class, 'idciclo', 'id');
     }
-
+    
     public function grupo()
     {
         return $this->belongsTo(Grupo::class, 'idGrupos', 'id');
     }
+    
+
+
+
+
+
+
+
+
+
+
+
+   
 
     public function pagos()
     {
