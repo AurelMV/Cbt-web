@@ -19,13 +19,9 @@ Route::get('/Colegio/Busqueda/{id}',[ColegioController::class,'BusquedaCodModula
 Route::apiResource('/Distrito',DistritoController::class);
 Route::get('/Distrito/Consulta/{id}',[DistritoController::class,'Consulta']);
 Route::apiResource('/Provincia',ProvinciaController::class);
+
+Route::get('/Provincia/Consulta/{id}',[ProvinciaController::class,'Consulta']);
 Route::apiResource('/Departamento',DepartamentoController::class);
-
 Route::post('/registrar-inscripcion-pago', [InscripcionController::class, 'registrarInscripcionYpago']);
-
 Route::get('/api/inscripcion/{id}', [InscripcionController::class, 'editarInscripcion']);
-
-
-
-
 

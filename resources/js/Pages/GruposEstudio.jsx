@@ -33,16 +33,16 @@ export default function GruposEstudio() {
         <AuthenticatedLayout>
             <Head title="Grupos de Estudio" />
 
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
-                Grupos de Estudio
+            <h2 className="text-xl font-semibold leading-tight text-black">
+                GRUPO DE ESTUDIO
             </h2>
-
+            <p className="leading-tight text-gray-400 ">Registre grupos de estudio </p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 border border-gray-300">
                         <div className="grid grid-cols-2 gap-8">
                             <div>
-                                <h3 className="text-md font-medium mb-4">
+                                <h3 className="text-md font-medium mb-4 text-blue-900">
                                     Datos del Grupo de Estudio
                                 </h3>
                                 <form
@@ -151,7 +151,7 @@ export default function GruposEstudio() {
                             </div>
 
                             <div>
-                                <h3 className="text-md font-medium mb-4">
+                                <h3 className="text-md font-medium mb-4 text-blue-900">
                                     Grupos de Estudio Registrados
                                 </h3>
                                 <div className="flex items-center space-x-2 mb-4">

@@ -49,9 +49,15 @@ export default function Estudiantes() {
     return (
         <AuthenticatedLayout>
             <div>
-                <h2 className="text-xl font-semibold">Gestión de Estudiantes</h2>
 
+                <h2 className="text-xl font-semibold text-black">GESTION DE ESTUDIANTES</h2>
+                <p className="leading-tight text-gray-400">Administra a los estudiantes que se han inscrito</p>
+                <div>
+                    {/*tmr x q no hay los otros div xd....aqui dentro tenia que ir con sus propiedades pex */}
+                </div>
                 {/* Tabla de estudiantes */}
+              
+
                 <table className="min-w-full divide-y divide-gray-200">
                     <thead>
                         <tr>
@@ -211,3 +217,4 @@ export default function Estudiantes() {
         </AuthenticatedLayout>
     );
 }
+

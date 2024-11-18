@@ -1,6 +1,4 @@
 
-
-
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 
@@ -12,11 +10,11 @@ export default function AuthenticatedLayout({children }) {
  
     return (
         <div className="flex flex-col min-h-screen">
-            <header className="w-full bg-red-700 p-4 shadow-md flex justify-between items-center">
+            <header className="w-full bg-gradient-to-r from-blue-500 to-green-500 p-3 shadow-md flex justify-between items-center">
                 
                 <div className="flex items-center">
                     <img src="https://cbt.istta.edu.pe/assets/images/img.png" width={50} height={50} />
-                    <h1 className="ml-4 text-white text-2xl font-semibold">CICLO BASICO TECNOLOGICO </h1>
+                    <h1 className="ml-4 text-white text-2xl font-semibold">Intituto Tupac Amaru - CBT  </h1>
                 </div>
                 <div>
                     <Dropdown>
@@ -24,7 +22,7 @@ export default function AuthenticatedLayout({children }) {
                             <span className="inline-flex w-full rounded-md">
                                 <button
                                     type="button"
-                                    className="inline-flex w-full items-center justify-between rounded-md border border-transparent bg-yellow-500 px-4 py-2 text-sm font-medium text-black transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
+                                    className="inline-flex w-full items-center justify-between rounded-md border border-transparent bg-blue-400 px-4 py-2 text-sm font-medium text-black transition duration-150 ease-in-out hover:text-gray-700 focus:outline-none"
                                 >
                                     {user.name}
                                     <svg
@@ -129,14 +127,14 @@ export default function AuthenticatedLayout({children }) {
                             active={route().current('docentes.index')}
                         >
                             Docentes
-                            <h1 className='text-gray-400'>_____</h1>
+                            <h1 className='text-gray-300'>_____</h1>
                         </NavLink>
                                                     <Dropdown>
                                     <Dropdown.Trigger>
                                         <span className="inline-flex w-full rounded-md">
                                             <button
                                                 type="button"
-                                                className="inline-flex w-full"
+                                                className="inline-flex w-full text-black"
                                             >
                                                 <svg
                                                     className="h-4 w-4 ml-2"
@@ -208,7 +206,7 @@ export default function AuthenticatedLayout({children }) {
                     
 
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                        <img src="https://cdn-icons-png.flaticon.com/512/69/69517.png" width={30} height={30} />
+                        <img src="https://cdn-icons-png.flaticon.com/512/841/841791.png" width={30} height={30} />
                         <NavLink
                             href={route('reportes.index')}
                             active={route().current('reportes.index')}
@@ -229,7 +227,7 @@ export default function AuthenticatedLayout({children }) {
                     </div>
                 </nav>
 
-                    <main className="flex-1 p-6 bg-">
+                    <main className="flex-1 p-6 ">
                         
                         {children}
                     </main>

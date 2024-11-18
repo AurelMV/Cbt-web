@@ -85,15 +85,16 @@ export default function Docentes() {
     return (
         <AuthenticatedLayout>
             <Head title="Docentes" />
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
-                Docentes
+            <h2 className="text-xl font-semibold leading-tight text-black">
+                DOCENTES
             </h2>
+            <p className="leading-tight text-gray-400">Registre y administre a sus docentes</p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 border border-gray-300">
                         <div className="grid grid-cols-1 gap-8">
                             <div>
-                                <h3 className="text-md font-medium mb-4">
+                                <h3 className="text-md font-medium mb-4 text-blue-900">
                                     Datos del Docente
                                 </h3>
                                 <form
@@ -224,7 +225,7 @@ export default function Docentes() {
                             </div>
 
                             <div>
-                                <h3 className="text-md font-medium mb-4">
+                                <h3 className="text-md font-medium mb-4 text-blue-900">
                                     Listado de Docentes
                                 </h3>
                                 <table className="min-w-full divide-y divide-gray-200 border">

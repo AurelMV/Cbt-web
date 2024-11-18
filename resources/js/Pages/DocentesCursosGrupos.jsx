@@ -43,15 +43,15 @@ export default function DocentesCursosGrupos() {
         <AuthenticatedLayout>
             <Head title="Docentes Cursos Grupos" />
 
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
-                Docentes - Cursos - Grupos
+            <h2 className=" text-xl font-semibold leading-tight text-black">
+                DOCENTES - CURSOS - GRUPOS 
             </h2>
-
+            <p className="leading-tight text-gray-400">Registre a un docente a los cursos que dictara y al grupo al que pertenecera</p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 border border-gray-300">
                         {/* Tabla de Docentes Activos */}
-                        <h3 className="text-md font-medium mb-4">Lista de Docentes Activos</h3>
+                        <h3 className="text-md font-medium mb-4 text-blue-900">Lista de Docentes Activos</h3>
                         <table className="min-w-full divide-y divide-gray-200 border mb-6">
                             <thead className="bg-gray-50">
                                 <tr>
@@ -84,7 +84,7 @@ export default function DocentesCursosGrupos() {
                         </table>
 
                         {/* Formulario de Registro de Curso, Grupo, Docente */}
-                        <h3 className="text-md font-medium mb-4">Registro de Curso, Grupo y Docente</h3>
+                        <h3 className="text-md font-medium mb-4 text-blue-900">Registro de Curso, Grupo y Docente</h3>
                         <form className="space-y-4">
                         <select
                                 value={curso}
@@ -143,7 +143,7 @@ export default function DocentesCursosGrupos() {
                         </form>
 
                         {/* Tabla de Relaciones Docente - Curso - Grupo */}
-                        <h3 className="text-md font-medium mt-8 mb-4">Relación de Docentes, Cursos y Grupos</h3>
+                        <h3 className="text-md font-medium mt-8 mb-4 text-blue-900">Relación de Docentes, Cursos y Grupos</h3>
                         <table className="min-w-full divide-y divide-gray-200 border">
                             <thead className="bg-gray-50">
                                 <tr>

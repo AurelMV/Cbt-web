@@ -44,18 +44,17 @@ export default function GestionPagos({
     return (
         <AuthenticatedLayout>
             <Head title="Gestion de Pagos" />
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
-                Gestion de Pagos
+            <h2 className="text-xl font-semibold leading-tight text-black">
+                GESTION DE PAGOS 
             </h2>
+            <p className="leading-tight text-gray-400">Mira los pagos hechos por los estudiantes o completa el pago de alguno</p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg border border-gray-300">
                         <div className="p-6 text-gray-900">
                             <div className="grid grid-cols-5 gap-8">
                                 <div className="col-span-1">
-                                    <h3 className="text-md font-medium mb-4">
-                                        Formulario de Pago
-                                    </h3>
+                                    <h3 className="text-md font-medium mb-4 text-blue-900">Formulario de Pago</h3>
                                     <form className="space-y-4">
                                         <input
                                             type="text"
@@ -114,14 +113,8 @@ export default function GestionPagos({
                                 </div>
                                 <div className="col-span-4">
                                     <div className="mb-8">
-                                        <h3 className="text-md font-medium mb-4">
-                                            Lista de Pagos
-                                        </h3>
-                                        <input
-                                            type="text"
-                                            placeholder="Buscar pago"
-                                            className=" border p-2 rounded-md mb-4"
-                                        />
+                                        <h3 className="text-md font-medium mb-4 text-blue-900">Lista de Pagos</h3>
+                                        <input type="text" placeholder="Buscar pago" className=" border p-2 rounded-md mb-4" />
                                         <table className="min-w-full border divide-y divide-gray-200">
                                             <thead className="bg-gray-50">
                                                 <tr>
@@ -172,15 +165,9 @@ export default function GestionPagos({
 
                                     {showStudentList && (
                                         <div>
-                                            <h3 className="text-md font-medium mb-4">
-                                                Lista de Estudiantes Inscritos
-                                            </h3>
-                                            <input
-                                                type="text"
-                                                placeholder="Buscar pago"
-                                                className=" border p-2 rounded-md mb-4"
-                                            />
-                                            <table className="min-w-full divide-y divide-gray-200 border">
+                                            <h3 className="text-md font-medium mb-4 text-blue-900">Lista de Estudiantes Inscritos</h3>
+                                            <input type="text" placeholder="Buscar pago" className=" border p-2 rounded-md mb-4" />
+                                            <table className="min-w-full border divide-y divide-gray-200">
                                                 <thead className="bg-gray-50">
                                                     <tr>
                                                         <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
