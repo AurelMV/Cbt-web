@@ -5,6 +5,10 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Pago;
 use App\Http\Requests\StorePagoRequest;
 use App\Http\Requests\UpdatePagoRequest;
+use App\Models\Ciclo;
+use App\Models\Estudiante;
+use App\Models\Grupo;
+use App\Models\ProgramaEstudio;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -28,13 +32,15 @@ class PagoController extends Controller
             'programa_estudios.nombre_programa as programa_nombre',
             'grupos.nombre as grupo_nombre'
         )
-        ->paginate(10);
+        ->paginate(2);
     
     // Consultar los datos adicionales necesarios para el formulario o lista de selección
     $estudiantes = DB::table('estudiantes')->select('id', 'nombres', 'aPaterno', 'aMaterno')->get();
     $programaEstudio = DB::table('programa_estudios')->select('id', 'nombre_programa')->get();
     $ciclosInscripcion = DB::table('ciclos')->select('id', 'nombre')->get();
-    $grupos = DB::table('grupos')->select('id', 'nombre')->get();
+    $grupos = DB::table('grupos')->select('id', 'nombre')->paginate(10);
+
+
     
     // Retornar los datos a la vista con Inertia
     return Inertia::render('GestiondePagos', [
@@ -47,16 +53,39 @@ class PagoController extends Controller
     
     }
 
-public function listadoInscripcion(){
+public function listadoDePagos(){
+    
+      $pagos = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.cicloInscripcion', 'inscripcion.grupo'])
+      ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher','idInscripcion')
+      ->paginate(5);
 
-   
+  // Formatear el campo `estado_pago`
+  $pagos->getCollection()->transform(function ($pago) {
+      $pago->estado_pago = $pago->estado_pago == 1 ? 'Pagado' : 'Pendiente';  // Ajusta según tu lógica
+      return $pago;
+  });
+
+  // Obtener los datos adicionales para el formulario
+  
+
+  return response()->json(
+  
+        $pagos, // O cualquier otro dato que estés pasando
+ 
+    
+
+   /* return response()->json([
+        'pagos' => $pagos,*/
+      
+    );
 
 
-
-
-
+ 
 
 }
+
+
+
 
 
 
@@ -74,14 +103,13 @@ public function listadoInscripcion(){
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'idPagos' => 'required|string|max:20',
             'fecha' => 'required|date',
-            'monto' => 'required|integer',
+            'monto' => 'required|regex:/^\d+$/', // Permite cadenas numéricas
             'medioPago' => 'required|string|max:20',
             'nroVoucher' => 'required|string|max:10',
-            'idInscripcion' => 'required|integer|exists:inscripcion,idInscripcion'
+            'idInscripcion' => 'required|regex:/^\d+$/|exists:inscripcions,id',
         ]);
-
+        
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -124,6 +152,28 @@ public function listadoInscripcion(){
     public function edit(Pago $pago)
     {
         //
+    }
+
+
+    public function editarPago(Request $request, $id)
+    {
+        $pago = Pago::findOrFail($id);
+
+        // Validar los datos entrantes
+        $request->validate([
+            'monto' => 'required|numeric',
+            'medioPago' => 'required|string',
+            'nroVoucher' => 'required|string',
+        ]);
+
+        // Actualizar los datos del pago
+        $pago->update([
+            'monto' => $request->input('monto'),
+            'medioPago' => $request->input('medioPago'),
+            'nroVoucher' => $request->input('nroVoucher'),
+        ]);
+
+        return response()->json(['message' => 'Pago actualizado correctamente']);
     }
 
     /**
