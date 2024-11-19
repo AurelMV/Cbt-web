@@ -20,7 +20,11 @@ return new class extends Migration
         $user = User::create([
             'name' => 'admin',
             'email' => 'coordinador@gmail.com',
-            'password' => bcrypt('12345678')
+            'password' => bcrypt('12345678'),
+            'nombres' => 'Paulo Cesar',
+            'a_paterno' => 'Masias',
+            'a_materno' => 'Zanabria',
+            'estado' => 'activo'
         ]);
 
         $user -> assignRole($role1);

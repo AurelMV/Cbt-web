@@ -62,7 +62,7 @@ Route::get('/enrollment-data', [EnrollmentController::class, 'index'])->name('di
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     Route::resource('ciclos', CicloController::class);
-    Route::resource('cursos', CursoController::class);
+    //Route::resource('cursos', CursoController::class);
     Route::resource('programasEstudio', ProgramaEstudioController::class);
 });
 
