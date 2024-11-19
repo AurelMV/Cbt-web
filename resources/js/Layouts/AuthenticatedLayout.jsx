@@ -14,7 +14,7 @@ export default function AuthenticatedLayout({children }) {
                 
                 <div className="flex items-center">
                     <img src="https://cbt.istta.edu.pe/assets/images/img.png" width={50} height={50} />
-                    <h1 className="ml-4 text-white text-2xl font-semibold">Intituto Tupac Amaru - CBT  </h1>
+                    <h1 className="ml-4 text-white text-2xl font-semibold">Instituto Tupac Amaru - CBT  </h1>
                 </div>
                 <div>
                     <Dropdown>
