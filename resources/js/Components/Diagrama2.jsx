@@ -26,7 +26,7 @@ const DiagramaBarras = () => {
     plugins: {
       title: {
         display: true,
-        text: 'Inscripciones por programa de estudio',
+        
         font: {
           size: 18,
         },

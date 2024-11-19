@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Curso;
+use App\Models\Docente;
 use App\Models\DocenteCurso;
+use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -13,10 +16,28 @@ class DocenteCursoController extends Controller
      */
     public function index()
     {
-        $docenteCursos = DocenteCurso::all();
-
+        $docenteCursos = DocenteCurso::with('docente', 'curso', 'grupo')->get()->map(function ($docenteCurso) {
+            return [
+                'id' => $docenteCurso->id,
+                'docente' => $docenteCurso->docente ? $docenteCurso->docente->nombre . ' ' . $docenteCurso->docente->aPaterno . ' ' . $docenteCurso->docente->aMaterno : 'Sin docente',
+                'idDocente' => $docenteCurso->idDocente,
+                'curso' => $docenteCurso->curso ? $docenteCurso->curso->nombre : 'Sin curso',
+                'idCurso' => $docenteCurso->idCurso,
+                'grupo' => $docenteCurso->grupo ? $docenteCurso->grupo->nombre : 'Sin grupo',
+                'idGrupo' => $docenteCurso->idGrupo,
+            ];
+        });
+        $docentesActivos = Docente::where('estado', 1)
+        ->selectRaw('id, CONCAT(nombre, " ", aPaterno, " ", aMaterno) as nombre_completo')
+        ->get();
+        $cursos = Curso::all();
+        $grupos = Grupo::all();
+        
         return Inertia::render('DocentesCursosGrupos', [
-            'docenteCursos' => $docenteCursos
+            'docenteCursos' => $docenteCursos,
+            'docentesActivos' => $docentesActivos,
+            'cursos' => $cursos,
+            'grupos' => $grupos
         ]);
     }
 
@@ -34,9 +55,9 @@ class DocenteCursoController extends Controller
     public function store(Request $request)
     {
         $validate = $request->validate([
-            'idcurso' => 'required|int',
+            'idCurso' => 'required|int',
             'idDocente' => 'required|int',
-            'idGrupos' => 'required|int',
+            'idGrupo' => 'required|int',
         ]);
 
         DocenteCurso::create($validate);
@@ -70,9 +91,9 @@ class DocenteCursoController extends Controller
     public function update(Request $request, string $id)
     {
         $validate = $request->validate([
-            'idcurso' => 'required|int',
+            'idCurso' => 'required|int',
             'idDocente' => 'required|int',
-            'idGrupos' => 'required|int',
+            'idGrupo' => 'required|int',
         ]);
 
         $docenteCurso = DocenteCurso::findOrFail($id);

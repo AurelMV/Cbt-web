@@ -26,7 +26,7 @@ const DiagraPastel = () => {
     plugins: {
       title: {
         display: true,
-        text: 'Distribución de Inscritos por Género',
+        
         font: {
           size: 18,
         },

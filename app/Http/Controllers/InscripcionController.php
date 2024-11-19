@@ -12,10 +12,8 @@ use App\Models\Pago;
 use App\Models\ProgramaEstudio;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-
-
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class InscripcionController extends Controller
 {
