@@ -238,7 +238,13 @@ export default function Dashboard() {
         });
         return null;
     };
-
+    const handleSelectColegio = (id) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            p_Colegios_id: id, 
+        }));
+        closeModal2(); 
+    };
     const handleSearch = () => {
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}&countrycodes=pe`;
         fetch(url)
@@ -260,6 +266,7 @@ export default function Dashboard() {
                 alert("Hubo un problema al realizar la búsqueda.");
             });
     };
+    console.log(FormData.p_Colegios_id);
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
@@ -758,7 +765,7 @@ export default function Dashboard() {
                                                         {Cole.length > 0 && Cole.map((resultado, index) => (
                                                             <tr key={index}>
                                                                 <td className="border px-4 py-2">
-                                                                    <button onClick={closeModal2} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                                                                    <button onClick={() => handleSelectColegio(resultado.id)} className="px-4 py-2 bg-blue-600 text-white rounded-md">
                                                                         Seleccionar
                                                                     </button>
                                                                 </td>
@@ -951,11 +958,7 @@ export default function Dashboard() {
                                                         <tbody>
                                                         {Cole.length > 0 && Cole.map((resultado, index) => (
                                                             <tr key={index}>
-                                                                <td className="border px-4 py-2">
-                                                                    <button onClick={closeModal2} className="px-4 py-2 bg-blue-600 text-white rounded-md">
-                                                                        Seleccionar
-                                                                    </button>
-                                                                </td>
+                                                                
                                                                 <td className="border px-4 py-2">{resultado.nombrecolegio}</td>
                                                                 <td className="border px-4 py-2">{resultado.codModular}</td>
                                                                 <td className="border px-4 py-2">{resultado.modalidad}</td>
