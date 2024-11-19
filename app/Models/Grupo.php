@@ -20,12 +20,12 @@ class Grupo extends Model
 
 
 
-public function inscripciones()
+    public function inscripciones()
     {
         return $this->hasMany(Inscripcion::class, 'idGrupos', 'id');
     }
 
-    public function docenteCurso() {
-        return $this->belongsTo(DocenteCurso::class);
+    public function docentecurso() {
+        return $this->hasMany(DocenteCurso::class, 'idGrupo', 'id');
     }
 }

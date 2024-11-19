@@ -12,7 +12,7 @@ export default function Estadistias() {
             <Head title="Estudiantes" />
             
             <h2 className="text-xl font-semibold leading-tight text-black">
-                GRAFICOS
+                GRÁFICOS
             </h2>
             <p className="leading-tight text-gray-400">Vea algunos graficos y estadisticas de como esta llendo el cbt</p>
             <div className="py-12">

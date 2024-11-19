@@ -174,7 +174,7 @@ export default function Dashboard() {
 
 
             <h2 className="text-xl font-semibold leading-tight text-black">
-                INSCRIPCIÓNES
+                INSCRIPCIONES
             </h2>
             <p className="leading-tight text-gray-400">Realize inscripciones de nuevos estudiantes y adjunte un pago</p>
             <form onSubmit={handleSubmit}>
@@ -1156,12 +1156,7 @@ export default function Dashboard() {
                         </button>
 
                         </div>
-                        <button
-                            type="submit"
-                            className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                        >
-                            Registrar Estudiante
-                        </button>
+                        
                     </div>
                 </div>
             </form>
