@@ -89,8 +89,22 @@ Route::put('/inscripciones/{id}', [InscripcionController::class, 'update'])->nam
 
 
 
+Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index');
+
+//Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('pagos.listado');
+Route::put('/GestionPagos/{id}', [PagoController::class, 'update']);
 
 
+
+
+
+//es para aser prueva de la inter que no funca 
+Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('pagos.listadoDePagos');
+
+//Route::get('/pagos', [PagoController::class, 'listadoPagos']);
+
+
+Route::put('/editar-pago/{id}', [PagoController::class, 'editarPago']);
 
 require __DIR__.'/auth.php';
 

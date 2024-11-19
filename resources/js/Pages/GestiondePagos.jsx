@@ -1,6 +1,10 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import { useState } from "react";
+
+import Prueva from "./Prueva";
+
+import React, { useState, useEffect } from "react";
+
 function Pagination({ links }) {
     const handlePagination = (url) => {
         if (url) {
@@ -28,17 +32,96 @@ function Pagination({ links }) {
     );
 }
 
-export default function GestionPagos({
-    inscripciones,
-    estudiantes,
-    programaEstudio,
-    ciclosInscripcion,
-    grupos,
-}) {
+export default function GestionPagos({ inscripciones }) {
+    // const [inscripciones, setInscripciones] = useState([]);
+
+    const [pagos, setPagos] = useState([]);
+    const [estudiantes, setEstudiantes] = useState([]);
+    const [programaEstudio, setProgramaEstudio] = useState([]);
+    const [ciclosInscripcion, setCiclosInscripcion] = useState([]);
+    const [grupos, setGrupos] = useState([]);
+    const [pagination, setPagination] = useState(null);
+
+    //Cargar inscripciones
+    useEffect(() => {
+        axios
+            .get("/GestionPagos")
+            .then((response) => {
+                setEstudiantes(response.data.estudiantes);
+                setProgramaEstudio(response.data.programaEstudio);
+                setCiclosInscripcion(response.data.ciclosInscripcion);
+                setGrupos(response.data.grupos);
+            })
+            .catch((error) => {
+                console.error(
+                    "Hubo un error al cargar las inscripciones",
+                    error
+                );
+            });
+    }, []);
+
+    ////------------------------------------------------------aqui se cierra la wea
+
     const [showStudentList, setShowStudentList] = useState(false);
 
     const handleNewPayment = () => {
         setShowStudentList(true);
+    };
+
+    const [selectedInscripcion, setSelectedInscripcion] = useState(null);
+
+    const handleSelectClick = (inscripcion) => {
+        document.querySelector('[name="nombre"]').value =
+            inscripcion.estudiante_nombres;
+        document.querySelector('[name="apellido"]').value = inscripcion.turno;
+        document.querySelector('[name="idInscripcion"]').value = inscripcion.id; // Aquí, por ejemplo, usas el ID de la inscripción
+    };
+
+    // ------------------------zona de registro de pago
+
+    const [fecha, setFecha] = useState("");
+    const [monto, setMonto] = useState("");
+    const [medioPago, setMedioPago] = useState("");
+    const [nroVoucher, setNroVoucher] = useState("");
+    const [idInscripcion, setIdInscripcion] = useState("");
+    const [nombre, setNombre] = useState("");
+    const [apellido, setApellido] = useState("");
+
+    // Función para registrar el pago
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        const pagoData = {
+            fecha: document.querySelector('[name="fecha"]').value,
+            monto: parseInt(document.querySelector('[name="monto"]').value, 10),
+            medioPago: document.querySelector('[name="medioPago"]').value,
+            nroVoucher: document.querySelector('[name="nroVoucher"]').value,
+            idInscripcion: parseInt(
+                document.querySelector('[name="idInscripcion"]').value,
+                10
+            ),
+        };
+
+        // Enviar los datos directamente al controlador
+
+        console.log("Datos enviados:", pagoData);
+
+        axios
+            .post("/api/registrar-pago", pagoData)
+            .then((response) => {
+                console.log("Pago registrado con éxito:", response.data);
+                setFecha("");
+                setMonto("");
+                setMedioPago("");
+                setNombre("");
+                setApellido("");
+                setNroVoucher("");
+                setIdInscripcion("");
+            })
+            .catch((error) => {
+                console.log("Datos enviados:", formData);
+                console.error("Error al registrar el pago:", error);
+            });
     };
 
     return (
@@ -54,50 +137,109 @@ export default function GestionPagos({
                         <div className="p-6 text-gray-900">
                             <div className="grid grid-cols-5 gap-8">
                                 <div className="col-span-1">
-                                    <h3 className="text-md font-medium mb-4 text-blue-900">Formulario de Pago</h3>
-                                    <form className="space-y-4">
+                                    <h3 className="text-md font-medium mb-4">
+                                        Formulario de Pago
+                                    </h3>
+                                    <form
+                                        className="space-y-4"
+                                        onSubmit={handleSubmit}
+                                    >
                                         <input
+                                            name="nroVoucher"
                                             type="text"
                                             placeholder="Número de Voucher"
                                             className="w-full border p-2 rounded-md"
                                             required
+                                            value={nroVoucher}
+                                            onChange={(e) =>
+                                                setNroVoucher(e.target.value)
+                                            }
                                         />
-                                        <input
-                                            type="text"
-                                            placeholder="Medio de Pago"
-                                            className="w-full border p-2 rounded-md"
+                                       
+
+
+                                        <select
+                                            name="medioPago"
+                                            value={medioPago}
+                                            onChange={(e) =>
+                                                setMedioPago(e.target.value)
+                                            }
+                                           
+                                            className="w-full border p-2 rounded-md mb-4"
                                             required
-                                        />
+                                        >
+                                            <option value="CAJA">CAJA</option>
+                                            <option value="DEPOSITO">
+                                            DEPOSITO
+                                            </option>
+                                        </select>
+
+
+
                                         <input
+                                            name="monto"
                                             type="number"
-                                            placeholder="Monto"
+                                            placeholder="Monto del Pago"
                                             className="w-full border p-2 rounded-md"
                                             required
+                                            value={monto}
+                                            onChange={(e) =>
+                                                setMonto(e.target.value)
+                                            }
                                         />
                                         <input
+                                            name="fecha"
                                             type="date"
                                             placeholder="Fecha de Pago"
                                             className="w-full border p-2 rounded-md"
                                             required
+                                            value={fecha}
+                                            onChange={(e) =>
+                                                setFecha(e.target.value)
+                                            }
                                         />
+
                                         <input
+                                            name="nombre"
                                             type="text"
                                             placeholder="Nombre del Estudiante"
                                             className="w-full border p-2 rounded-md"
                                             required
+                                            value={nombre}
+                                            onChange={(e) =>
+                                                setNombre(e.target.value)
+                                            }
                                         />
+
                                         <input
+                                            name="apellido"
                                             type="text"
                                             placeholder="Apellido del Estudiante"
                                             className="w-full border p-2 rounded-md"
                                             required
+                                            value={apellido}
+                                            onChange={(e) =>
+                                                setApellido(e.target.value)
+                                            }
                                         />
+
+                                        <input
+                                            name="idInscripcion"
+                                            type="hidden"
+                                            className="w-full border p-2 rounded-md"
+                                            value={idInscripcion}
+                                            onChange={(e) =>
+                                                setIdInscripcion(e.target.value)
+                                            }
+                                            required
+                                        />
+
                                         <div className="flex space-x-2">
                                             <button
                                                 type="submit"
                                                 className="bg-blue-600 text-white px-4 py-2 rounded-md"
                                             >
-                                                Editar Pago
+                                                Registrar nuevo pago
                                             </button>
                                         </div>
                                         <div>
@@ -113,54 +255,16 @@ export default function GestionPagos({
                                 </div>
                                 <div className="col-span-4">
                                     <div className="mb-8">
-                                        <h3 className="text-md font-medium mb-4 text-blue-900">Lista de Pagos</h3>
-                                        <input type="text" placeholder="Buscar pago" className=" border p-2 rounded-md mb-4" />
-                                        <table className="min-w-full border divide-y divide-gray-200">
-                                            <thead className="bg-gray-50">
-                                                <tr>
-                                                    <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                                        Id
-                                                    </th>
-                                                    <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                                        Fecha
-                                                    </th>
-                                                    <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                                        Monto
-                                                    </th>
-                                                    <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                                        Medio de Pago
-                                                    </th>
-                                                    <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                                        N° Voucher
-                                                    </th>
-                                                    <th className="px-4 py-2 text-left text-xs font-medium uppercase text-gray-500">
-                                                        fecha inscrita
-                                                    </th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="bg-white divide-y divide-gray-200">
-                                                <tr>
-                                                    <td className="px-4 py-2 text-sm text-gray-900">
-                                                        asdasd
-                                                    </td>
-                                                    <td className="px-4 py-2 text-sm text-gray-900">
-                                                        asdasd
-                                                    </td>
-                                                    <td className="px-4 py-2 text-sm text-gray-900">
-                                                        asdasd
-                                                    </td>
-                                                    <td className="px-4 py-2 text-sm text-gray-900">
-                                                        asdasd
-                                                    </td>
-                                                    <td className="px-4 py-2 text-sm text-gray-900">
-                                                        asdasd
-                                                    </td>
-                                                    <td className="px-4 py-2 text-sm text-gray-900">
-                                                        asdasd
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <h3 className="text-md font-medium mb-4">
+                                            Lista de Pagos
+                                        </h3>
+                                        <input
+                                            type="text"
+                                            placeholder="Buscar pago"
+                                            className=" border p-2 rounded-md mb-4"
+                                        />
+
+                                        <Prueva />
                                     </div>
 
                                     {showStudentList && (
@@ -236,13 +340,13 @@ export default function GestionPagos({
                                                                     <td className="px-6 py-4 text-sm text-gray-500">
                                                                         <button
                                                                             onClick={() =>
-                                                                                handleEditClick(
+                                                                                handleSelectClick(
                                                                                     inscripcion
                                                                                 )
                                                                             }
                                                                             className="text-indigo-600 hover:text-indigo-900"
                                                                         >
-                                                                            Editar
+                                                                            Seleccionar
                                                                         </button>
                                                                     </td>
                                                                 </tr>
