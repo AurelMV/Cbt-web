@@ -160,17 +160,17 @@ const Inicio = ({ auth }) => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="p-4 bg-gray-100 rounded shadow">
             <img src="https://via.placeholder.com/150" alt="Ejemplo 1" className="w-full h-auto rounded mb-2" />
-            <h3 className="font-semibold">Sección 1</h3>
+            <h3 className="font-semibold">Contabilidad</h3>
             <p>Descripción para la sección 1.</p>
           </div>
           <div className="p-4 bg-gray-100 rounded shadow">
             <img src="https://via.placeholder.com/150" alt="Ejemplo 2" className="w-full h-auto rounded mb-2" />
-            <h3 className="font-semibold">Sección 2</h3>
+            <h3 className="font-semibold">Electronica Industrial</h3>
             <p>Descripción para la sección 2.</p>
           </div>
           <div className="p-4 bg-gray-100 rounded shadow">
             <img src="https://via.placeholder.com/150" alt="Ejemplo 3" className="w-full h-auto rounded mb-2" />
-            <h3 className="font-semibold">Sección 3</h3>
+            <h3 className="font-semibold">Electricidad Industrial</h3>
             <p>Descripción para la sección 3.</p>
           </div>
           <div className="p-4 bg-gray-100 rounded shadow">

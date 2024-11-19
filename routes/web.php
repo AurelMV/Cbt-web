@@ -33,6 +33,7 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('auth')->group(function () {
+    Route::get('/profile/user', [ProfileController::class, 'userManagement'])->name('profile.user');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index');
     Route::get('/Estudiantes', [EstudianteController::class, 'index'])->name('estudiantes.index');
@@ -55,7 +56,7 @@ Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('do
 Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
 Route::get('/enrollment-data', [EnrollmentController::class, 'index'])->name('diagrama.index');
 // Rutas accesibles para usuario con el rol admin
-Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
+Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     Route::resource('ciclos', CicloController::class);
     Route::resource('cursos', CursoController::class);
@@ -72,4 +73,4 @@ Route::group(['middleware' => ['auth', 'verified', 'role:empleado']], function (
 
 
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';
