@@ -12,10 +12,8 @@ use App\Models\Pago;
 use App\Models\ProgramaEstudio;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
-use Inertia\Inertia;
-
-
 use Illuminate\Support\Facades\DB;
+use Inertia\Inertia;
 
 class InscripcionController extends Controller
 {
@@ -53,6 +51,23 @@ class InscripcionController extends Controller
         'grupos' => $grupos,
         'pagos' => $pagos
     ]);
+    }
+
+
+    public function listarInscripciones(){
+$inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'cicloInscripcion', 'grupo'])->paginate(5);
+
+//return response()->json(
+  
+ //   $inscripcion, 
+  
+//);
+return Inertia::render('ListaInscripciones', [
+    'inscripciones' => $inscripcion,
+]);
+
+
+
     }
 
 

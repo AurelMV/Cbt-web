@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
 // Rutas para pruebas
 Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
 Route::post('/cursos', [CursoController::class, 'store'])->name('cursos.store');
+Route::put('/cursos/{curso}', [CursoController::class, 'update'])->name('cursos.update');
 Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
 Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
 Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
@@ -92,6 +93,7 @@ Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index
 Route::put('/GestionPagos/{id}', [PagoController::class, 'update']);
 
 
+Route::get('/ListaInscripciones', [InscripcionController::class, 'listarInscripciones'])->name('inscripciones.listar');
 
 
 

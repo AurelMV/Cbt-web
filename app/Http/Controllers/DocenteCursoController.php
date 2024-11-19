@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Curso;
+use App\Models\Docente;
 use App\Models\DocenteCurso;
+use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
 
@@ -14,9 +17,17 @@ class DocenteCursoController extends Controller
     public function index()
     {
         $docenteCursos = DocenteCurso::all();
-
+        $docentesActivos = Docente::where('estado', 1)
+        ->selectRaw('id, CONCAT(nombre, " ", aPaterno, " ", aMaterno) as nombre_completo')
+        ->get();
+        $cursos = Curso::all();
+        $grupos = Grupo::all();
+        
         return Inertia::render('DocentesCursosGrupos', [
-            'docenteCursos' => $docenteCursos
+            'docenteCursos' => $docenteCursos,
+            'docentesActivos' => $docentesActivos,
+            'cursos' => $cursos,
+            'grupos' => $grupos
         ]);
     }
 
