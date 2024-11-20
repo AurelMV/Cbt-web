@@ -13,7 +13,7 @@ export default function AuthenticatedLayout({children }) {
             <header className="w-full bg-gradient-to-r from-blue-500 to-green-500 p-3 shadow-md flex justify-between items-center">
                 
                 <div className="flex items-center">
-                    <img src="https://cbt.istta.edu.pe/assets/images/img.png" width={50} height={50} />
+                    <img src="https://cbt.istta.edu.pe/assets/images/img.png" width={50} height={50}className='mr-2'/>
                     <h1 className="ml-4 text-white text-2xl font-semibold">Instituto Tupac Amaru - CBT  </h1>
                 </div>
                 <div>
@@ -45,6 +45,9 @@ export default function AuthenticatedLayout({children }) {
                             <Dropdown.Link href={route('profile.edit')}>
                                 Profile
                             </Dropdown.Link>
+                            <Dropdown.Link href={route('profile.user')}>
+                                Gestion de Usuarios
+                            </Dropdown.Link>
                             <Dropdown.Link
                                 href={route('logout')}
                                 method="post"
@@ -66,7 +69,7 @@ export default function AuthenticatedLayout({children }) {
                         <div className="flex flex-col h-screen">
 
                             <div className="mt-5 space-y-4 inline-flex items-center rounded-md  px-4 py-2 text-xs font-semibold uppercase tracking-widest transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 active:bg-gray-900">
-                                <img src="https://cdn-icons-png.flaticon.com/512/88/88450.png" width={30} height={30} />
+                                <img src="https://cdn-icons-png.flaticon.com/512/88/88450.png" width={30} height={30} className='mr-2'/>
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
                                     Inscripciones
                                 </NavLink>
@@ -121,7 +124,7 @@ export default function AuthenticatedLayout({children }) {
                                
                             </div>
                             <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                        <img src="https://cdn-icons-png.flaticon.com/512/42/42916.png" width={30} height={30} />
+                        <img src="https://cdn-icons-png.flaticon.com/512/42/42916.png" width={30} height={30} className='mr-2'/>
                         <NavLink
                             href={route('docentes.index')}
                             active={route().current('docentes.index')}
@@ -164,7 +167,7 @@ export default function AuthenticatedLayout({children }) {
                     </div>
 
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                    <img src="https://svgsilh.com/svg/303116.svg" width={30} height={30} />
+                    <img src="https://svgsilh.com/svg/303116.svg" width={30} height={30} className='mr-2'/>
                         <NavLink
                             href={route('ciclos.index')}
                             active={route().current('ciclos.index')}
@@ -174,7 +177,7 @@ export default function AuthenticatedLayout({children }) {
                     </div>
 
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                        <img src="https://cdn-icons-png.flaticon.com/512/5885/5885260.png" width={30} height={30} />
+                        <img src="https://cdn-icons-png.flaticon.com/512/5885/5885260.png" width={30} height={30} className='mr-2' />
                         <NavLink
                             href={route('programasEstudio.index')}
                             active={route().current('programasEstudio.index')}
@@ -185,7 +188,7 @@ export default function AuthenticatedLayout({children }) {
                     </div>
 
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                    <img src="https://cdn-icons-png.flaticon.com/512/73/73531.png" width={30} height={30} />
+                    <img src="https://cdn-icons-png.flaticon.com/512/73/73531.png" width={30} height={30} className='mr-2'/>
                         <NavLink
                         href={route('cursos.index')}
                         active={route().current('cursos.index')}
@@ -195,7 +198,7 @@ export default function AuthenticatedLayout({children }) {
                     </div>
 
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                    <img src="https://cdn-icons-png.flaticon.com/512/32/32441.png" width={30} height={30} />
+                    <img src="https://cdn-icons-png.flaticon.com/512/32/32441.png" width={30} height={30} className='mr-2'/>
                         <NavLink
                         href={route('grupos.index')}
                         active={route().current('grupos.index')}
@@ -206,7 +209,7 @@ export default function AuthenticatedLayout({children }) {
                     
 
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                        <img src="https://cdn-icons-png.flaticon.com/512/841/841791.png" width={30} height={30} />
+                        <img src="https://cdn-icons-png.flaticon.com/512/841/841791.png" width={30} height={30} className='mr-2'/>
                         <NavLink
                             href={route('reportes.index')}
                             active={route().current('reportes.index')}
@@ -215,7 +218,7 @@ export default function AuthenticatedLayout({children }) {
                         </NavLink>
                     </div>
                     <div className="mt-5 space-y-4 inline-flex items-center rounded-md border border-transparent px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
-                        <img src="https://cdn-icons-png.flaticon.com/512/69/69517.png" width={30} height={30} />
+                        <img src="https://cdn-icons-png.flaticon.com/512/69/69517.png" width={30} height={30} className='mr-2'/>
                         <NavLink
                             href={route('diagrama.index')}
                             active={route().current('diagrama.index')}

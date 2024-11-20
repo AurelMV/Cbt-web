@@ -33,6 +33,7 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('auth')->group(function () {
+    Route::get('/profile/user', [ProfileController::class, 'userManagement'])->name('profile.user');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index');
     Route::get('/Estudiantes', [EstudianteController::class, 'index'])->name('estudiantes.index');
@@ -112,6 +113,5 @@ Route::put('/editar-pago/{id}', [PagoController::class, 'editarPago']);
 
 
 require __DIR__.'/auth.php';
-
 
 
