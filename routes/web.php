@@ -49,12 +49,14 @@ Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.in
 Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
 Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
 Route::post('/docentes', [DocenteController::class, 'store'])->name('docentes.store');
-
 Route::put('/docentes/{docente}', [DocenteController::class, 'update'])->name('docentes.update');
 //Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
-Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('docenteCursos.index');
 Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
+Route::put('/grupos/{grupo}', [GrupoController::class, 'update'])->name('grupos.update');
+Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('docenteCursos.index');
+Route::post('/docenteCursos', [DocenteCursoController::class, 'store'])->name('docenteCursos.store');
+Route::put('/docenteCursos/{docenteCurso}', [DocenteCursoController::class, 'update'])->name('docenteCursos.update');
 Route::get('/enrollment-data', [EnrollmentController::class, 'index'])->name('diagrama.index');
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
@@ -93,8 +95,9 @@ Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index
 Route::put('/GestionPagos/{id}', [PagoController::class, 'update']);
 
 
-Route::get('/ListaInscripciones', [InscripcionController::class, 'listarInscripciones'])->name('inscripciones.listar');
 
+
+Route::post('/inscripciones/{id}/update', [InscripcionController::class, 'update'])->name('inscripciones.update');
 
 
 //es para aser prueva de la inter que no funca 
@@ -104,6 +107,9 @@ Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('p
 
 
 Route::put('/editar-pago/{id}', [PagoController::class, 'editarPago']);
+
+
+
 
 require __DIR__.'/auth.php';
 

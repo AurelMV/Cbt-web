@@ -11,8 +11,8 @@ class Curso extends Model
 
     protected $fillable = ['nombre', 'descripcion'];
 
-    public function docenteCurso()
+    public function docentecurso()
     {
-        return $this->belongsTo(DocenteCurso::class);
+        return $this->hasMany(DocenteCurso::class, 'idCurso', 'id');
     }
 }

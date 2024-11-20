@@ -1,342 +1,182 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
-import React, { useState } from "react";
-import axios from "axios";
+import React, { useState, useEffect } from 'react';
+import { usePage } from '@inertiajs/react'; // Para trabajar con props y navegación
+import { Inertia } from '@inertiajs/inertia';
 
-function Pagination({ links }) {
-    const handlePagination = (url) => {
-        if (url) {
-            window.location.href = url;
+export default function GestionInscripciones() {
+    const { inscripciones } = usePage().props;
+    const [showModal, setShowModal] = useState(false);
+    const [editingInscripcion, setEditingInscripcion] = useState(null);
+    const [opciones, setOpciones] = useState({ ciclos: [], programas: [] });
+    const [gruposFiltrados, setGruposFiltrados] = useState([]);
+    const [searchTerm, setSearchTerm] = useState('');  // Estado para el término de búsqueda
+
+    useEffect(() => {
+        if (showModal) {
+            fetch('/api/inscripcionesopciones')
+                .then((res) => res.json())
+                .then((data) => setOpciones(data));
         }
-    };
+    }, [showModal]);
 
-    return (
-        <div className="flex justify-center mt-4">
-            {links.map((link, index) => (
-                <button
-                    key={index}
-                    onClick={() => handlePagination(link.url)}
-                    disabled={!link.url}
-                    className={`px-4 py-2 mx-1 text-sm rounded-md ${
-                        link.url
-                            ? "bg-indigo-600 text-white"
-                            : "bg-gray-300 text-gray-500"
-                    }`}
-                >
-                    {link.label}
-                </button>
-            ))}
-        </div>
-    );
-}
-
-export default function GestionInscripciones({ inscripciones }) {
-    const [isModalOpen, setIsModalOpen] = useState(false); // Control del modal
-    const [inscripcionToEdit, setInscripcionToEdit] = useState(null); // Datos de la inscripción a editar
-
-    // Función para abrir el modal con los datos de la inscripción
     const handleEditClick = (inscripcion) => {
-        setInscripcionToEdit(inscripcion);
-        setIsModalOpen(true);
+        setEditingInscripcion(inscripcion);
+        const ciclo = opciones.ciclos.find(c => c.id === inscripcion.idciclo);
+        setGruposFiltrados(ciclo ? ciclo.grupos : []);
+        setShowModal(true);
     };
 
-    // Función para cerrar el modal
-    const closeModal = () => {
-        setIsModalOpen(false);
-        setInscripcionToEdit(null);
+    const handleCicloChange = (cicloId) => {
+        const ciclo = opciones.ciclos.find(c => c.id === parseInt(cicloId));
+        setGruposFiltrados(ciclo ? ciclo.grupos : []);
+        setEditingInscripcion(prev => ({
+            ...prev,
+            idciclo: cicloId,
+        }));
     };
 
-    // Función para manejar la actualización de la inscripción
-    const handleUpdate = async (event) => {
-        event.preventDefault();
-
-        const formData = new FormData(event.target);
-        try {
-            const response = await axios.post(
-                `/api/inscripciones/${inscripcionToEdit.id}`,
-                formData
-            );
-            // Manejar la respuesta (por ejemplo, actualizar la lista de inscripciones)
-            alert("Inscripción actualizada exitosamente");
-            closeModal();
-        } catch (error) {
-            console.error(error);
-            alert("Hubo un error al actualizar la inscripción");
-        }
+    const handleSave = () => {
+        // Usamos PUT en lugar de POST para la actualización
+        Inertia.put(`/inscripciones/${editingInscripcion.id}`, {
+            idciclo: editingInscripcion.idciclo,
+            idprogramaestudios: editingInscripcion.idprogramaestudios,
+            idGrupos: editingInscripcion.idGrupos,
+        });
+        setShowModal(false); // Cierra el modal después de guardar
     };
+
+    // Filtra las inscripciones según el nombre o DNI
+    const filteredInscripciones = inscripciones.data.filter(inscripcion => {
+        const fullName = `${inscripcion.estudiante.aPaterno} ${inscripcion.estudiante.aMaterno}`.toLowerCase();
+        const searchTermLower = searchTerm.toLowerCase();
+        return fullName.includes(searchTermLower) || inscripcion.estudiante.dni.includes(searchTermLower);
+    });
 
     return (
         <AuthenticatedLayout>
-            <Head title="Gestión de Inscripciones" />
+            <div className="p-6 bg-gray-100">
+                <h2 className="text-2xl font-semibold mb-4 text-gray-700">Gestión de Inscripciones</h2>
+                
+                {/* Zona de búsqueda */}
+                <div className="mb-4">
+                    <input
+                        type="text"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Buscar por nombre o DNI"
+                        className="p-2 border rounded w-1/3"
+                    />
+                </div>
 
-            <h2 className="text-xl font-semibold leading-tight text-black">
-                GESTION DE INSCRIPCIONES
+                <table className="min-w-full border border-gray-300 rounded-lg bg-white shadow">
+                    <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        <tr>
+                           
+                            <th className="py-3 px-6 text-left">Turno</th>
+                            <th className="py-3 px-6 text-left">Nombres</th>
+                            <th className="py-3 px-6 text-left">Apellidos</th>
+                            <th className="py-3 px-6 text-left">Ciclo</th>
+                            <th className="py-3 px-6 text-left">Programa</th>
+                            <th className="py-3 px-6 text-left">Grupo</th>
+                            <th className="py-3 px-6 text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody className="text-gray-600 text-sm">
+                        {filteredInscripciones.map((inscripcion) => (
+                            <tr key={inscripcion.id} className="border-b border-gray-200 hover:bg-gray-100">
+                               
+                                <td className="py-3 px-6">{inscripcion.turno}</td>
+                                <td className="py-3 px-6">{inscripcion.estudiante.nombres}</td>
+                                <td className="py-3 px-6">
+  {`${inscripcion.estudiante.aPaterno} ${inscripcion.estudiante.aMaterno}`}
+</td>
 
-            </h2>
-            <p className="leading-tight text-gray-400">Modifica algunas campos de una inscripcion (este proceso solo se puede realizar antes de que el ciclo haya empezado)</p>
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg border border-gray-300">
-                        <div className="p-6 text-gray-900">
-                        <h3 className="text-md font-medium mb-4 text-blue-900">Campos que se pueden modificar</h3>
-                        <p className="leading-tight text-gray-400">Para que se llene el formulario precione el boton de editar en la tabla en la fila correspondiente a su eleccion</p>
-                            <div className="mt-4 grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
-                            
-                            <div className="col-span-1">
+                                <td className="py-3 px-6">{inscripcion.ciclo_inscripcion.nombre}</td>
+                                <td className="py-3 px-6">{inscripcion.programa_estudio.nombre_programa}</td>
+                                <td className="py-3 px-6">{inscripcion.grupo.nombre}</td>
+                                <td className="py-3 px-6 text-center">
+                                    <button
+                                        className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                                        onClick={() => handleEditClick(inscripcion)}
+                                    >
+                                        Editar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
 
-                                    <label
-                                        htmlFor="turno"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Turno
-                                    </label>
-                                    <input
-                                        id="turno"
-                                        type="text"
-                                        placeholder="Turno"
-                                        className="mt-1 block w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-span-1">
-                                    <label
-                                        htmlFor="estudiante"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Estudiante
-                                    </label>
-                                    <input
-                                        id="estudiante"
-                                        type="text"
-                                        placeholder="Estudiante"
-                                        className="mt-1 block w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-span-1">
-                                    <label
-                                        htmlFor="grupo"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Grupo
-                                    </label>
-                                    <input
-                                        id="grupo"
-                                        type="text"
-                                        placeholder="Grupo"
-                                        className="mt-1 block w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-span-1">
-                                    <label
-                                        htmlFor="fechaInscripcion"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Fecha de Inscripción
-                                    </label>
-                                    <input
-                                        id="fechaInscripcion"
-                                        type="date"
-                                        className="mt-1 block w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-span-1">
-                                    <label
-                                        htmlFor="ciclo"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Ciclo
-                                    </label>
-                                    <input
-                                        id="ciclo"
-                                        type="text"
-                                        placeholder="Ciclo"
-                                        className="mt-1 block w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                <div className="col-span-1">
-                                    <label
-                                        htmlFor="programa"
-                                        className="block text-sm font-medium text-gray-700"
-                                    >
-                                        Programa de Estudio
-                                    </label>
-                                    <input
-                                        id="programa"
-                                        type="text"
-                                        placeholder="Programa de Estudio"
-                                        className="mt-1 block w-full border p-2 rounded-md"
-                                        required
-                                    />
-                                </div>
-                                
-                            </div>
-
-                                        <button
-                                            type="submit"
-                                            className="inline-flex items-center rounded-md border border-transparent bg-blue-500 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                                        >
-                                            Actualizar
-                                        </button>
-                            <h3 className="mt-4 text-md font-medium mb-4">
-                                Lista de Inscripciones
-                            </h3>
-                            <table className="min-w-full divide-y divide-gray-200 border">
-                                <thead className="bg-gray-50">
-                                    <tr>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                            Turno
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                            Fecha
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                            Valor de Pago
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                            Estudiante
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                            Ciclo
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                            Programa
-                                        </th>
-                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                            Acciones
-                                        </th>
-                                    </tr>
-                                </thead>
-                                <tbody className="bg-white divide-y divide-gray-200">
-                                    {inscripciones.data.map((inscripcion) => (
-                                        <tr key={inscripcion.id}>
-                                            <td className="px-6 py-4 text-sm text-gray-900">
-                                                {inscripcion.turno}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900">
-                                                {inscripcion.fechaInscripcion}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900">
-                                                {inscripcion.estadopago}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900">
-                                                {inscripcion.estudiante_nombres}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900">
-                                                {inscripcion.ciclo_nombre}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-900">
-                                                {inscripcion.programa_nombre}
-                                            </td>
-                                            <td className="px-6 py-4 text-sm text-gray-500">
-                                                <button
-                                                    onClick={() =>
-                                                        handleEditClick(
-                                                            inscripcion
-                                                        )
-                                                    }
-                                                    className="text-indigo-600 hover:text-indigo-900"
-                                                >
-                                                    Editar
-                                                </button>
-                                            </td>
-                                        </tr>
+                {/* Modal */}
+                {showModal && editingInscripcion && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
+                        <div className="bg-white w-1/3 p-6 rounded shadow-lg">
+                            <h3 className="text-xl font-semibold mb-4">Editar Inscripción</h3>
+                            <form>
+                                <label className="block text-gray-700 font-medium mb-2">Ciclo:</label>
+                                <select
+                                    value={editingInscripcion.idciclo}
+                                    onChange={(e) => handleCicloChange(e.target.value)}
+                                    className="w-full mb-4 px-3 py-2 border rounded"
+                                >
+                                    {opciones.ciclos.map((ciclo) => (
+                                        <option key={ciclo.id} value={ciclo.id}>
+                                            {ciclo.nombre}
+                                        </option>
                                     ))}
-                                </tbody>
-                            </table>
-
-                            {/* Paginación (si estás usando paginación) */}
-                            <div className="mt-4">
-                                <Pagination links={inscripciones.links} />
+                                </select>
+                                <label className="block text-gray-700 font-medium mb-2">Programa:</label>
+                                <select
+                                    value={editingInscripcion.idprogramaestudios}
+                                    onChange={(e) =>
+                                        setEditingInscripcion((prev) => ({
+                                            ...prev,
+                                            idprogramaestudios: e.target.value,
+                                        }))
+                                    }
+                                    className="w-full mb-4 px-3 py-2 border rounded"
+                                >
+                                    {opciones.programas.map((programa) => (
+                                        <option key={programa.id} value={programa.id}>
+                                            {programa.nombre_programa}
+                                        </option>
+                                    ))}
+                                </select>
+                                <label className="block text-gray-700 font-medium mb-2">Grupo:</label>
+                                <select
+                                    value={editingInscripcion.idGrupos}
+                                    onChange={(e) =>
+                                        setEditingInscripcion((prev) => ({
+                                            ...prev,
+                                            idGrupos: e.target.value,
+                                        }))
+                                    }
+                                    className="w-full mb-4 px-3 py-2 border rounded"
+                                >
+                                    {gruposFiltrados.map((grupo) => (
+                                        <option key={grupo.id} value={grupo.id}>
+                                            {grupo.nombre}
+                                        </option>
+                                    ))}
+                                </select>
+                            </form>
+                            <div className="mt-4 flex justify-end space-x-3">
+                                <button
+                                    className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600"
+                                    onClick={handleSave}
+                                >
+                                    Guardar
+                                </button>
+                                <button
+                                    className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600"
+                                    onClick={() => setShowModal(false)}
+                                >
+                                    Cancelar
+                                </button>
                             </div>
-
-                            {/* Modal de edición */}
-                            {isModalOpen && (
-                                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-                                    <div className="bg-white p-6 rounded-md w-1/2">
-                                        <h3 className="text-lg font-semibold mb-4">
-                                            Editar Inscripción
-                                        </h3>
-                                        <form onSubmit={handleUpdate}>
-                                            <div className="mb-4">
-                                                <label
-                                                    htmlFor="turno"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Turno
-                                                </label>
-                                                <input
-                                                    id="turno"
-                                                    name="turno"
-                                                    type="text"
-                                                    defaultValue={
-                                                        inscripcionToEdit.turno
-                                                    }
-                                                    className="mt-1 block w-full border p-2 rounded-md"
-                                                    required
-                                                />
-                                            </div>
-                                            <div className="col-span-1">
-                                                <label
-                                                    htmlFor="fechaInscripcion"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Fecha de Inscripción
-                                                </label>
-                                                <input
-                                                    id="fechaInscripcion"
-                                                    type="text"
-                                                    value={
-                                                        inscripcionToEdit.fechaInscripcion
-                                                    } // Asignamos el valor de la fecha que no se puede modificar
-                                                    className="mt-1 block w-full border p-2 rounded-md bg-gray-100"
-                                                    readOnly // Esto hace que el campo no sea editable
-                                                />
-                                            </div>
-                                            <div className="mb-4">
-                                                <label
-                                                    htmlFor="estadopago"
-                                                    className="block text-sm font-medium text-gray-700"
-                                                >
-                                                    Estado de Pago
-                                                </label>
-                                                <input
-                                                    id="estadopago"
-                                                    name="estadopago"
-                                                    type="text"
-                                                    defaultValue={
-                                                        inscripcionToEdit.estadopago
-                                                    }
-                                                    className="mt-1 block w-full border p-2 rounded-md"
-                                                    required
-                                                />
-                                            </div>
-                                            {/* Agrega los demás campos aquí... */}
-                                            <div className="flex justify-end mt-4">
-                                                <button
-                                                    type="button"
-                                                    onClick={closeModal}
-                                                    className="mr-2 px-4 py-2 bg-gray-300 text-gray-700 rounded-md"
-                                                >
-                                                    Cancelar
-                                                </button>
-                                                <button
-                                                    type="submit"
-                                                    className="px-4 py-2 bg-indigo-600 text-white rounded-md"
-                                                >
-                                                    Guardar
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </AuthenticatedLayout>
     );

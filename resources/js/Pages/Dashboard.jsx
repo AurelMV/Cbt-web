@@ -3,6 +3,9 @@ import { Head } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import ColegioServicio from "@/Components/ColegioServicio";
 import Listado from "@/Components/DepartamentoServicio";
+import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
 
 export default function Dashboard() {
     const [inputValue, setInputValue] = useState("");
@@ -12,6 +15,22 @@ export default function Dashboard() {
     const [Cole, setCole] = useState([]);
     const [error, setError] = useState(null);
     const [MensajeError, setMensajeError] = useState("");
+    const [Seleeccion, setSeleeccion] = useState({
+        Depar: "",
+        Provin: "",
+        Distri: "",
+    });
+    const [ColegioDAta, setColegioDAta] = useState({
+        nombrecolegio: "",
+        codModular: "",
+        modalidad: "",
+        gestion: "",
+        latitud: null, // Guardar latitud
+        longitud: null, // Guardar longitud
+        Distrito_idDistrito: "",
+    });
+    const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
+    const [search, setSearch] = useState("");
 
     const [modalOpen, setModalOpen] = useState(false);
     const openModal = () => setModalOpen(true);
@@ -50,6 +69,25 @@ export default function Dashboard() {
         p_Programaestudios_id: "",
         archivo: null,
     });
+    const handleChangeDAtaColegio = (e) => {
+        const { name, value } = e.target;
+        setColegioDAta((prevState) => ({
+            ...prevState,
+            [name]: value,
+        }));
+    };
+
+    const handleSave = async () => {
+        try {
+
+            const response = await ColegioServicio.store(ColegioDAta);
+            console.log("Colegio guardado con éxito:", response);
+            // Aquí puedes hacer alguna acción adicional como cerrar el modal o limpiar los campos
+        } catch (error) {
+            console.error("Error al guardar el colegio:", error);
+            alert("Error al guardar el colegio. Verifique los datos.");
+        }
+    };
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -78,9 +116,8 @@ export default function Dashboard() {
                     console.error("Encabezados:", error.response.headers);
 
                     alert(
-                        `Error al realizar la inscripción: ${
-                            error.response.data.message ||
-                            "Revise los datos ingresados."
+                        `Error al realizar la inscripción: ${error.response.data.message ||
+                        "Revise los datos ingresados."
                         }`
                     );
                 } else if (error.request) {
@@ -124,7 +161,12 @@ export default function Dashboard() {
 
     const handleDepartamentoChange = async (event) => {
         const idDepartamento = event.target.value;
-
+        setSeleeccion((prev) => ({
+            ...prev,
+            Depar: event.target.options[event.target.selectedIndex].text, // Obtener el nombre
+            Provin: "", // Limpiar provincia al cambiar departamento
+            Distri: "", // Limpiar distrito al cambiar departamento
+        }));
         try {
             const data = await Listado.ConsultaProvi(idDepartamento);
             setProvincias(data);
@@ -135,7 +177,11 @@ export default function Dashboard() {
 
     const handleProvinciaChange = async (event) => {
         const idProvincia = event.target.value;
-
+        setSeleeccion((prev) => ({
+            ...prev,
+            Provin: event.target.options[event.target.selectedIndex].text, // Obtener el nombre
+            Distri: "", // Limpiar distrito al cambiar provincia
+        }));
         try {
             const data = await Listado.ConsultaDistri(idProvincia);
             setdistritos(data);
@@ -146,6 +192,11 @@ export default function Dashboard() {
     const handleColegioChange = async (event) => {
         const idDistrito = event.target.value;
         setCole([]);
+        setSeleeccion((prev) => ({
+            ...prev,
+            ...prev,
+            Distri: event.target.options[event.target.selectedIndex].text,
+        }));
         try {
             const data = await Listado.ConsultaColegio(idDistrito);
             setCole(data);
@@ -167,14 +218,61 @@ export default function Dashboard() {
         listadoservice();
     }, []);
 
+    delete L.Icon.Default.prototype._getIconUrl;
+    L.Icon.Default.mergeOptions({
+        iconRetinaUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png",
+        iconUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png",
+        shadowUrl: "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png",
+    });
 
+    const ClickableMap = ({ setCoordinates }) => {
+        useMapEvents({
+            click(e) {
+                const { lat, lng } = e.latlng;
+                setCoordinates((prevData) => ({
+                    ...prevData,
+                    latitud: lat,
+                    longitud: lng,
+                }));
+            },
+        });
+        return null;
+    };
+    const handleSelectColegio = (id) => {
+        setFormData((prevData) => ({
+            ...prevData,
+            p_Colegios_id: id, 
+        }));
+        closeModal2(); 
+    };
+    const handleSearch = () => {
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}&countrycodes=pe`;
+        fetch(url)
+            .then((response) => response.json())
+            .then((data) => {
+                if (data.length > 0) {
+                    const { lat, lon } = data[0];
+                    setColegioDAta((prevData) => ({
+                        ...prevData,
+                        latitud: parseFloat(lat),
+                        longitud: parseFloat(lon),
+                    }));
+                } else {
+                    alert("No se encontró la ubicación.");
+                }
+            })
+            .catch((error) => {
+                console.error("Error:", error);
+                alert("Hubo un problema al realizar la búsqueda.");
+            });
+    };
+    console.log(FormData.p_Colegios_id);
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
 
-
             <h2 className="text-xl font-semibold leading-tight text-black">
-                INSCRIPCIÓNES
+                INSCRIPCIONES
             </h2>
             <p className="leading-tight text-gray-400">Realize inscripciones de nuevos estudiantes y adjunte un pago</p>
             <form onSubmit={handleSubmit}>
@@ -624,26 +722,6 @@ export default function Dashboard() {
                                                             placeholder="Buscar colegios..."
                                                             className="input-class"
                                                         />
-                                                        {Cole.length > 0 && (
-                                                            <ul>
-                                                                {Cole.map(
-                                                                    (
-                                                                        resultado,
-                                                                        index
-                                                                    ) => (
-                                                                        <li
-                                                                            key={
-                                                                                index
-                                                                            }
-                                                                        >
-                                                                            {
-                                                                                resultado.nombrecolegio
-                                                                            }
-                                                                        </li>
-                                                                    )
-                                                                )}
-                                                            </ul>
-                                                        )}
                                                     </div>
                                                     <button
                                                         onClick={openModal2}
@@ -675,69 +753,35 @@ export default function Dashboard() {
                                                 <table className="min-w-full border">
                                                     <thead>
                                                         <tr className="bg-gray-200">
-                                                            <th className="border px-4 py-2">
-                                                                Nombre
-                                                            </th>
-                                                            <th className="border px-4 py-2">
-                                                                modalidad
-                                                            </th>
-                                                            <th className="border px-4 py-2">
-                                                                Departamento
-                                                            </th>
-                                                            <th className="border px-4 py-2">
-                                                                distrito
-                                                            </th>
-                                                            <th className="border px-4 py-2">
-                                                                provincia
-                                                            </th>
-                                                            <th className="border px-4 py-2">
-                                                                Seleccion
-                                                            </th>
+                                                            <th className="border px-4 py-2">Seleccion</th>
+                                                            <th className="border px-4 py-2">Nombre</th>
+                                                            <th className="border px-4 py-2">Codigo Modular</th>
+                                                            <th className="border px-4 py-2">Modalidad</th>
+                                                            <th className="border px-4 py-2">Gestion</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {Cole.length > 0 &&
-                                                            Cole.map(
-                                                                (
-                                                                    resultado,
-                                                                    index
-                                                                ) => (
-                                                                    <tr
-                                                                        key={
-                                                                            index
-                                                                        }
-                                                                    >
-                                                                        <td className="border px-4 py-2">
-                                                                            {
-                                                                                resultado.nombrecolegio
-                                                                            }
-                                                                        </td>
-                                                                        <td className="border px-4 py-2">
-                                                                            {
-                                                                                resultado.modalidad
-                                                                            }
-                                                                        </td>
-                                                                        <td className="border px-4 py-2">
-                                                                            {
-                                                                                resultado.Distrito_idDistrito
-                                                                            }
-                                                                        </td>
-                                                                        <td className="border px-4 py-2">
-                                                                            {
-                                                                                resultado.gestion
-                                                                            }
-                                                                        </td>
-                                                                        <td className="border px-4 py-2">
-                                                                            <button className="text-indigo-600 hover:text-indigo-900">
-                                                                                Seleccionar
-                                                                            </button>
-                                                                        </td>
-                                                                    </tr>
-                                                                )
-                                                            )}
+
+                                                        {Cole.length > 0 && Cole.map((resultado, index) => (
+                                                            <tr key={index}>
+                                                                <td className="border px-4 py-2">
+                                                                    <button onClick={() => handleSelectColegio(resultado.id)} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                                                                        Seleccionar
+                                                                    </button>
+                                                                </td>
+                                                                <td className="border px-4 py-2">{resultado.nombrecolegio}</td>
+                                                                <td className="border px-4 py-2">{resultado.codModular}</td>
+                                                                <td className="border px-4 py-2">{resultado.modalidad}</td>
+                                                                <td className="border px-4 py-2">{resultado.gestion}</td>
+
+                                                            </tr>
+                                                        ))}
                                                     </tbody>
+
                                                 </table>
+
                                             </div>
+
                                         </div>
                                     </div>
                                 )}
@@ -752,70 +796,79 @@ export default function Dashboard() {
                                                     </h3>
                                                     <div className="space-y-4">
                                                         <div>
-                                                            <label htmlFor="">
-                                                                Nombre del
-                                                                Colegio
-                                                            </label>
+                                                            <label>Nombre del Colegio</label>
                                                             <input
                                                                 type="text"
                                                                 className="w-full border p-2 rounded-md"
+                                                                name="nombrecolegio"
+                                                                value={ColegioDAta.nombrecolegio}
+                                                                onChange={handleChangeDAtaColegio}
                                                             />
                                                         </div>
                                                         <div className="grid grid-cols-2 gap-4 mb-6">
                                                             <div className="col-span-1">
-                                                                <label htmlFor="">
-                                                                    codModular
-                                                                </label>
+                                                                <label>codModular</label>
                                                                 <input
                                                                     type="text"
                                                                     className="w-full border p-2 rounded-md"
+                                                                    name="codModular"
+                                                                    value={ColegioDAta.codModular}
+                                                                    onChange={handleChangeDAtaColegio}
                                                                 />
                                                             </div>
                                                             <div>
-                                                                <label htmlFor="">
-                                                                    modalidad
-                                                                </label>
+                                                                <label>Modalidad</label>
                                                                 <input
                                                                     type="text"
                                                                     className="w-full border p-2 rounded-md"
+                                                                    name="modalidad"
+                                                                    value={ColegioDAta.modalidad}
+                                                                    onChange={handleChangeDAtaColegio}
                                                                 />
                                                             </div>
                                                             <div>
-                                                                <label htmlFor="">
-                                                                    Gestion
-                                                                </label>
+                                                                <label>Gestión</label>
                                                                 <input
                                                                     type="text"
                                                                     className="w-full border p-2 rounded-md"
+                                                                    name="gestion"
+                                                                    value={ColegioDAta.gestion}
+                                                                    onChange={handleChangeDAtaColegio}
                                                                 />
                                                             </div>
                                                             <div>
-                                                                <label htmlFor="">
-                                                                    Latitud
-                                                                </label>
+                                                                <label>Latitud</label>
                                                                 <input
                                                                     type="text"
                                                                     className="w-full border p-2 rounded-md"
+                                                                    name="latitud"
+                                                                    value={ColegioDAta.latitud ? ColegioDAta.latitud.toFixed(6) : "-"}
+                                                                    onChange={handleChangeDAtaColegio}
                                                                 />
                                                             </div>
+
                                                             <div>
-                                                                <label htmlFor="">
-                                                                    longitud
-                                                                </label>
+                                                                <label>Longitud</label>
                                                                 <input
                                                                     type="text"
                                                                     className="w-full border p-2 rounded-md"
+                                                                    name="longitud"
+                                                                    value={ColegioDAta.longitud ? ColegioDAta.longitud.toFixed(6) : "-"}
+                                                                    onChange={handleChangeDAtaColegio}
                                                                 />
                                                             </div>
+
                                                             <div>
-                                                                <label htmlFor="">
-                                                                    Distrito
-                                                                </label>
+                                                                <label>Distrito</label>
                                                                 <input
                                                                     type="text"
                                                                     className="w-full border p-2 rounded-md"
+                                                                    name="Distrito_idDistrito"
+                                                                    value={ColegioDAta.Distrito_idDistrito}
+                                                                    onChange={handleChangeDAtaColegio}
                                                                 />
                                                             </div>
+
                                                         </div>
                                                     </div>
                                                     <div className="flex justify-end mt-4 space-x-2">
@@ -828,13 +881,47 @@ export default function Dashboard() {
                                                             Cancelar
                                                         </button>
                                                         <button
-                                                            onClick={
-                                                                closeModal2
-                                                            }
+                                                            onClick={handleSave}
                                                             className="px-4 py-2 bg-blue-600 text-white rounded-md"
                                                         >
                                                             Guardar
                                                         </button>
+                                                    </div>
+                                                    <div style={{ textAlign: "center" }}>
+                                                        <h3>Mapa Pequeño - Selección de Coordenadas</h3>
+                                                        <div>
+                                                            <input
+                                                                type="text"
+                                                                value={search}
+                                                                onChange={(e) => setSearch(e.target.value)}
+                                                                placeholder="Departamento, Provincia, Distrito"
+                                                                style={{ marginRight: "10px", padding: "5px" }}
+                                                            />
+                                                            <button onClick={handleSearch} style={{ padding: "5px 10px" }}>
+                                                                Buscar
+                                                            </button>
+                                                        </div>
+                                                        <div
+                                                            id="map"
+                                                            style={{
+                                                                height: "300px",
+                                                                width: "400px",
+                                                                margin: "20px auto",
+                                                                border: "1px solid #ccc",
+                                                            }}
+                                                        >
+                                                            <MapContainer
+                                                                center={ColegioDAta.latitud && ColegioDAta.longitud ? [ColegioDAta.latitud, ColegioDAta.longitud] : [-10.4074729, -75.3347043]}
+                                                                zoom={ColegioDAta.latitud && ColegioDAta.longitud ? 15 : 6}
+                                                                style={{ height: "100%", width: "100%" }}
+                                                            >
+                                                                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                                                <ClickableMap setCoordinates={setColegioDAta} />
+                                                                {ColegioDAta.latitud && ColegioDAta.longitud && (
+                                                                    <Marker position={[ColegioDAta.latitud, ColegioDAta.longitud]} />
+                                                                )}
+                                                            </MapContainer>
+                                                        </div>
                                                     </div>
                                                 </div>
 
@@ -869,29 +956,16 @@ export default function Dashboard() {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            <tr>
-                                                                <td className="border px-4 py-2">
-                                                                    Colegio
-                                                                </td>
-                                                                <td className="border px-4 py-2">
-                                                                    asdasd
-                                                                </td>
-                                                                <td className="border px-4 py-2">
-                                                                    asdasd
-                                                                </td>
-                                                                <td className="border px-4 py-2">
-                                                                    asdasd
-                                                                </td>
-                                                                <td className="border px-4 py-2">
-                                                                    asdsad
-                                                                </td>
-                                                                <td className="border px-4 py-2">
-                                                                    asdasd
-                                                                </td>
-                                                                <td className="border px-4 py-2">
-                                                                    asdasd
-                                                                </td>
+                                                        {Cole.length > 0 && Cole.map((resultado, index) => (
+                                                            <tr key={index}>
+                                                                
+                                                                <td className="border px-4 py-2">{resultado.nombrecolegio}</td>
+                                                                <td className="border px-4 py-2">{resultado.codModular}</td>
+                                                                <td className="border px-4 py-2">{resultado.modalidad}</td>
+                                                                <td className="border px-4 py-2">{resultado.gestion}</td>
+
                                                             </tr>
+                                                        ))}
                                                         </tbody>
                                                     </table>
                                                 </div>
@@ -1148,23 +1222,19 @@ export default function Dashboard() {
 
                         </div>
                         <div className="p-6">
-                        <button
-                            type="submit"
-                            className="inline-flex items-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                        >
-                            Registrar Estudiante
-                        </button>
+                            <button
+                                type="submit"
+                                className="inline-flex items-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
+                            >
+                                Registrar Estudiante
+                            </button>
 
                         </div>
-                        <button
-                            type="submit"
-                            className="inline-flex items-center rounded-md border border-transparent bg-gray-800 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                        >
-                            Registrar Estudiante
-                        </button>
+                        
                     </div>
                 </div>
             </form>
+
         </AuthenticatedLayout>
     );
 }

@@ -6,8 +6,10 @@ use App\Http\Controllers\Api\DistritoController;
 use App\Http\Controllers\Api\ProvinciaController;
 use App\Http\Controllers\InscripcionController;
 use App\Http\Controllers\PagoController;
+use App\Models\Ciclo;
 use App\Models\Distrito;
 use App\Models\Inscripcion;
+use App\Models\ProgramaEstudio;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,4 +33,8 @@ Route::post('/registrar-pago', [PagoController::class, 'store'])->name('pago.sto
 
 Route::post('/listarinscrip',[InscripcionController::class,'listarInscripciones']);
 //Route::get('/api/listado-de-pagos', [PagoController::class, 'listadoDePagos']);
+
+//zona de carga de colegios para editar inscripciones 
+
+Route::get('/inscripcionesopciones', [InscripcionController::class, 'opciones'])->name('inscripciones.opciones');
 
