@@ -1,7 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
-import ConsultaCole from "@/Components/ConsultaCole";
 import ColegioServicio from "@/Components/ColegioServicio";
 import Listado from "@/Components/DepartamentoServicio";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
