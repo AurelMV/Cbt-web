@@ -182,6 +182,7 @@ export default function UserManagement() {
 
                 {/* Tabla para mostrar los usuarios registrados */}
                 <div className="mt-6">
+                    <h2 className="text-xl font-bold text-center mb-4">Registro de Usuarios</h2>
                     <table className="w-full table-auto border-collapse">
                         <thead>
                             <tr>

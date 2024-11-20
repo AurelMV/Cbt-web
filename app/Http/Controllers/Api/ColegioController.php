@@ -22,7 +22,6 @@ class ColegioController extends Controller
             ],
             200
         );
-        
     }
 
 
@@ -140,13 +139,15 @@ class ColegioController extends Controller
     public function BusquedaCodModular(string $id)
     {
         $colegio = Colegio::where('nombrecolegio', 'like', '%' . $id . '%')
-            ->take(20) // Limitar a los primeros 5 resultados
+            ->orWhere('codModular', 'like', '%' . $id . '%') // Agregar búsqueda por codModular
+            ->take(20) // Limitar a los primeros 20 resultados
             ->get();
 
         // Filtrar los resultados: buscar solo aquellos que contienen la subcadena de forma válida
         $colegioFiltrado = $colegio->filter(function ($item) use ($id) {
-            return stripos($item->nombrecolegio, $id) !== false &&
-                strpos($item->nombrecolegio, $id) !== 0; 
+            return (stripos($item->nombrecolegio, $id) !== false ||
+                stripos($item->codModular, $id) !== false) && // Filtrar por nombrecolegio o codModular
+                strpos($item->nombrecolegio, $id) !== 0;
         });
 
         // Si encontramos resultados después del filtrado
