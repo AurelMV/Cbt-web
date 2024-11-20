@@ -1,7 +1,6 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
-import ConsultaCole from "@/Components/ConsultaCole";
 import ColegioServicio from "@/Components/ColegioServicio";
 import Listado from "@/Components/DepartamentoServicio";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
@@ -16,11 +15,27 @@ export default function Dashboard() {
     const [Cole, setCole] = useState([]);
     const [error, setError] = useState(null);
     const [MensajeError, setMensajeError] = useState("");
+
+
+    const [currentPage, setCurrentPage] = useState(1); // Página actual
+    const itemsPerPage = 5;
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = Cole.slice(indexOfFirstItem, indexOfLastItem);
+    const paginate = (pageNumber) => setCurrentPage(pageNumber);
+    const pageNumbers = [];
+    for (let i = 1; i <= Math.ceil(Cole.length / itemsPerPage); i++) {
+        pageNumbers.push(i);
+    }
+
     const [Seleeccion, setSeleeccion] = useState({
         Depar: "",
         Provin: "",
         Distri: "",
     });
+    const [mapRef, setMapRef] = useState(null);
+
+
     const [ColegioDAta, setColegioDAta] = useState({
         nombrecolegio: "",
         codModular: "",
@@ -30,7 +45,6 @@ export default function Dashboard() {
         longitud: null, // Guardar longitud
         Distrito_idDistrito: "",
     });
-    const [coordinates, setCoordinates] = useState({ lat: null, lng: null });
     const [search, setSearch] = useState("");
 
     const [modalOpen, setModalOpen] = useState(false);
@@ -84,7 +98,7 @@ export default function Dashboard() {
             const response = await ColegioServicio.store(ColegioDAta);
             console.log("Colegio guardado con éxito:", response);
             alert("¡Colegio seleccionado con éxito!");
-            closeModal2();   
+            closeModal2();
             // Aquí puedes hacer alguna acción adicional como cerrar el modal o limpiar los campos
         } catch (error) {
             console.error("Error al guardar el colegio:", error);
@@ -229,16 +243,20 @@ export default function Dashboard() {
     });
 
     const ClickableMap = ({ setCoordinates }) => {
+        // Manejar el clic en el mapa para actualizar las coordenadas
+        const handleMapClick = (e) => {
+            const { lat, lng } = e.latlng;
+            setCoordinates((prevData) => ({
+                ...prevData,
+                latitud: lat,
+                longitud: lng,
+            }));
+        };
+
         useMapEvents({
-            click(e) {
-                const { lat, lng } = e.latlng;
-                setCoordinates((prevData) => ({
-                    ...prevData,
-                    latitud: lat,
-                    longitud: lng,
-                }));
-            },
+            click: handleMapClick, // Actualizar marcador al hacer clic
         });
+
         return null;
     };
     const handleSelectColegio = (id) => {
@@ -249,7 +267,8 @@ export default function Dashboard() {
         alert("¡Colegio seleccionado con éxito!");
     };
     const handleSearch = () => {
-        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}&countrycodes=pe`;
+        const query = `${Seleeccion.Depar}, ${Seleeccion.Provin}, ${Seleeccion.Distri}`.trim();
+        const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(query)}&countrycodes=pe`;
         fetch(url)
             .then((response) => response.json())
             .then((data) => {
@@ -260,6 +279,9 @@ export default function Dashboard() {
                         latitud: parseFloat(lat),
                         longitud: parseFloat(lon),
                     }));
+                    if (mapRef) {
+                        mapRef.setView([parseFloat(lat), parseFloat(lon)], 15);
+                    }
                 } else {
                     alert("No se encontró la ubicación.");
                 }
@@ -269,6 +291,7 @@ export default function Dashboard() {
                 alert("Hubo un problema al realizar la búsqueda.");
             });
     };
+
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
@@ -751,9 +774,7 @@ export default function Dashboard() {
                                             </div>
 
                                             <div className="w-1/2 pl-4 overflow-x-auto">
-                                                <h3 className="text-lg font-semibold mb-4">
-                                                    Colegios Seleccionados
-                                                </h3>
+                                                <h3 className="text-lg font-semibold mb-4">Colegios Seleccionados</h3>
                                                 <table className="min-w-full border">
                                                     <thead>
                                                         <tr className="bg-gray-200">
@@ -765,10 +786,14 @@ export default function Dashboard() {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-                                                        {Cole.length > 0 && Cole.map((resultado, index) => (
+                                                        {currentItems.length > 0 && currentItems.map((resultado, index) => (
                                                             <tr key={index}>
                                                                 <td className="border px-4 py-2">
-                                                                    <button type="button" onClick={() => handleSelectColegio(resultado.id)} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                                                                    <button
+                                                                        className="inline-flex items-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
+                                                                        type="button"
+                                                                        onClick={() => handleSelectColegio(resultado.id)}
+                                                                    >
                                                                         Seleccionar
                                                                     </button>
                                                                 </td>
@@ -776,13 +801,25 @@ export default function Dashboard() {
                                                                 <td className="border px-4 py-2">{resultado.codModular}</td>
                                                                 <td className="border px-4 py-2">{resultado.modalidad}</td>
                                                                 <td className="border px-4 py-2">{resultado.gestion}</td>
-
                                                             </tr>
                                                         ))}
                                                     </tbody>
-
                                                 </table>
 
+                                                <div className="flex justify-center mt-4">
+                                                    {pageNumbers.map((number) => (
+                                                        <button
+                                                            key={number}
+                                                            onClick={() => paginate(number)}
+                                                            className={`px-4 py-2 mx-1 rounded-md ${number === currentPage
+                                                                ? "bg-blue-500 text-white"
+                                                                : "bg-gray-300"
+                                                                }`}
+                                                        >
+                                                            {number}
+                                                        </button>
+                                                    ))}
+                                                </div>
                                             </div>
 
                                         </div>
@@ -899,87 +936,67 @@ export default function Dashboard() {
                                                             Guardar
                                                         </button>
                                                     </div>
-                                                    <div style={{ textAlign: "center" }}>
-                                                        <h3>Mapa Pequeño - Selección de Coordenadas</h3>
-                                                        <div>
-                                                            <input
-                                                                type="text"
-                                                                value={search}
-                                                                onChange={(e) => setSearch(e.target.value)}
-                                                                placeholder="Departamento, Provincia, Distrito"
-                                                                style={{ marginRight: "10px", padding: "5px" }}
-                                                            />
-                                                            <button onClick={handleSearch} style={{ padding: "5px 10px" }}>
-                                                                Buscar
-                                                            </button>
-                                                        </div>
-                                                        <div
-                                                            id="map"
-                                                            style={{
-                                                                height: "300px",
-                                                                width: "400px",
-                                                                margin: "20px auto",
-                                                                border: "1px solid #ccc",
-                                                            }}
-                                                        >
-                                                            <MapContainer
-                                                                center={ColegioDAta.latitud && ColegioDAta.longitud ? [ColegioDAta.latitud, ColegioDAta.longitud] : [-10.4074729, -75.3347043]}
-                                                                zoom={ColegioDAta.latitud && ColegioDAta.longitud ? 15 : 6}
-                                                                style={{ height: "100%", width: "100%" }}
-                                                            >
-                                                                <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                                                                <ClickableMap setCoordinates={setColegioDAta} />
-                                                                {ColegioDAta.latitud && ColegioDAta.longitud && (
-                                                                    <Marker position={[ColegioDAta.latitud, ColegioDAta.longitud]} />
-                                                                )}
-                                                            </MapContainer>
-                                                        </div>
-                                                    </div>
+
                                                 </div>
 
                                                 <div className="w-1/2 pl-4 overflow-x-auto">
                                                     <h3 className="text-lg font-semibold mb-4">
-                                                        Colegios Seleccionados
+                                                        Seleccione la Ubicación
                                                     </h3>
-                                                    <table className="min-w-full border">
-                                                        <thead>
-                                                            <tr className="bg-gray-200">
-                                                                <th className="border px-4 py-2">
-                                                                    Nombre
-                                                                </th>
-                                                                <th className="border px-4 py-2">
-                                                                    codModular
-                                                                </th>
-                                                                <th className="border px-4 py-2">
-                                                                    modalidad
-                                                                </th>
-                                                                <th className="border px-4 py-2">
-                                                                    gestion
-                                                                </th>
-                                                                <th className="border px-4 py-2">
-                                                                    latitud
-                                                                </th>
-                                                                <th className="border px-4 py-2">
-                                                                    longitud
-                                                                </th>
-                                                                <th className="border px-4 py-2">
-                                                                    distrito
-                                                                </th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody>
-                                                            {Cole.length > 0 && Cole.map((resultado, index) => (
-                                                                <tr key={index}>
+                                                    <div style={{ textAlign: "center" }}>
+                                                        <h3>Selección de Coordenadas</h3>
+                                                        <div>
+                                                            <p><strong>Departamento:</strong> {Seleeccion.Depar || "No seleccionado"}</p>
+                                                            <p><strong>Provincia:</strong> {Seleeccion.Provin || "No seleccionado"}</p>
+                                                            <p><strong>Distrito:</strong> {Seleeccion.Distri || "No seleccionado"}</p>
+                                                        </div>
+                                                        <button
+                                                            className="inline-flex items-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
+                                                            onClick={handleSearch}
+                                                        >
+                                                            Buscar
+                                                        </button>
+                                                    </div>
+                                                    <div
+                                                        id="map"
+                                                        style={{
+                                                            height: "300px",
+                                                            width: "400px",
+                                                            margin: "20px auto",
+                                                            border: "1px solid #ccc",
+                                                        }}
+                                                    >
+                                                        <MapContainer
+                                                            center={
+                                                                ColegioDAta.latitud && ColegioDAta.longitud
+                                                                    ? [ColegioDAta.latitud, ColegioDAta.longitud]
+                                                                    : [-10.4074729, -75.3347043] 
+                                                            }
+                                                            zoom={ColegioDAta.latitud && ColegioDAta.longitud ? 15 : 6}
+                                                            style={{ height: "100%", width: "100%" }}
+                                                            whenCreated={setMapRef} 
+                                                        >
+                                                            <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
+                                                            <ClickableMap setCoordinates={setColegioDAta} />
+                                                            {ColegioDAta.latitud && ColegioDAta.longitud && (
+                                                                <Marker
+                                                                    position={[ColegioDAta.latitud, ColegioDAta.longitud]}
+                                                                    draggable={true} 
+                                                                    eventHandlers={{
+                                                                        dragend: (e) => {
+                                                                            const { lat, lng } = e.target.getLatLng();
+                                                                            setColegioDAta((prevData) => ({
+                                                                                ...prevData,
+                                                                                latitud: lat,
+                                                                                longitud: lng,
+                                                                            }));
+                                                                        },
+                                                                    }}
+                                                                />
+                                                            )}
+                                                        </MapContainer>
+                                                    </div>
 
-                                                                    <td className="border px-4 py-2">{resultado.nombrecolegio}</td>
-                                                                    <td className="border px-4 py-2">{resultado.codModular}</td>
-                                                                    <td className="border px-4 py-2">{resultado.modalidad}</td>
-                                                                    <td className="border px-4 py-2">{resultado.gestion}</td>
-
-                                                                </tr>
-                                                            ))}
-                                                        </tbody>
-                                                    </table>
                                                 </div>
                                             </div>
                                         </div>
@@ -1242,7 +1259,7 @@ export default function Dashboard() {
                             </button>
 
                         </div>
-                        
+
                     </div>
                 </div>
             </form>
