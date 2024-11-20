@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/inertia-react';
-
+import { Link } from '@inertiajs/react';
 
 const images = [
   {
@@ -88,7 +87,7 @@ const Inicio = ({ auth }) => {
           <li><a href="#pricing" className="hover:text-yellow-500">Nosotros</a></li>
         </ul>
         <div className="flex space-x-4">
-          {auth && auth.user ? (
+          {auth.user ? (
             <Link href={route('dashboard')} className="text-gray-800 hover:text-gray-600 transition">
               Dashboard
             </Link>
