@@ -16,30 +16,18 @@ class EstudianteController extends Controller
      */
     public function index()
     {
-        $estudiantes = Estudiante::select( 'nombres',
-        'aPaterno',
-        'aMaterno',
-        'sexo',
-        'celularestudiante',
-        'celularapoderado',
-        'fechaNacimiento',
-        'email',
-        'anoculminado',
-        'Nrodocumento',
-        'tipodocumento',
-        'direccion',
-        'foto')  
-                              ->get();
-
-    /*return response()->json([
-        'status' => true,
-        'message' => 'Estudiantes Establecidos con exito :)',
-        'data' => $estudiantes
-    ], 200);*/
-    return Inertia::render('Estudiantes', [
-        'estudiantes' => $estudiantes
-    ]);
+      // Obtener todos los estudiantes
+      $estudiantes = Estudiante::all();
+    
+      // Retornar los datos a la vista de React usando Inertia
+   
+    
+        // Pasar los estudiantes a la vista de Inertia
+        return Inertia::render('Estudiantes', [
+            'estudiantes' => $estudiantes
+        ]);
     }
+    
 
     /**
      * Show the form for creating a new resource.
@@ -108,11 +96,7 @@ class EstudianteController extends Controller
         'foto')
         
         ->findOrFail($id);
-        return response()->json([
-            'status' => true,
-            'message' => 'Estudiante localizado',
-            'data' => $estudiante
-        ], 200);
+        return Inertia::render('Estudiantes');
     }
 
     /**
@@ -126,43 +110,34 @@ class EstudianteController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, string $id)
     {
-        $validator = Validator::make($request->all(), [
-            'idEstudiante'=>'required|string|max:80',
-            'nombres' => 'required|string|max:80',
-            'aPaterno' => 'required|string|max:120',
-            'aMaterno' => 'required|string|max:120',
-            'sexo' => 'required|string|max:1',
-            'celularestudiante' => 'required|string|max:9',
-            'celularapoderado' => 'required|string|max:9',
-            'fechaNacimiento' => 'nullable|date',
-            'email' => 'required|email|max:220',
-            'anoculminado' => 'required|string|max:45',
-            'Nrodocumento' => 'nullable|string|max:45',
-            'tipodocumento' => 'nullable|string|max:45',
-            'direccion' => 'required|string|max:45',
-            'foto' => 'nullable|binary',
-           
-        ]);
+       
+            $request->validate([
+                'nombres' => 'required|string|max:255',
+                'aPaterno' => 'required|string|max:255',
+                'aMaterno' => 'required|string|max:255',
+                'sexo' => 'required|string',
+                'Nrodocumento' => 'required|string|max:255',
+                'celularestudiante' => 'required|string|max:15',
+                'celularapoderado' => 'required|string|max:15',
+                'fechaNacimiento' => 'required|date',
+                'email' => 'required|email',
+                'anoculminado' => 'required|string',
+                'idcolegios' => 'required|integer',
+                'tipodocumento' => 'required|string',
+                'direccion' => 'required|string|max:255',
+            ]);
+        
+            $estudiante = Estudiante::findOrFail($id);
+            $estudiante->update($request->all());
+        
+            return redirect()->route('estudiantes.index')->with('success', 'Estudiante actualizado con éxito');
 
-        if ($validator->fails()) {
-            return response()->json([
-                'status' => false,
-                'message' => 'Error en actualizar Estudiante',
-                'errors' => $validator->errors()
-            ], 422);
-        }
+        
+        
 
-        $estudiante = Estudiante::findOrFail($id);
-        $estudiante->update($request->all());
-
-        return response()->json([
-            'status' => true,
-            'message' => 'Estudiante Actualizado ',
-            'data' => $estudiante
-        ], 200);
-    }
+     }
     /**
      * Remove the specified resource from storage.
      */

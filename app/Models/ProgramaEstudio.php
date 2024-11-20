@@ -10,7 +10,10 @@ class ProgramaEstudio extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['nombre_programa'];
 
-    public function inscripciones() {
-        return $this->hasMany(Inscripcion::class);
+
+    
+    public function inscripciones()
+    {
+        return $this->hasMany(Inscripcion::class, 'idprogramaestudios', 'id');
     }
 }

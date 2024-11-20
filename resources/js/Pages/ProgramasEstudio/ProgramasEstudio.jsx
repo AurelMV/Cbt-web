@@ -93,17 +93,18 @@ export default function ProgramasEstudio({ programasEstudio: initialPrograma }) 
         <AuthenticatedLayout>
             <Head title="Programas de Estudio" />
 
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
-                Programas de Estudios
+            <h2 className="text-xl font-semibold leading-tight text-black">
+                PROGRAMA DE ESTUDIO
             </h2>
+            <p className='leading-tight text-gray-400'>Registre nuevos programas de estudio</p>
 
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 border border-gray-300">
                         <div className="grid grid-cols-2 gap-8">
 
                             <div>
-                                <h3 className="text-md font-medium mb-4">Registro de nuevos Programas de Estudios</h3>
+                                <h3 className="text-md font-medium mb-4 text-blue-900">Registro de nuevos Programas de Estudios</h3>
                                 <form className="space-y-4" onSubmit={handleSubmit}>
                                     <input
                                         type="text"
@@ -138,7 +139,7 @@ export default function ProgramasEstudio({ programasEstudio: initialPrograma }) 
                             </div>
 
                             <div>
-                                <h3 className="text-md font-medium mb-4">Listado de los Programas de Estudios Resgistrados </h3>
+                                <h3 className="text-md font-medium mb-4 text-blue-900">Listado de los Programas de Estudios Resgistrados </h3>
                                 <table className="min-w-full divide-y divide-gray-200 border">
                                     <thead className="bg-gray-50">
                                         <tr>

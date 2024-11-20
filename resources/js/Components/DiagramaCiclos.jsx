@@ -54,7 +54,7 @@ export default function EnrollmentAnalysis() {
 
   return (
     <div className="bg-white p-6 rounded-lg shadow-md">
-      <h3 className="text-lg font-semibold mb-4">Análisis de Inscripciones por Ciclo</h3>
+      
       <Line data={chartData} options={chartOptions} />
     </div>
   );

@@ -40,14 +40,18 @@ export default function Reportes({ datos = [] }) {
     return (
         <AuthenticatedLayout>
             <Head title="Reportes" />
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
+            <h2 className="text-xl font-semibold leading-tight text-black">
                 REPORTES
             </h2>
+            <p className="leading-tight text-gray-400">Realize y descargue un reporte de inscritos por ciclos y programas de estudio</p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg border border-gray-300">
                         <div className="p-6 text-gray-900">
-                            <div className="mb-4">
+                        
+
+                            <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <div>
                                 <label htmlFor="ciclo" className="block text-sm font-medium text-gray-700">
                                     Filtrar por ciclo:
                                 </label>
@@ -57,16 +61,33 @@ export default function Reportes({ datos = [] }) {
                                     value={cicloFiltrado}
                                     onChange={handleCicloChange}
                                 >
-                                    <option value="">Todos los ciclos</option>
+                                    <option value="" selected disabled>Seleccione un ciclo</option>
                                     <option value="Ciclo 1">Ciclo 1</option>
                                     <option value="Ciclo 2">Ciclo 2</option>
-                                    <option value="Ciclo 2">Ciclo intensivo</option>
+                                    <option value="Ciclo 3">Ciclo intensivo</option>
                                 </select>
+                                </div>
+                               <div>
+                               <label htmlFor="programaE" className="block text-sm font-medium text-gray-700">
+                                    Filtrar por programa de estudio:
+                                </label>
+                                <select
+                                    id="programaE"
+                                    className="mt-1 block w-full border-gray-300 rounded-md shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                    //value={cicloFiltrado}
+                                    //onChange={handleCicloChange}
+                                >
+                                    <option value="" selected disabled>Seleccione un programa de estudio</option>
+                                    <option value="Ciclo 1">programa 1</option>
+                                    <option value="Ciclo 2">programa 2</option>
+                                    <option value="Ciclo 3">programa 3</option>
+                                </select>
+                               </div>
                             </div>
 
                             <button
                                 onClick={handleExportPDF}
-                                className="mb-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+                                className="mt-4 mb-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
                             >
                                 Imprimir PDF
                             </button>

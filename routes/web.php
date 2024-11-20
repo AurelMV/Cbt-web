@@ -45,6 +45,7 @@ Route::middleware('auth')->group(function () {
 // Rutas para pruebas
 Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
 Route::post('/cursos', [CursoController::class, 'store'])->name('cursos.store');
+Route::put('/cursos/{curso}', [CursoController::class, 'update'])->name('cursos.update');
 Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes.index');
 Route::get('/ciclos', [CicloController::class, 'index'])->name('ciclos.index');
 Route::get('/docentes', [DocenteController::class, 'index'])->name('docentes.index');
@@ -52,11 +53,14 @@ Route::post('/docentes', [DocenteController::class, 'store'])->name('docentes.st
 Route::put('/docentes/{docente}', [DocenteController::class, 'update'])->name('docentes.update');
 //Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
-Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('docenteCursos.index');
 Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
+Route::put('/grupos/{grupo}', [GrupoController::class, 'update'])->name('grupos.update');
+Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('docenteCursos.index');
+Route::post('/docenteCursos', [DocenteCursoController::class, 'store'])->name('docenteCursos.store');
+Route::put('/docenteCursos/{docenteCurso}', [DocenteCursoController::class, 'update'])->name('docenteCursos.update');
 Route::get('/enrollment-data', [EnrollmentController::class, 'index'])->name('diagrama.index');
 // Rutas accesibles para usuario con el rol admin
-Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {
+Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
     Route::get('/admin', [AdminController::class, 'index'])->name('admin');
     Route::resource('ciclos', CicloController::class);
     Route::resource('cursos', CursoController::class);
@@ -73,4 +77,36 @@ Route::group(['middleware' => ['auth', 'verified', 'role:empleado']], function (
 
 
 
-require __DIR__ . '/auth.php';
+//canvios que se estan asiendo en Inscripciones ... 
+Route::post('/web/inscripciones', [InscripcionController::class, 'store']);
+
+
+Route::put('/estudiantes/{id}', [EstudianteController::class, 'update'])->name('estudiantes.update');
+
+
+
+Route::put('/inscripciones/{id}', [InscripcionController::class, 'update'])->name('inscripciones.update');
+
+
+
+
+Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index');
+
+//Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('pagos.listado');
+Route::put('/GestionPagos/{id}', [PagoController::class, 'update']);
+
+
+
+
+
+//es para aser prueva de la inter que no funca 
+Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('pagos.listadoDePagos');
+
+//Route::get('/pagos', [PagoController::class, 'listadoPagos']);
+
+
+Route::put('/editar-pago/{id}', [PagoController::class, 'editarPago']);
+
+require __DIR__.'/auth.php';
+
+
