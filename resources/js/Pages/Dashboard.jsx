@@ -1,6 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
+import ConsultaCole from "@/Components/ConsultaCole";
 import ColegioServicio from "@/Components/ColegioServicio";
 import Listado from "@/Components/DepartamentoServicio";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
@@ -82,6 +83,8 @@ export default function Dashboard() {
 
             const response = await ColegioServicio.store(ColegioDAta);
             console.log("Colegio guardado con éxito:", response);
+            alert("¡Colegio seleccionado con éxito!");
+            closeModal2();   
             // Aquí puedes hacer alguna acción adicional como cerrar el modal o limpiar los campos
         } catch (error) {
             console.error("Error al guardar el colegio:", error);
@@ -241,9 +244,9 @@ export default function Dashboard() {
     const handleSelectColegio = (id) => {
         setFormData((prevData) => ({
             ...prevData,
-            p_Colegios_id: id, 
+            p_Colegios_id: id, // Asocia el ID del colegio al estudiante
         }));
-        closeModal2(); 
+        alert("¡Colegio seleccionado con éxito!");
     };
     const handleSearch = () => {
         const url = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(search)}&countrycodes=pe`;
@@ -266,7 +269,6 @@ export default function Dashboard() {
                 alert("Hubo un problema al realizar la búsqueda.");
             });
     };
-    console.log(FormData.p_Colegios_id);
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
@@ -724,6 +726,7 @@ export default function Dashboard() {
                                                         />
                                                     </div>
                                                     <button
+                                                        type="button"
                                                         onClick={openModal2}
                                                         className="w-full bg-indigo-600 text-white p-2 rounded-md mt-2"
                                                     >
@@ -738,6 +741,7 @@ export default function Dashboard() {
                                                         Cancelar
                                                     </button>
                                                     <button
+                                                        type="button"
                                                         onClick={closeModal}
                                                         className="px-4 py-2 bg-blue-600 text-white rounded-md"
                                                     >
@@ -761,11 +765,10 @@ export default function Dashboard() {
                                                         </tr>
                                                     </thead>
                                                     <tbody>
-
                                                         {Cole.length > 0 && Cole.map((resultado, index) => (
                                                             <tr key={index}>
                                                                 <td className="border px-4 py-2">
-                                                                    <button onClick={() => handleSelectColegio(resultado.id)} className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                                                                    <button type="button" onClick={() => handleSelectColegio(resultado.id)} className="px-4 py-2 bg-blue-600 text-white rounded-md">
                                                                         Seleccionar
                                                                     </button>
                                                                 </td>
@@ -860,13 +863,21 @@ export default function Dashboard() {
 
                                                             <div>
                                                                 <label>Distrito</label>
-                                                                <input
-                                                                    type="text"
+                                                                <select
+                                                                    name="Distrito_idDistrito" // Asegúrate de que coincida con la propiedad del estado
                                                                     className="w-full border p-2 rounded-md"
-                                                                    name="Distrito_idDistrito"
-                                                                    value={ColegioDAta.Distrito_idDistrito}
-                                                                    onChange={handleChangeDAtaColegio}
-                                                                />
+                                                                    value={ColegioDAta.Distrito_idDistrito} // Valor actual del estado
+                                                                    onChange={handleChangeDAtaColegio} // Manejador de cambio
+                                                                >
+                                                                    <option value="" disabled>
+                                                                        Seleccione un distrito
+                                                                    </option>
+                                                                    {distritos.map((lista) => (
+                                                                        <option key={lista.id} value={lista.id}>
+                                                                            {lista.nombredistrito}
+                                                                        </option>
+                                                                    ))}
+                                                                </select>
                                                             </div>
 
                                                         </div>
@@ -881,6 +892,7 @@ export default function Dashboard() {
                                                             Cancelar
                                                         </button>
                                                         <button
+                                                            type="button"
                                                             onClick={handleSave}
                                                             className="px-4 py-2 bg-blue-600 text-white rounded-md"
                                                         >
@@ -956,16 +968,16 @@ export default function Dashboard() {
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                        {Cole.length > 0 && Cole.map((resultado, index) => (
-                                                            <tr key={index}>
-                                                                
-                                                                <td className="border px-4 py-2">{resultado.nombrecolegio}</td>
-                                                                <td className="border px-4 py-2">{resultado.codModular}</td>
-                                                                <td className="border px-4 py-2">{resultado.modalidad}</td>
-                                                                <td className="border px-4 py-2">{resultado.gestion}</td>
+                                                            {Cole.length > 0 && Cole.map((resultado, index) => (
+                                                                <tr key={index}>
 
-                                                            </tr>
-                                                        ))}
+                                                                    <td className="border px-4 py-2">{resultado.nombrecolegio}</td>
+                                                                    <td className="border px-4 py-2">{resultado.codModular}</td>
+                                                                    <td className="border px-4 py-2">{resultado.modalidad}</td>
+                                                                    <td className="border px-4 py-2">{resultado.gestion}</td>
+
+                                                                </tr>
+                                                            ))}
                                                         </tbody>
                                                     </table>
                                                 </div>
