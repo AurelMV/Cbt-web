@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Ciclo;
+use App\Models\Estudiante;
 use App\Models\Grupo;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -14,21 +15,46 @@ class GrupoController extends Controller
      */
     public function index()
     {
+        $grupoID = request()->input('grupo_id');
         $grupos = Grupo::with('ciclo')->get()->map(function ($grupo) {
             return [
                 'id' => $grupo->id,
                 'nombre' => $grupo->nombre,
                 'aforo' => $grupo->aforo,
-                'estado' => $grupo->estado ? 'Activo' : 'Inactivo',
+                'estado' => $grupo->estado,
+                'estadonombre' => $grupo->estado ? 'Activo' : 'Inactivo',
                 'ciclo' => $grupo->ciclo ? $grupo->ciclo->nombre : 'Sin ciclo',
+                'idciclo' => $grupo->idciclo
             ];
         });
-
+        $estudiantes = Estudiante::join('inscripcions', 'estudiantes.id', '=', 'inscripcions.idEstudiante')
+        ->where('inscripcions.idGrupos', $grupoID)
+        ->selectRaw('estudiantes.id, CONCAT(nombres, " ", aPaterno, " ", aMaterno) as nombre_completo, inscripcions.estadopago')
+        ->get()->map(function ($estudiante) {
+            return [
+                'id' => $estudiante->id,
+                'nombre_completo' => $estudiante->nombre_completo,
+                'estadopago' => $estudiante->estadopago
+            ];
+        });
+        $estudiantesDeudores = Estudiante::join('inscripcions', 'estudiantes.id', '=', 'inscripcions.idEstudiante')
+        ->where('inscripcions.estadopago', 0)
+        ->where('inscripcions.idGrupos', $grupoID)
+        ->selectRaw('estudiantes.id, CONCAT(nombres, " ", aPaterno, " ", aMaterno) as nombre_completo, inscripcions.estadopago')
+        ->get()->map(function ($estudiante) {
+            return [
+                'id' => $estudiante->id,
+                'nombre_completo' => $estudiante->nombre_completo,
+                'estadopago' => $estudiante->estadopago
+            ];
+        });
         $ciclos = Ciclo::all();
 
         return Inertia::render('GruposEstudio', [
             'grupos' => $grupos,
-            'ciclos' => $ciclos
+            'ciclos' => $ciclos,
+            'estudiantes' => $estudiantes,
+            'estudiantesDeudores' => $estudiantesDeudores
         ]);
     }
 

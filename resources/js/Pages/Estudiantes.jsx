@@ -1,95 +1,220 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head } from '@inertiajs/react';
+import { Head, usePage } from '@inertiajs/react'; // Solo importa una vez
+import { useState } from "react";
+import { Inertia } from '@inertiajs/inertia';
+
+export default function Estudiantes() {
+
+    const { estudiantes } = usePage().props;
+    const [modalVisible, setModalVisible] = useState(false);
+    const [selectedEstudiante, setSelectedEstudiante] = useState(null);
+
+    // Función para mostrar el modal y cargar los datos del estudiante
+    const handleEditClick = (estudiante) => {
+        setSelectedEstudiante(estudiante);
+        setModalVisible(true);
+    };
+
+    // Función para manejar el cambio de datos en el formulario
+    const handleChange = (e) => {
+        setSelectedEstudiante({
+            ...selectedEstudiante,
+            [e.target.name]: e.target.value,
+        });
+    };
 
 
-export default function Edit({ mustVerifyEmail, status }) {
+    const closeModal = () => {
+        Inertia.reload(); 
+      };
+
+    // Función para enviar el formulario de actualización
+    const handleSubmit = (e) => {
+        e.preventDefault();
+
+        Inertia.put(`/estudiantes/${selectedEstudiante.id}`, selectedEstudiante, {
+            onSuccess: () => {
+                setModalVisible(false); // Cerrar el modal después de actualizar
+                // Si deseas actualizar la lista sin recargar la página, puedes usar:
+                // Inertia.visit('/ruta-de-los-estudiantes', { method: 'get' }); 
+                // o redirigir al listado
+                Inertia.visit('/estudiantes.index'); // Redirige a la página de estudiantes
+            },
+            onError: () => {
+                console.error('Error al actualizar el estudiante');
+            }
+        });
+    };
 
     return (
-        <AuthenticatedLayout
-        >
-            <Head title="Estudiantes" />
-            
-            <h2 className="border-b-2 border-gray-400 text-xl font-semibold leading-tight text-gray-800">
-                Gestión de Estudiantes Inscritos
-            </h2>
-            <div className="py-12">
-                <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-                    <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
-                        <div className="p-6 text-gray-900">
-                        <div className='grid grid-cols-6'></div>
-                            <div className="grid grid-cols-5 gap-8">
-                                <div className='col-span-1'>
-                                    <h3 className="text-md font-medium mb-4">Formulario de Estudiante</h3>
-                                    <form className="space-y-4">
-                                        <input type="text" placeholder="Nombre" className="w-full border p-2 rounded-md" required />
-                                        <input type="text" placeholder="Apellido Paterno" className="w-full border p-2 rounded-md" required />
-                                        <input type="text" placeholder="Apellido Materno" className="w-full border p-2 rounded-md" required />
-                                        <select className="w-full border p-2 rounded-md" required>
-                                            <option value="">Sexo</option>
-                                            <option value="masculino">Masculino</option>
-                                            <option value="femenino">Femenino</option>
-                                        </select>
-                                        <input type="text" placeholder="DNI" className="w-full border p-2 rounded-md" required />
-                                        <input type="text" placeholder="Número de Celular" className="w-full border p-2 rounded-md" required />
-                                        <input type="text" placeholder="Número de Apoderado" className="w-full border p-2 rounded-md" required />
-                                        <input type="date" placeholder="Fecha de Nacimiento" className="w-full border p-2 rounded-md" required />
-                                        <input type="email" placeholder="Email" className="w-full border p-2 rounded-md" required />
-                                        <input type="text" placeholder="Último Año Cursado" className="w-full border p-2 rounded-md" required />
-                                        <input type="text" placeholder="Colegio de Procedencia" className="w-full border p-2 rounded-md" required />
-                                        <select className="w-full border p-2 rounded-md" required>
-                                            <option value="">Tipo de Documento</option>
-                                            <option value="DNI">DNI</option>
-                                            <option value="PASAPORTE">PASAPORTE</option>
-                                        </select>
-                                        <input type="text" placeholder="Dirección" className="w-full border p-2 rounded-md" required />
-                                        <button type="submit" className="w-full inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white font-semibold hover:bg-blue-500">
-                                            Modificar Estudiante
-                                        </button>
-                                    </form>
-                                </div>
+        <AuthenticatedLayout>
+            <div>
 
-           
-                                <div className='col-span-4'>
-                                    <h3 className="text-md font-medium mb-4">Foto del Estudiante</h3>
-                                    <div className="mb-4">
-                                        <img src="https://i.pinimg.com/originals/90/b2/6a/90b26ac18df70f2e8eaa45627fb4aa47.jpg" alt="Foto del Estudiante" className="w-52 h-52 object-cover rounded-md" />
-                                    </div>
-                                    <h3 className="text-md font-medium mb-4">Lista de Estudiantes</h3>
-                                    <table className="min-w-full divide-y divide-gray-200 border">
-                                        <thead className="bg-gray-50">
-                                            <tr>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nombre</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Paterno</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Materno</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Sexo</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Celular</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Celular_Apoderado</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nacimiento</th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Acción</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="bg-white divide-y divide-gray-200">
- 
-                                            <tr>
-                                                <td className="px-6 py-4 text-sm text-gray-900">Royer</td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">Quispe</td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">Delgado</td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">Todos los dias... (...La vida me coge) </td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">xiaomi 9 </td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">calidad-precio papa</td>
-                                                <td className="px-6 py-4 text-sm text-gray-900">si</td>
-                                                <td className="px-6 py-4 text-sm text-gray-500">
-                                                    <button className="text-indigo-600 hover:text-indigo-900">Editar</button>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
+                <h2 className="text-xl font-semibold text-black">GESTION DE ESTUDIANTES</h2>
+                <p className="leading-tight text-gray-400">Administra a los estudiantes que se han inscrito</p>
+                <div>
+                    {/*tmr x q no hay los otros div xd....aqui dentro tenia que ir con sus propiedades pex */}
+                </div>
+                {/* Tabla de estudiantes */}
+              
+
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead>
+                        <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nombre</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Paterno</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Materno</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Acción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {estudiantes.map((estudiante) => (
+                            <tr key={estudiante.id}>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.nombres}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.aPaterno}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.aMaterno}</td>
+                                <td className="px-6 py-4 text-sm text-gray-500">
+                                    <button
+                                        onClick={() => handleEditClick(estudiante)}
+                                        className="text-indigo-600 hover:text-indigo-900"
+                                    >
+                                        Editar
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+
+                {/* Modal para editar estudiante */}
+                {modalVisible && selectedEstudiante && (
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center">
+                        <div className="bg-white p-6 rounded-md shadow-lg w-1/3">
+                            <h3 className="text-xl mb-4">Editar Estudiante</h3>
+                            <form onSubmit={handleSubmit}>
+                                <input
+                                    type="text"
+                                    name="nombres"
+                                    value={selectedEstudiante.nombres}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="aPaterno"
+                                    value={selectedEstudiante.aPaterno}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="aMaterno"
+                                    value={selectedEstudiante.aMaterno}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <select
+                                    name="sexo"
+                                    value={selectedEstudiante.sexo}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                >
+                                    <option value="">Selecciona el sexo</option>
+                                    <option value="m">Masculino</option>
+                                    <option value="f">Femenino</option>
+                                </select>
+                                <input
+                                    type="text"
+                                    name="Nrodocumento"
+                                    value={selectedEstudiante.Nrodocumento}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="celularestudiante"
+                                    value={selectedEstudiante.celularestudiante}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="celularapoderado"
+                                    value={selectedEstudiante.celularapoderado}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <input
+                                    type="date"
+                                    name="fechaNacimiento"
+                                    value={selectedEstudiante.fechaNacimiento}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <input
+                                    type="email"
+                                    name="email"
+                                    value={selectedEstudiante.email}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="anoculminado"
+                                    value={selectedEstudiante.anoculminado}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <input
+                                    type="text"
+                                    name="idcolegios"
+                                    value={selectedEstudiante.idcolegios}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <select
+                                    name="tipodocumento"
+                                    value={selectedEstudiante.tipodocumento}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                >
+                                    <option value="DNI">DNI</option>
+                                    <option value="PASAPORTE">PASAPORTE</option>
+                                </select>
+                                <input
+                                    type="text"
+                                    name="direccion"
+                                    value={selectedEstudiante.direccion}
+                                    onChange={handleChange}
+                                    className="w-full border p-2 rounded-md mb-4"
+                                    required
+                                />
+                                <button
+                                  href={route('estudiantes.index')}
+                                    type="submit"
+                                    className="w-full inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white font-semibold hover:bg-blue-500"
+                                    
+                                >
+                                    Modificar Estudiante
+                                </button>
+                            </form>
                         </div>
                     </div>
-                </div>
+                )}
             </div>
         </AuthenticatedLayout>
     );
 }
+

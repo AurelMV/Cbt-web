@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/inertia-react';
+import { Link } from '@inertiajs/react';
 
 const images = [
   {
@@ -56,7 +56,7 @@ const images = [
 
 const Inicio = ({ auth }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-
+  const [activeSection, setActiveSection] = useState("home");
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prevIndex) => (prevIndex + 1) % images.length);
@@ -87,7 +87,7 @@ const Inicio = ({ auth }) => {
           <li><a href="#pricing" className="hover:text-yellow-500">Nosotros</a></li>
         </ul>
         <div className="flex space-x-4">
-          {auth && auth.user ? (
+          {auth.user ? (
             <Link href={route('dashboard')} className="text-gray-800 hover:text-gray-600 transition">
               Dashboard
             </Link>
@@ -104,56 +104,49 @@ const Inicio = ({ auth }) => {
         </div>
       </nav>
 
-    {/* Carrusel */}
-<div className="carousel relative w-full max-w-3xl mx-auto mt-8">
-  <div className="relative w-full h-96 overflow-hidden rounded-lg flex items-center justify-center">
-    
-    {/* Imagen anterior borrosa */}
-    <img
-      src={images[(currentIndex - 1 + images.length) % images.length].src}
-      alt={images[(currentIndex - 1 + images.length) % images.length].alt}
-      className="absolute left-0 w-1/3 h-full object-cover opacity-50 blur-sm transform -translate-x-1/2"
-    />
+      <div class="relative min-h-screen bg-cover bg-center bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSobihibzhFqBDgNuVyobCV6f5e7GHLkgT4Vw&s')]">
+        <div class="absolute top-0 left-0 h-full w-1/3 bg-white rounded-full shadow-lg translate-x-[-50%]"></div>
+        <div class="relative z-10 flex flex-col items-center justify-center h-full space-y-12">
+          !-- Texto principal --
+          <div class="text-center bg-white bg-opacity-75 p-8 rounded-lg shadow-md max-w-3xl">
+            <h1 class="text-5xl font-bold text-gray-800">Bienvenido</h1>
+            <p class="mt-4 text-gray-600 text-lg">
+              Siempre en lado con el CBT, con el recto cumplimiento de las labores academicas
+            </p>
+          </div>
 
-    {/* Imagen actual */}
-    <img
-      src={images[currentIndex].src}
-      alt={images[currentIndex].alt}
-      className="w-1/2 h-full object-contain rounded-lg"
-    />
+          !-- Carrusel agrandado con contenedor adecuado--
+          <div class="carousel relative w-full max-w-5xl mx-auto">
+            <div class="relative w-full h-[700px] overflow-hidden rounded-lg bg-red-100">
+              <img
+                src={images[currentIndex].src}
+                alt={images[currentIndex].alt}
+                class="w-full h-full object-cover rounded-lg"
+              />
+              <div class="absolute bottom-4 left-1/2 transform -translate-x-1/2 bg-gray-900 bg-opacity-50 text-white p-4 rounded text-center">
+                <h3 class="font-bold text-lg">{images[currentIndex].alt}</h3>
+                <p>{images[currentIndex].caption}</p>
+              </div>
+            </div>
 
-    {/* Imagen siguiente borrosa */}
-    <img
-      src={images[(currentIndex + 1) % images.length].src}
-      alt={images[(currentIndex + 1) % images.length].alt}
-      className="absolute right-0 w-1/3 h-full object-cover opacity-50 blur-sm transform translate-x-1/2"
-    />
-
-    {/* Título y subtítulo de la imagen actual */}
-    <div className="absolute bottom-4 left-4 bg-gray-900 bg-opacity-50 text-white p-2 rounded">
-      <h3 className="font-bold">{images[currentIndex].alt}</h3>
-      <p>{images[currentIndex].caption}</p>
-    </div>
-  </div>
-
-  {/* Botón de retroceso */}
-  <button
-    onClick={goToPrevious}
-    className="absolute left-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-900 bg-opacity-50 rounded-full text-white focus:outline-none"
-    aria-label="Previous"
-  >
-    ❮
-  </button>
-
-  {/* Botón de avance */}
-  <button
-    onClick={goToNext}
-    className="absolute right-0 top-1/2 transform -translate-y-1/2 p-2 bg-gray-900 bg-opacity-50 rounded-full text-white focus:outline-none"
-    aria-label="Next"
-  >
-    ❯
-  </button>
-</div>
+            !-- Botones de navegación --
+            <button
+              onClick={goToPrevious}
+              class="absolute left-4 top-1/2 transform -translate-y-1/2 p-4 bg-red-900 bg-opacity-75 rounded-full text-white focus:outline-none"
+              aria-label="Previous"
+            >
+              ❮
+            </button>
+            <button
+              onClick={goToNext}
+              class="absolute right-4 top-1/2 transform -translate-y-1/2 p-4 bg-red-900 bg-opacity-75 rounded-full text-white focus:outline-none"
+              aria-label="Next"
+            >
+              ❯
+            </button>
+          </div>
+        </div>
+      </div>
 
 
 
@@ -175,9 +168,88 @@ const Inicio = ({ auth }) => {
 
       {/* Marcadores de Posición */}
       <div className="container mx-auto mt-8 p-4 bg-white rounded shadow">
-        <h2 className="text-2xl font-bold mb-4">Marcadores de Posición</h2>
-        <p>Este es un ejemplo de marcadores de posición en la página.</p>
+        <h2 className="text-2xl font-bold mb-4">CARRERAS IMPLEMENTADAS EN EL"CBT"</h2>
+        <p className="mb-4"></p>
+
+        {/* Contenedor dividido en 2 filas, la primera con 5 y la segunda con 5 secciones */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
+          {/* Sección 1 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://admision.istta.edu.pe/img/courses/desinf.jpg" alt="Ejemplo 1" className="w-full h-auto rounded mb-2" />
+            <h1 className="font-semibold">Desarrollo de Sistemas de Información</h1>
+            <p>Diseña y gestiona soluciones tecnológicas para procesar datos y mejorar la toma de decisiones en diferentes contextos....</p>
+          </div>
+
+          {/* Sección 2 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://cbt.istta.edu.pe/assets/images/courses/gt01.png" alt="Ejemplo 2" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Contabilidad</h3>
+            <p>Registra y analiza información financiera para planificar, tomar decisiones y garantizar el cumplimiento de obligaciones legales.....</p>
+          </div>
+
+          {/* Sección 3 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://cbt.istta.edu.pe/assets/images/courses/ei01.png" alt="Ejemplo 3" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Electrónica Industrial</h3>
+            <p>Aplica sistemas electrónicos para automatizar, monitorear y mejorar procesos industriales, aumentando la productividad y reduciendo costos......</p>
+          </div>
+
+          {/* Sección 4 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://tepnum.edu.pe/wp-content/uploads/2022/11/ELECTROOOOO-1024x683.jpg" alt="Ejemplo 4" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Electricidad Industrial</h3>
+            <p>Diseña, instala y mantiene sistemas eléctricos utilizados en industrias, asegurando su eficiencia, seguridad y cumplimiento de normas técnicas.....</p>
+          </div>
+
+          {/* Sección 5 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://iestpmgl.edu.pe/wp-content/uploads/2024/10/g6-1024x678.jpg" alt="Ejemplo 5" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Mecanica de Producion Industrial</h3>
+            <p>Optimiza procesos de fabricación mediante el diseño, ensamblaje y mantenimiento de maquinaria y equipos industriales.....</p>
+          </div>
+        </div>
+
+        {/* Segunda fila con el resto de las secciones */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-4">
+          {/* Sección 6 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://admision.istta.edu.pe/img/courses/hoteleria.jpg" alt="Ejemplo 6" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Administracion de Servicios de Hosteleria y Restaurantes</h3>
+            <p>Gestiona recursos y servicios en establecimientos turísticos y gastronómicos, garantizando experiencias de alta calidad para los clientes.....</p>
+          </div>
+
+          {/* Sección 7 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://admision.istta.edu.pe/img/courses/mecatronica.jpg" alt="Ejemplo 7" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Mecanica Automatriz</h3>
+            <p>Realiza diagnóstico, reparación y mantenimiento de vehículos, utilizando herramientas avanzadas para garantizar su funcionalidad y seguridad...</p>
+          </div>
+
+          {/* Sección 8 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://admision.istta.edu.pe/img/courses/laboratorio.jpg" alt="Ejemplo 8" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Laboratorio clínico y anatomía patológica</h3>
+            <p>Analiza muestras biológicas para detectar enfermedades y alteraciones en tejidos, apoyando la labor médica con resultados precisos.....</p>
+          </div>
+
+          {/* Sección 9 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ0nrqad6seYNm0N4XrmuZUtG27w7qIRYas_AQoWnk3osZidwXQsT1fijKtBsYFk_5y-R8" alt="Ejemplo 9" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Guia Oficial de Turismo</h3>
+            <p>Informa y orienta a los turistas sobre destinos, promoviendo el patrimonio cultural, histórico y natural de manera profesional......</p>
+          </div>
+
+          {/* Sección 10 */}
+          <div className="p-4 bg-gray-100 rounded shadow">
+            <img src="https://admision.istta.edu.pe/img/courses/conta.jpg" alt="Ejemplo 10" className="w-full h-auto rounded mb-2" />
+            <h3 className="font-semibold">Contabilidad</h3>
+            <p>Estudia el comportamiento humano para mejorar la calidad de vida de las personas, aplicando teorías y técnicas psicológicas...</p>
+          </div>
+        </div>
       </div>
+
+
+
     </div>
   );
 };

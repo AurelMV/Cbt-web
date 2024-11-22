@@ -17,6 +17,6 @@ class Pago extends Model
 
     public function inscripcion()
     {
-        return $this->belongsTo(Inscripcion::class, 'idInscripcion', 'idInscripcion');
+        return $this->belongsTo(Inscripcion::class, 'idInscripcion', 'id');
     }
 }

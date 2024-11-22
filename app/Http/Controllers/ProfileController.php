@@ -24,6 +24,11 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function userManagement()
+    {
+        return inertia('Profile/UserManagement'); 
+    }
+
     /**
      * Update the user's profile information.
      */

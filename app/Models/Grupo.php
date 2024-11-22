@@ -13,11 +13,19 @@ class Grupo extends Model
     protected $primaryKey = 'id';
     protected $fillable = ['nombre', 'aforo', 'estado', 'idciclo'];
 
-    public function ciclo() {
-        return $this->belongsTo(Ciclo::class, 'idciclo');
+    public function ciclo()
+    {
+        return $this->belongsTo(Ciclo::class, 'idciclo', 'id');
     }
 
-    public function docenteCurso() {
-        return $this->belongsTo(DocenteCurso::class);
+
+
+    public function inscripciones()
+    {
+        return $this->hasMany(Inscripcion::class, 'idGrupos', 'id');
+    }
+
+    public function docentecurso() {
+        return $this->hasMany(DocenteCurso::class, 'idGrupo', 'id');
     }
 }

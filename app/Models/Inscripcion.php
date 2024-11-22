@@ -8,46 +8,62 @@ class Inscripcion extends Model
 {
 
     public $timestamps=false;
-    protected $table = 'inscripcion';
+    protected $table = 'inscripcions';
     protected $primaryKey = 'id';
 
     protected $fillable = [
         'turno',
         'fechaInscripcion',
-        'estadopa',
+        'estadopago',
         'idEstudiante',
         'idprogramaestudios',
         'idciclo',
+        'idusuarios',
         'idGrupos',
     ];
 
+
+
     public function estudiante()
     {
-        return $this->belongsTo(Estudiante::class, 'idEstudiante', 'idEstudiante');
+        return $this->belongsTo(Estudiante::class, 'idEstudiante', 'id');
     }
-
-    public function programaEstudios()
+    
+    public function programaEstudio()
     {
-        return $this->belongsTo(ProgramaEstudio::class, 'idprogramaestudios', 'idprogramaestudios');
+        return $this->belongsTo(ProgramaEstudio::class, 'idprogramaestudios', 'id');
     }
-
-    public function cicloInscripcion()
+    
+    public function ciclo()
     {
-        return $this->belongsTo(Ciclo::class, 'idciclo', 'idciclo');
+        return $this->belongsTo(Ciclo::class, 'idciclo', 'id');
     }
-
+    
     public function grupo()
     {
-        return $this->belongsTo(Grupo::class, 'idGrupos', 'idGrupos');
+        return $this->belongsTo(Grupo::class, 'idGrupos', 'id');
     }
+    
+
+
+
+
+
+
+
+
+
+
+
+   
 
     public function pagos()
     {
-        return $this->hasMany(Pago::class, 'idInscripcion', 'idInscripcion');
+        return $this->hasMany(Pago::class, 'idInscripcion', 'id');
     }
     public function usuario()
     {
-        return $this->hasMany(User::class, 'idInscripcion', 'idInscripcion');
+        return $this->hasMany(User::class, 'idInscripcion', 'id');
     }
 
 

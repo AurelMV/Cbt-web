@@ -13,7 +13,13 @@ class CursoController extends Controller
      */
     public function index()
     {
-        $cursos = Curso::all();
+        $cursos = Curso::all()->map(function ($curso) {
+            return [
+                'id' => $curso->id,
+                'nombre' => $curso->nombre,
+                'descripcion' => $curso->descripcion ? $curso->descripcion : 'Sin descripción',
+            ];
+        });
         return Inertia::render('Cursos', [
             'cursos' => $cursos
         ]);
@@ -67,7 +73,7 @@ class CursoController extends Controller
     public function update(Request $request, string $id)
     {
         $validate = $request->validate([
-            'nombreCurso' => 'required|string',
+            'nombre' => 'required|string',
             'descripcion' => 'nullable|string',
         ]);
 

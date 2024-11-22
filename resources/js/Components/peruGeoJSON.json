@@ -1,0 +1,43 @@
+{
+    "type": "FeatureCollection",
+    "features": [
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-77.0369, -12.0432],
+              [-77.0469, -12.0432],
+              [-77.0469, -12.0532],
+              [-77.0369, -12.0532],
+              [-77.0369, -12.0432]
+            ]
+          ]
+        },
+        "properties": {
+          "name": "Distrito 1",
+          "population": 50000
+        }
+      },
+      {
+        "type": "Feature",
+        "geometry": {
+          "type": "Polygon",
+          "coordinates": [
+            [
+              [-77.0469, -12.0532],
+              [-77.0569, -12.0532],
+              [-77.0569, -12.0632],
+              [-77.0469, -12.0632],
+              [-77.0469, -12.0532]
+            ]
+          ]
+        },
+        "properties": {
+          "name": "Distrito 2",
+          "population": 30000
+        }
+      }
+    ]
+  }
