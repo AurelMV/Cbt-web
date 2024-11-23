@@ -3,52 +3,52 @@ import { Link } from '@inertiajs/react';
 
 const images = [
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-12-01-at-9.44.55-AM-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.10.jpg",
     alt: "Primera Imagen",
     caption: "Descripción de la primera imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-12-01-at-9.44.54-AM-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.1.jpg",
     alt: "Segunda Imagen",
     caption: "Descripción de la segunda imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-11-30-at-11.53.03-AM-2.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.8.jpg",
     alt: "Tercera Imagen",
     caption: "Descripción de la tercera imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-11-30-at-11.53.03-AM-3-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.9.jpg",
     alt: "Cuarta Imagen",
     caption: "Descripción de la tercera imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-12-01-at-9.44.54-AM-2-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.5.jpg",
     alt: "Quinta Imagen",
     caption: "Descripción de la tercera imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-11-30-at-11.53.03-AM-1-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.6.jpg",
     alt: "Sexta Imagen",
     caption: "Descripción de la tercera imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-11-30-at-12.07.33-PM-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.7.jpg",
     alt: "Septima Imagen",
     caption: "Descripción de la tercera imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-12-01-at-9.44.55-AM-1-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.3.jpg",
     alt: "Octaba Imagen",
     caption: "Descripción de la tercera imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-12-01-at-9.44.55-AM-1-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.2.jpg",
     alt: "Novena Imagen",
     caption: "Descripción de la tercera imagen."
   },
   {
-    src: "https://iesta.edu.pe/portal/wp-content/uploads/2023/12/WhatsApp-Image-2023-12-01-at-9.44.55-AM-1-1024x768.jpeg",
+    src: "https://www.istta.edu.pe/img/course/20.4.jpg",
     alt: "Decima Imagen",
     caption: "Descripción de la tercera imagen."
   }
@@ -78,7 +78,7 @@ const Inicio = ({ auth }) => {
       {/* Barra de Navegación */}
       <nav className="bg-red-900 shadow p-4 flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <img src="CBT.png" alt="Logo" className="h-8 w-8" />
+          <img src="CBT.png" alt="Logo" className="h-10 w-8" />
           <h1 className="text-xl font-bold text-white">CBT</h1>
         </div>
         <ul className="flex space-x-4 text-white">
@@ -104,7 +104,7 @@ const Inicio = ({ auth }) => {
         </div>
       </nav>
 
-      <div class="relative min-h-screen bg-cover bg-center bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSobihibzhFqBDgNuVyobCV6f5e7GHLkgT4Vw&s')]">
+      <div class="relative min-h-screen bg-cover bg-center bg-[url('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSBxdk37q1zD-ItIH6OA6J8kKnSZqfGp4NGgw&s')]">
         <div class="absolute top-0 left-0 h-full w-1/3 bg-white rounded-full shadow-lg translate-x-[-50%]"></div>
         <div class="relative z-10 flex flex-col items-center justify-center h-full space-y-12">
           !-- Texto principal --
@@ -116,8 +116,8 @@ const Inicio = ({ auth }) => {
           </div>
 
           !-- Carrusel agrandado con contenedor adecuado--
-          <div class="carousel relative w-full max-w-5xl mx-auto">
-            <div class="relative w-full h-[700px] overflow-hidden rounded-lg bg-red-100">
+          <div class="carousel relative w-full max-w-6xl mx-auto">
+            <div class="relative w-full h-[500px] overflow-hidden rounded-lg bg-red-100">
               <img
                 src={images[currentIndex].src}
                 alt={images[currentIndex].alt}
