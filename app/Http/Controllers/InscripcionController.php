@@ -14,6 +14,9 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
+use ReflectionFunctionAbstract;
+
+use function Termwind\render;
 
 class InscripcionController extends Controller
 {
@@ -22,9 +25,9 @@ class InscripcionController extends Controller
         $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(5);
 
         //return response()->json(
-          
-         //   $inscripcion, 
-          
+
+        //   $inscripcion, 
+
         //);
         return Inertia::render('GestionInscripciones', [
             'inscripciones' => $inscripcion,
@@ -180,26 +183,25 @@ class InscripcionController extends Controller
      * Update the specified resource in storage.
      */
     // En InscripcionController
-public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'idciclo' => 'required|exists:ciclos,id',
-        'idprogramaestudios' => 'required|exists:programa_estudios,id',
-        'idGrupos' => 'required|exists:grupos,id',
-    ]);
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'idciclo' => 'required|exists:ciclos,id',
+            'idprogramaestudios' => 'required|exists:programa_estudios,id',
+            'idGrupos' => 'required|exists:grupos,id',
+        ]);
 
-    // Encuentra la inscripción y actualiza
-    $inscripcion = Inscripcion::findOrFail($id);
-    $inscripcion->update([
-        'idciclo' => $validated['idciclo'],
-        'idprogramaestudios' => $validated['idprogramaestudios'],
-        'idGrupos' => $validated['idGrupos'],
-    ]);
+        // Encuentra la inscripción y actualiza
+        $inscripcion = Inscripcion::findOrFail($id);
+        $inscripcion->update([
+            'idciclo' => $validated['idciclo'],
+            'idprogramaestudios' => $validated['idprogramaestudios'],
+            'idGrupos' => $validated['idGrupos'],
+        ]);
 
-    // Redirige con mensaje de éxito
-    return redirect()->route('gestInscripcion.index')->with('success', 'Inscripción actualizada correctamente.');
-    
-}
+        // Redirige con mensaje de éxito
+        return redirect()->route('gestInscripcion.index')->with('success', 'Inscripción actualizada correctamente.');
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -217,26 +219,47 @@ public function update(Request $request, $id)
 
 
     public function editarInscripcion($id)
-{
-    // Obtener la inscripción por su ID
-    $inscripcion = Inscripcion::with('estudiante', 'programaEstudio', 'ciclo', 'grupo')
-        ->findOrFail($id);
+    {
+        // Obtener la inscripción por su ID
+        $inscripcion = Inscripcion::with('estudiante', 'programaEstudio', 'ciclo', 'grupo')
+            ->findOrFail($id);
 
-    // Retornar los datos al frontend (React)
-    return response()->json($inscripcion);
-}
+        // Retornar los datos al frontend (React)
+        return response()->json($inscripcion);
+    }
 
-  
-    public function opciones(){
+
+    public function opciones()
+    {
         $ciclos = Ciclo::with('grupos')->get();
         $programas = ProgramaEstudio::all();
-    
+
         return response()->json([
             'ciclos' => $ciclos,
             'programas' => $programas,
         ]);
+    }
 
+    public function listaGrupos()
+    {
 
+        $grupo = Grupo::all();
+
+        return inertia::render('Dashboard', [
+
+            'grupo' => $grupo,
+        ]);
+    }
+
+    public function listarprogramas(){
+        $programas=ProgramaEstudio::all();
+
+        return response()->json($programas);
+    }
+    public function ListadoGruposCiclos(){
+        $ciclos =Ciclo::with('grupos')->get();
+        return response()->json($ciclos);
+        
     }
 
 

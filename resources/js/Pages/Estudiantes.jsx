@@ -154,8 +154,8 @@ export default function Estudiantes() {
                                     required
                                 >
                                     <option value="">Selecciona el sexo</option>
-                                    <option value="m">Masculino</option>
-                                    <option value="f">Femenino</option>
+                                    <option value="M">Masculino</option>
+                                    <option value="F">Femenino</option>
                                 </select>
                                 <input
                                     type="text"

@@ -38,3 +38,7 @@ Route::post('/listarinscrip',[InscripcionController::class,'listarInscripciones'
 
 Route::get('/inscripcionesopciones', [InscripcionController::class, 'opciones'])->name('inscripciones.opciones');
 
+
+
+Route::get('/programas', [InscripcionController::class, 'listarprogramas']);
+Route::get('/ciclos',[InscripcionController::class,'ListadoGruposCiclos']);
