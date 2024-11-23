@@ -11,4 +11,8 @@ class Colegio extends Model
     private function Distrito(){
         return $this->belongsTo(Distrito::class); 
     }
+    public function estudiantes()
+    {
+        return $this->hasMany(Estudiante::class, 'idcolegios', 'id');
+    }
 }
