@@ -4,7 +4,7 @@ import { useState } from "react";
 import { Inertia } from '@inertiajs/inertia';
 
 export default function Estudiantes() {
-
+    const [filterText, setFilterText] = useState('');
     const { estudiantes } = usePage().props;
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEstudiante, setSelectedEstudiante] = useState(null);
@@ -46,6 +46,15 @@ export default function Estudiantes() {
         });
     };
 
+    const filteredEstudiantes = estudiantes.filter(estudiante =>
+        estudiante.nombres.toLowerCase().includes(filterText.toLowerCase()) || 
+        estudiante.Nrodocumento.toLowerCase().includes(filterText.toLowerCase())
+    );
+  
+
+
+
+
     return (
         <AuthenticatedLayout>
             <div>
@@ -64,7 +73,18 @@ export default function Estudiantes() {
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nombre</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Paterno</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Materno</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Sexo</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Tipo de Documento</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nro de Documentro</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">telefono de estudiante</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">telefono de apoderado</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">fecha de nacimiento</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">direccion</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">email</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">foto</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Acción</th>
+
+                           
                         </tr>
                     </thead>
                     <tbody>
@@ -73,6 +93,16 @@ export default function Estudiantes() {
                                 <td className="px-6 py-4 text-sm text-gray-900">{estudiante.nombres}</td>
                                 <td className="px-6 py-4 text-sm text-gray-900">{estudiante.aPaterno}</td>
                                 <td className="px-6 py-4 text-sm text-gray-900">{estudiante.aMaterno}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.sexo}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.tipodocumento}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.Nrodocumento}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.celularestudiante}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.celularapoderado}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.fechaNacimiento}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.direccion}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.email}</td>
+                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.foto}</td>
+                                
                                 <td className="px-6 py-4 text-sm text-gray-500">
                                     <button
                                         onClick={() => handleEditClick(estudiante)}

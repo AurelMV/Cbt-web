@@ -91,7 +91,7 @@ export default function GestionInscripciones() {
   {`${inscripcion.estudiante.aPaterno} ${inscripcion.estudiante.aMaterno}`}
 </td>
 
-                                <td className="py-3 px-6">{inscripcion.ciclo_inscripcion.nombre}</td>
+                                <td className="py-3 px-6">{inscripcion.ciclo.nombre}</td>
                                 <td className="py-3 px-6">{inscripcion.programa_estudio.nombre_programa}</td>
                                 <td className="py-3 px-6">{inscripcion.grupo.nombre}</td>
                                 <td className="py-3 px-6 text-center">
