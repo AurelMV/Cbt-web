@@ -3,7 +3,7 @@ import { Head } from '@inertiajs/react';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-export default function UserManager( {users: initialUsers} ) {
+export default function UserManager({ users: initialUsers }) {
     const [formData, setFormData] = useState({
         name: '',
         email: '',
@@ -22,19 +22,22 @@ export default function UserManager( {users: initialUsers} ) {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         console.log(`${name} seleccionado: ${value}`);
-        setFormData({ ...formData, [name]: value });
+        setFormData({ 
+            ...formData, 
+            [name]: value 
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        
+
         if (!formData.roles || !formData.estado) {
             console.log('Por favor, selecciona un rol y un estado');
             return;  // Detener el envío del formulario
         }
 
         try {
-            const response = await axios.post('/users', formData);
+            const response = await axios.post('/users');
             //fetchUsers();
             const nuevoUser = response.data;
 
@@ -49,11 +52,27 @@ export default function UserManager( {users: initialUsers} ) {
         }
     };
 
-    const handleEditSubmit = async () => {
+    const handleEditSubmit = async (e) => {
         e.preventDefault();
         try {
             await axios.put(`/users/${editUserId}`, formData);
             //fetchUsers();
+            setListaUsers(
+                listaUsers.map(user =>
+                    user.id === editUserId
+                        ? {
+                              ...user,
+                              name: formData.name,
+                              email: formData.email,
+                              nombres: formData.nombres,
+                              a_paterno: formData.a_paterno,
+                              a_materno: formData.a_materno,
+                              estado: formData.estado,
+                              roles: formData.roles,
+                          }
+                        : user
+                )
+            );
             setIsEditModalOpen(false);
         } catch (error) {
             if (error.response && error.response.data.errors) {
@@ -73,14 +92,14 @@ export default function UserManager( {users: initialUsers} ) {
     const closeEditModal = () => {
         setIsEditModalOpen(false);
         setFormData({
-            name: '',
-            email: '',
-            password: '',
-            nombres: '',
-            a_paterno: '',
-            a_materno: '',
-            estado: '',
-            roles: '',
+            name: user.name,
+            email: user.email,
+            password: user.password,
+            nombres: user.nombres,
+            a_paterno: user.a_paterno,
+            a_materno: user.a_materno,
+            estado: user.estaod,
+            roles: user.roles,
         });
     };
 
@@ -106,27 +125,60 @@ export default function UserManager( {users: initialUsers} ) {
                                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
-                                        <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                                        <input
+                                            type="text"
+                                            name="name"
+                                            value={formData.name}
+                                            onChange={handleInputChange}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Nombres</label>
-                                        <input type="text" name="nombres" value={formData.nombres} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                                        <input
+                                            type="text"
+                                            name="nombres"
+                                            value={formData.nombres}
+                                            onChange={handleInputChange}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Apellido Paterno</label>
-                                        <input type="text" name="a_paterno" value={formData.a_paterno} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                                        <input
+                                            type="text"
+                                            name="a_paterno"
+                                            value={formData.a_paterno} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Apellido Materno</label>
-                                        <input type="text" name="a_materno" value={formData.a_materno} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                                    </div> 
+                                        <input
+                                            type="text"
+                                            name="a_materno"
+                                            value={formData.a_materno}
+                                            onChange={handleInputChange}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        />
+                                    </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Email</label>
-                                        <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                                        <input type="email"
+                                            name="email"
+                                            value={formData.email}
+                                            onChange={handleInputChange}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Password</label>
-                                        <input type="password" name="password" value={formData.password} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
+                                        <input
+                                            type="password"
+                                            name="password"
+                                            value={formData.password}
+                                            onChange={handleInputChange}
+                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                        />
                                     </div>
                                     <div>
                                         <label className="block text-sm font-medium text-gray-700">Rol</label>
@@ -155,9 +207,10 @@ export default function UserManager( {users: initialUsers} ) {
                     </div>
 
                     <div className="bg-white p-6 rounded-lg shadow-lg border border-gray-200">
-                        <h2 className="text-3xl font-medium text-[#3395C9] flex justify-center">
+                        <h2 className="text-3xl font-medium text-[#23C363] flex justify-center">
                             Usuarios Registrados
                         </h2>
+                        <br></br>
                         <table className="min-w-full divide-y divide-gray-200">
                             <thead className="bg-gray-50">
                                 <tr>
@@ -171,12 +224,12 @@ export default function UserManager( {users: initialUsers} ) {
                             <tbody className="bg-white divide-y divide-gray-200">
                                 {listaUsers.map(user => (
                                     <tr key={user.id}>
-                                        <td className="px-6 py-4 whitespace-nowrap">{user.nombres +' '+ user.a_paterno +' '+ user.a_materno}</td>
+                                        <td className="px-6 py-4 whitespace-nowrap">{user.nombres + ' ' + user.a_paterno + ' ' + user.a_materno}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{user.email}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{user.roles}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">{user.estado}</td>
                                         <td className="px-6 py-4 whitespace-nowrap">
-                                            <button onClick={() => openEditModal(user)} className="text-indigo-600 hover:text-indigo-900">Modificar</button>
+                                            <button onClick={() => openEditModal(user)} className="text-[#2DA9A0] hover:text-indigo-900">Modificar</button>
                                         </td>
                                     </tr>
                                 ))}
@@ -197,62 +250,106 @@ export default function UserManager( {users: initialUsers} ) {
                             <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
                                 <div className="sm:flex sm:items-start">
                                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900">Editar Usuario</h3>
+                                        <div className="bg-[#2DA9A0] p-4">
+                                            <h3 className="text-lg leading-6 font-bold text-white flex justify-center">Editar Usuario</h3>
+                                        </div>
                                         <div className="mt-2">
-                                            <form className="space-y-4" onSubmit={handleEditSubmit}>
-                                                <div className="border-b border-gray-200 pb-4">
-                                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
-                                                            <input type="text" name="name" value={formData.name} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                                                        </div>
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-gray-700">Nombres</label>
-                                                            <input type="text" name="nombres" value={formData.nombres} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                                                        </div>
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-gray-700">Apellido Paterno</label>
-                                                            <input type="text" name="a_paterno" value={formData.a_paterno} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                                                        </div>
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-gray-700">Apellido Materno</label>
-                                                            <input type="text" name="a_materno" value={formData.a_materno} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                                                        </div> 
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-gray-700">Email</label>
-                                                            <input type="email" name="email" value={formData.email} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                                                        </div>
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-gray-700">Password</label>
-                                                            <input type="password" name="password" value={formData.password} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" />
-                                                        </div>
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-gray-700">Rol</label>
-                                                            <select name="roles" value={formData.roles} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                            <div className="border-b border-gray-200 pb-4">
+                                                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Nombre de Usuario</label>
+                                                        <input 
+                                                            type="text" 
+                                                            name="name" 
+                                                            value={formData.name} 
+                                                            onChange={handleInputChange} 
+                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Nombres</label>
+                                                        <input 
+                                                            type="text" 
+                                                            name="nombres" 
+                                                            value={formData.nombres} 
+                                                            onChange={handleInputChange} 
+                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Apellido Paterno</label>
+                                                        <input 
+                                                            type="text" 
+                                                            name="a_paterno" 
+                                                            value={formData.a_paterno} 
+                                                            onChange={handleInputChange} 
+                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Apellido Materno</label>
+                                                        <input 
+                                                            type="text" 
+                                                            name="a_materno" 
+                                                            value={formData.a_materno} 
+                                                            onChange={handleInputChange} 
+                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Email</label>
+                                                        <input 
+                                                            type="email" 
+                                                            name="email" 
+                                                            value={formData.email} 
+                                                            onChange={handleInputChange} 
+                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Password</label>
+                                                        <input 
+                                                            type="password" 
+                                                            name="password" 
+                                                            value={formData.password} 
+                                                            onChange={handleInputChange} 
+                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm" 
+                                                        />
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Rol</label>
+                                                        <select 
+                                                            name="roles" 
+                                                            value={formData.roles} 
+                                                            onChange={handleInputChange} 
+                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                                                                 <option value="">Seleccione un rol</option>
                                                                 <option value="admin">Admin</option>
                                                                 <option value="empleado">Empleado</option>
-                                                            </select>
-                                                        </div>
-                                                        <div>
-                                                            <label className="block text-sm font-medium text-gray-700">Estado</label>
-                                                            <select name="estado" value={formData.estado} onChange={handleInputChange} className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
+                                                        </select>
+                                                    </div>
+                                                    <div>
+                                                        <label className="block text-sm font-medium text-gray-700">Estado</label>
+                                                        <select 
+                                                            name="estado" 
+                                                            value={formData.estado} 
+                                                            onChange={handleInputChange} 
+                                                            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm">
                                                                 <option value="">Seleccione el estado de la cuenta</option>
                                                                 <option value="activo">Activo</option>
                                                                 <option value="inactivo">Inactivo</option>
-                                                            </select>
-                                                        </div>
+                                                        </select>
                                                     </div>
                                                 </div>
-                                                <div>
-                                                    <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
-                                                        Guardar Cambios
-                                                    </button>
-                                                    <button type="button" onClick={closeEditModal} className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700">
-                                                        Cancelar
-                                                    </button>
-                                                </div>
-                                            </form>
+                                            </div>
+                                            <div>
+                                                <button type="button" onClick={handleEditSubmit} className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700">
+                                                    Guardar Cambios
+                                                </button>
+                                                <button type="button" onClick={closeEditModal} className="ml-4 inline-flex justify-center rounded-md border border-transparent bg-gray-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-gray-700">
+                                                    Cancelar
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
