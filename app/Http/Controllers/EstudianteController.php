@@ -18,6 +18,8 @@ class EstudianteController extends Controller
     {
       // Obtener todos los estudiantes
       $estudiantes = Estudiante::all();
+
+      
     
       // Retornar los datos a la vista de React usando Inertia
    

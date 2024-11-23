@@ -55,7 +55,7 @@ class PagoController extends Controller
 
 public function listadoDePagos(){
     
-      $pagos = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.cicloInscripcion', 'inscripcion.grupo'])
+      $pagos = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.ciclo', 'inscripcion.grupo'])
       ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher','idInscripcion')
       ->paginate(5);
 

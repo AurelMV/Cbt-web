@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -67,9 +68,10 @@ class UserController extends Controller
     }
 
     // Mostrar detalles de un usuario específico
-    public function show(User $user)
+    public function show()
     {
-        return inertia('Users/Show', ['user' => $user]);
+        $user = Auth::user();
+        return response()->json($user);
     }
 
     // Mostrar formulario para editar un usuario

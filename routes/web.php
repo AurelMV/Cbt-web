@@ -44,6 +44,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/GestionIncripciones', [InscripcionController::class, 'index'])->name('gestInscripcion.index');
 });
 
+
 // Rutas para pruebas
 Route::get('/cursos', [CursoController::class, 'index'])->name('cursos.index');
 Route::post('/cursos', [CursoController::class, 'store'])->name('cursos.store');
@@ -99,6 +100,8 @@ Route::put('/GestionPagos/{id}', [PagoController::class, 'update']);
 
 
 
+Route::post('/inscripciones/{id}/update', [InscripcionController::class, 'update'])->name('inscripciones.update');
+
 
 //es para aser prueva de la inter que no funca 
 Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('pagos.listadoDePagos');
@@ -108,7 +111,7 @@ Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('p
 
 Route::put('/editar-pago/{id}', [PagoController::class, 'editarPago']);
 
-require __DIR__.'/auth.php';
 
 
 
+require __DIR__ . '/auth.php';

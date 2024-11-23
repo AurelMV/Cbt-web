@@ -34,7 +34,7 @@ class Inscripcion extends Model
         return $this->belongsTo(ProgramaEstudio::class, 'idprogramaestudios', 'id');
     }
     
-    public function cicloInscripcion()
+    public function ciclo()
     {
         return $this->belongsTo(Ciclo::class, 'idciclo', 'id');
     }
