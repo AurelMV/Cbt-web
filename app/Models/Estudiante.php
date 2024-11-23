@@ -28,4 +28,9 @@ class Estudiante extends Model
     {
         return $this->hasMany(Inscripcion::class, 'estudiante_id', 'id');
     }
+
+    public function colegio()
+    {
+        return $this->belongsTo(Colegio::class, 'idcolegios', 'id');
+    }
 }
