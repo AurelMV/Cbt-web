@@ -1,13 +1,36 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, usePage } from '@inertiajs/react'; // Solo importa una vez
+import { Head, router, usePage } from '@inertiajs/react'; // Solo importa una vez
 import { useState } from "react";
-import { Inertia } from '@inertiajs/inertia';
+import { Inertia} from '@inertiajs/inertia';
+import TextInput from '@/Components/TextInput';
 
-export default function Estudiantes() {
+export default function Estudiantes({queryParams=null}) {
+
+
+
+    const [queryParamsState, setQueryParams] = useState(() => queryParams || {});
     const [filterText, setFilterText] = useState('');
     const { estudiantes } = usePage().props;
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEstudiante, setSelectedEstudiante] = useState(null);
+
+
+
+   
+
+
+
+
+const handleInputChange = (name, value, isKeyPress = false) => {
+    if (isKeyPress && value.trim() === '') return;
+
+    const updatedQueryParams = { ...queryParams, [name]: value || undefined };
+    setQueryParams(updatedQueryParams);
+
+    router.get(route('estudiantes.index'), updatedQueryParams);
+};
+
+
 
     // Función para mostrar el modal y cargar los datos del estudiante
     const handleEditClick = (estudiante) => {
@@ -63,6 +86,34 @@ export default function Estudiantes() {
                 <p className="leading-tight text-gray-400">Administra a los estudiantes que se han inscrito</p>
                 <div>
                     {/*tmr x q no hay los otros div xd....aqui dentro tenia que ir con sus propiedades pex */}
+                    <TextInput
+                            placeholder="Nombre del estudiante"
+                            defaultValue={queryParamsState.name}
+                            onBlur={(e) => handleInputChange('name', e.target.value)}
+                            onKeyDown={(e) =>
+                                e.key === 'Enter' && handleInputChange('name', e.target.value, true)
+                            }
+                        />
+                        
+
+                        <input type="number"
+                        placeholder="Nro de Documento"
+                            
+                        defaultValue={queryParamsState.documento}
+                        onBlur={(e) => handleInputChange('documento', e.target.value)}
+                        onKeyDown={(e) =>
+                            e.key === 'Enter' && handleInputChange('documento', e.target.value, true)
+                        }
+                         />
+                        
+                         <TextInput
+                            placeholder="Email o correo"
+                            defaultValue={queryParamsState.Email}
+                            onBlur={(e) => handleInputChange('Email', e.target.value)}
+                            onKeyDown={(e) =>
+                                e.key === 'Enter' && handleInputChange('Email', e.target.value, true)
+                            }
+                        />
                 </div>
                 {/* Tabla de estudiantes */}
               
@@ -87,6 +138,7 @@ export default function Estudiantes() {
                            
                         </tr>
                     </thead>
+                   
                     <tbody>
                         {estudiantes.map((estudiante) => (
                             <tr key={estudiante.id}>
@@ -206,7 +258,7 @@ export default function Estudiantes() {
                                     required
                                 />
                                 <input
-                                    type="text"
+                                    type="hidden"
                                     name="idcolegios"
                                     value={selectedEstudiante.idcolegios}
                                     onChange={handleChange}

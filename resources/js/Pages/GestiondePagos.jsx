@@ -1,6 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-
+import { InertiaLink } from '@inertiajs/inertia-react'; 
+import { Inertia } from '@inertiajs/inertia';
 import Prueva from "./Prueva";
 
 import React, { useState, useEffect } from "react";
@@ -32,25 +33,18 @@ function Pagination({ links }) {
     );
 }
 
-export default function GestionPagos({ inscripciones }) {
+export default function GestionPagos({ inscripciones, estudiantes, programaEstudio, ciclosInscripcion, grupos }) {
     // const [inscripciones, setInscripciones] = useState([]);
 
-    const [pagos, setPagos] = useState([]);
-    const [estudiantes, setEstudiantes] = useState([]);
-    const [programaEstudio, setProgramaEstudio] = useState([]);
-    const [ciclosInscripcion, setCiclosInscripcion] = useState([]);
-    const [grupos, setGrupos] = useState([]);
-    const [pagination, setPagination] = useState(null);
+    const [nombreEstudiante, setNombreEstudiante] = useState("");
+    const [documentoEstudiante, setDocumentoEstudiante] = useState("");
 
-    //Cargar inscripciones
     useEffect(() => {
         axios
             .get("/GestionPagos")
             .then((response) => {
                 setEstudiantes(response.data.estudiantes);
-                setProgramaEstudio(response.data.programaEstudio);
-                setCiclosInscripcion(response.data.ciclosInscripcion);
-                setGrupos(response.data.grupos);
+              
             })
             .catch((error) => {
                 console.error(
@@ -123,14 +117,28 @@ export default function GestionPagos({ inscripciones }) {
                 console.error("Error al registrar el pago:", error);
             });
     };
+    //fonita de filtrado de datos 
+    const handleFilterChange = () => {
+        Inertia.get('/GestionPagos', {
+            nombre_estudiante: nombreEstudiante,
+            documento_estudiante: documentoEstudiante,
+        }, {
+            preserveState: true, // Asegúrate de que preserveState esté configurado
+            replace: true, // Usar replace si quieres que la URL cambie sin recargar la página
+        });
+    };
+    
 
     return (
         <AuthenticatedLayout>
             <Head title="Gestion de Pagos" />
             <h2 className="text-xl font-semibold leading-tight text-black">
-                GESTION DE PAGOS 
+                GESTION DE PAGOS
             </h2>
-            <p className="leading-tight text-gray-400">Mira los pagos hechos por los estudiantes o completa el pago de alguno</p>
+            <p className="leading-tight text-gray-400">
+                Mira los pagos hechos por los estudiantes o completa el pago de
+                alguno
+            </p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg border border-gray-300">
@@ -155,8 +163,6 @@ export default function GestionPagos({ inscripciones }) {
                                                 setNroVoucher(e.target.value)
                                             }
                                         />
-                                       
-
 
                                         <select
                                             name="medioPago"
@@ -164,17 +170,14 @@ export default function GestionPagos({ inscripciones }) {
                                             onChange={(e) =>
                                                 setMedioPago(e.target.value)
                                             }
-                                           
                                             className="w-full border p-2 rounded-md mb-4"
                                             required
                                         >
                                             <option value="CAJA">CAJA</option>
                                             <option value="DEPOSITO">
-                                            DEPOSITO
+                                                DEPOSITO
                                             </option>
                                         </select>
-
-
 
                                         <input
                                             name="monto"
@@ -265,12 +268,146 @@ export default function GestionPagos({ inscripciones }) {
                                         />
 
                                         <Prueva />
+
+                                        <div>
+                                            <h3 className="text-md font-medium mb-4 text-blue-900">
+                                                Lista de Estudiantes Inscritos
+                                            </h3>
+                                            <input
+                    type="text"
+                    placeholder="Buscar por nombre"
+                    value={nombreEstudiante}
+                    onChange={(e) => setNombreEstudiante(e.target.value)}
+                    onBlur={handleFilterChange}  // Filtro al salir del campo
+                />
+                <input
+                    type="text"
+                    placeholder="Buscar por documento"
+                    value={documentoEstudiante}
+                    onChange={(e) => setDocumentoEstudiante(e.target.value)}
+                    onBlur={handleFilterChange}  // Filtro al salir del campo
+                />
+                                            <table className="min-w-full border divide-y divide-gray-200">
+                                                <thead className="bg-gray-50">
+                                                    <tr>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                                            Turno
+                                                        </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                                            Fecha
+                                                        </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                                            Valor de Pago
+                                                        </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                                            Estudiante
+                                                        </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                                            Apellidos
+                                                        </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                                            Ciclo
+                                                        </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                                            Programa
+                                                        </th>
+                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                                            Acciones
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="bg-white divide-y divide-gray-200">
+                                                    {inscripciones &&
+                                                    inscripciones.data ? (
+                                                        inscripciones.data.map(
+                                                            (inscripcion) => (
+                                                                <tr
+                                                                    key={
+                                                                        inscripcion.id
+                                                                    }
+                                                                >
+                                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                                        {
+                                                                            inscripcion.turno
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                                        {
+                                                                            inscripcion.fechaInscripcion
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                                        {
+                                                                            inscripcion.estadopago
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                                        {
+                                                                            inscripcion.estudiante_nombres
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                                        {
+                                                                            inscripcion.aPaterno
+                                                                        }
+                                                                    </td>
+
+                                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                                        {
+                                                                            inscripcion.ciclo_nombre
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                                                        {
+                                                                            inscripcion.programa_nombre
+                                                                        }
+                                                                    </td>
+                                                                    <td className="px-6 py-4 text-sm text-gray-500">
+                                                                        <button
+                                                                            onClick={() =>
+                                                                                handleSelectClick(
+                                                                                    inscripcion
+                                                                                )
+                                                                            }
+                                                                            className="text-indigo-600 hover:text-indigo-900"
+                                                                        >
+                                                                            Seleccionar
+                                                                        </button>
+                                                                    </td>
+                                                                </tr>
+                                                            )
+                                                        )
+                                                    ) : (
+                                                        <tr>
+                                                            <td
+                                                                colSpan="7"
+                                                                className="px-6 py-4 text-sm text-gray-500 text-center"
+                                                            >
+                                                                No hay datos
+                                                                disponibles
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                </tbody>
+                                            </table>
+                                            <div className="mt-4">
+                                                <Pagination
+                                                    links={inscripciones.links}
+                                                />
+                                            </div>
+                                        </div>
                                     </div>
 
                                     {showStudentList && (
                                         <div>
-                                            <h3 className="text-md font-medium mb-4 text-blue-900">Lista de Estudiantes Inscritos</h3>
-                                            <input type="text" placeholder="Buscar pago" className=" border p-2 rounded-md mb-4" />
+                                            <h3 className="text-md font-medium mb-4 text-blue-900">
+                                                Lista de Estudiantes Inscritos
+                                            </h3>
+                                            <input
+                                                type="text"
+                                                placeholder="Buscar pago"
+                                                className=" border p-2 rounded-md mb-4"
+                                            />
                                             <table className="min-w-full border divide-y divide-gray-200">
                                                 <thead className="bg-gray-50">
                                                     <tr>
