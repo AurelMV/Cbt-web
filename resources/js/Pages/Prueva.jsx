@@ -1,26 +1,40 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { router } from '@inertiajs/react';
+import TextInput from '@/Components/TextInput';
 
 function GestionPagos() {
+  
     const [pagos, setPagos] = useState([]);
     const [paginationInfo, setPaginationInfo] = useState({});
     const [loading, setLoading] = useState(true);
     const [modalOpen, setModalOpen] = useState(false); // Estado para controlar el modal
     const [pagoEdit, setPagoEdit] = useState(null); // Estado para almacenar el pago a editar
 
+
+
+
+
+
     // Función para obtener pagos de una página específica
     const fetchPagos = async (page = 1) => {
         try {
             setLoading(true);
             const response = await axios.get(`/gestion-pagos?page=${page}`);
-            setPagos(response.data.data);
+            if (response.data && Array.isArray(response.data.data)) {
+                setPagos(response.data.data);
+            } else {
+                setPagos([]); // Si no es un array, reinicia a vacío
+            }
             setPaginationInfo(response.data);
         } catch (error) {
             console.error('Error al obtener los pagos:', error);
+            setPagos([]); // Asegúrate de que sea un array incluso si hay errores
         } finally {
             setLoading(false);
         }
     };
+    
 
     useEffect(() => {
         fetchPagos(); // Cargar la primera página al montar el componente
@@ -56,17 +70,19 @@ function GestionPagos() {
     return (
         <div className="p-6">
             <h1 className="text-xl font-bold mb-4">Lista de Pagos</h1>
+            
             <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">
                 <table className="min-w-full divide-y divide-gray-200 border">
                     <thead className="bg-gray-50">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">ID</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Monto</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Fecha</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Medio de Pago</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nro Voucher</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Estado Pago</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Estudiante</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellidos</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Documento</th>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Acción</th> {/* Columna de acción */}
                         </tr>
                     </thead>
@@ -74,7 +90,7 @@ function GestionPagos() {
                         {pagos.length > 0 ? (
                             pagos.map((pago) => (
                                 <tr key={pago.id}>
-                                    <td className="px-6 py-4 text-sm text-gray-900">{pago.id}</td>
+                                  
                                     <td className="px-6 py-4 text-sm text-gray-900">{pago.monto}</td>
                                     <td className="px-6 py-4 text-sm text-gray-900">{pago.fecha}</td>
                                     <td className="px-6 py-4 text-sm text-gray-900">{pago.medioPago}</td>
@@ -83,6 +99,11 @@ function GestionPagos() {
                                     <td className="px-6 py-4 text-sm text-gray-900">
                                         {pago.inscripcion?.estudiante?.nombres || 'N/A'}
                                     </td>
+                                    <td className="px-6 py-4 text-sm text-gray-900">
+                                        {pago.inscripcion?.estudiante?.aPaterno}
+                                    </td>
+                                    
+                                    
                                     <td className="px-6 py-4 text-sm text-gray-900">
                                         <button
                                             onClick={() => handleEdit(pago)} // Al hacer clic, se abre el modal con los datos del pago

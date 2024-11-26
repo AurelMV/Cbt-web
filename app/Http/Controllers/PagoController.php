@@ -28,6 +28,9 @@ class PagoController extends Controller
             'inscripcions.fechaInscripcion',
             DB::raw("CASE WHEN inscripcions.estadopago = 1 THEN 'Pagado' ELSE 'Deudor' END as estadopago"),  // Transformar el valor de estadopago
             'estudiantes.nombres as estudiante_nombres',
+            'estudiantes.aPaterno',
+            'estudiantes.aMaterno',
+            
             'ciclos.nombre as ciclo_nombre',
             'programa_estudios.nombre_programa as programa_nombre',
             'grupos.nombre as grupo_nombre'
@@ -68,16 +71,10 @@ public function listadoDePagos(){
   // Obtener los datos adicionales para el formulario
   
 
-  return response()->json(
+  return response()->json([
+    'pagos',
   
-        $pagos, // O cualquier otro dato que estés pasando
- 
-    
-
-   /* return response()->json([
-        'pagos' => $pagos,*/
-      
-    );
+]);
 
 
  

@@ -22,15 +22,49 @@ class InscripcionController extends Controller
 {
     public function index()
     {
-        $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(5);
+        $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(10);
 
         //return response()->json(
 
         //   $inscripcion, 
 
         //);
+        $query = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo']);
+
+        // Verificar si se pasó un parámetro de búsqueda por nombre del estudiante
+        if (request()->has('name') && !empty(request('name'))) {
+            $query->whereHas('estudiante', function ($subQuery) {
+                $subQuery->where('nombres', 'like', '%' . request('name') . '%');
+            });
+        }
+        if (request()->has('documento') && !empty(request('documento'))) {
+            $query->whereHas('estudiante', function ($subQuery) {
+                $subQuery->where('Nrodocumento', 'like', '%' . request('documento') . '%');
+            });
+        }
+
+
+        // Filtrar por ciclo seleccionado si se proporciona
+        if (request()->has('p_cicloinscripciones_id') && !empty(request('p_cicloinscripciones_id'))) {
+            $query->where('idciclo', request('p_cicloinscripciones_id')); // Ajusta 'ciclo_id' según el nombre del campo en tu tabla
+        }
+
+        // Filtrar por grupo seleccionado si se proporciona
+        if (request()->has('p_Grupos_id') && !empty(request('p_Grupos_id'))) {
+            $query->where('idGrupos', request('p_Grupos_id')); // Ajusta 'grupo_id' según el nombre del campo en tu tabla
+        }
+
+
+
+        // Paginar los resultados
+        $inscripcion = $query->paginate(5);
+
+
+
+
         return Inertia::render('GestionInscripciones', [
             'inscripciones' => $inscripcion,
+            'queryParams' => request()->query(),
         ]);
     }
 
@@ -251,15 +285,16 @@ class InscripcionController extends Controller
         ]);
     }
 
-    public function listarprogramas(){
-        $programas=ProgramaEstudio::all();
+    public function listarprogramas()
+    {
+        $programas = ProgramaEstudio::all();
 
         return response()->json($programas);
     }
-    public function ListadoGruposCiclos(){
-        $ciclos =Ciclo::with('grupos')->get();
+    public function ListadoGruposCiclos()
+    {
+        $ciclos = Ciclo::with('grupos')->get();
         return response()->json($ciclos);
-        
     }
 
 
