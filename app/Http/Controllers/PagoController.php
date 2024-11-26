@@ -15,71 +15,109 @@ use Inertia\Inertia;
 
 class PagoController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $inscripciones = DB::table('inscripcions')
-        ->join('estudiantes', 'inscripcions.idEstudiante', '=', 'estudiantes.id')
-        ->join('programa_estudios', 'inscripcions.idprogramaestudios', '=', 'programa_estudios.id')
-        ->join('ciclos', 'inscripcions.idciclo', '=', 'ciclos.id')
-        ->join('grupos', 'inscripcions.idGrupos', '=', 'grupos.id')
-        ->select(
-            'inscripcions.id',
-            'inscripcions.turno',
-            'inscripcions.fechaInscripcion',
-            DB::raw("CASE WHEN inscripcions.estadopago = 1 THEN 'Pagado' ELSE 'Deudor' END as estadopago"),  // Transformar el valor de estadopago
-            'estudiantes.nombres as estudiante_nombres',
-            'estudiantes.aPaterno',
-            'estudiantes.aMaterno',
-            
-            'ciclos.nombre as ciclo_nombre',
-            'programa_estudios.nombre_programa as programa_nombre',
-            'grupos.nombre as grupo_nombre'
-        )
-        ->paginate(2);
+        $query = DB::table('inscripcions')
+            ->join('estudiantes', 'inscripcions.idEstudiante', '=', 'estudiantes.id')
+            ->join('programa_estudios', 'inscripcions.idprogramaestudios', '=', 'programa_estudios.id')
+            ->join('ciclos', 'inscripcions.idciclo', '=', 'ciclos.id')
+            ->join('grupos', 'inscripcions.idGrupos', '=', 'grupos.id')
+            ->select(
+                'inscripcions.id',
+                'inscripcions.turno',
+                'inscripcions.fechaInscripcion',
+                DB::raw("CASE WHEN inscripcions.estadopago = 1 THEN 'Pagado' ELSE 'Deudor' END as estadopago"),
+                'estudiantes.nombres as estudiante_nombres',
+                'estudiantes.aPaterno',
+                'estudiantes.aMaterno',
+                'ciclos.nombre as ciclo_nombre',
+                'programa_estudios.nombre_programa as programa_nombre',
+                'grupos.nombre as grupo_nombre'
+            );
     
-    // Consultar los datos adicionales necesarios para el formulario o lista de selección
-    $estudiantes = DB::table('estudiantes')->select('id', 'nombres', 'aPaterno', 'aMaterno')->get();
-    $programaEstudio = DB::table('programa_estudios')->select('id', 'nombre_programa')->get();
-    $ciclosInscripcion = DB::table('ciclos')->select('id', 'nombre')->get();
-    $grupos = DB::table('grupos')->select('id', 'nombre')->paginate(10);
+            if ($request->has('nombre_estudiante') && $request->nombre_estudiante != '') {
+                $query->where(function ($query) use ($request) {
+                    $query->where('estudiantes.nombres', 'like', '%' . $request->nombre_estudiante . '%');
+                       
+                });
+            }
+        
+            // Filtro por documento del estudiante (si tienes el campo en la tabla estudiantes)
+            if ($request->has('documento_estudiante') && $request->documento_estudiante != '') {
+                $query->where('estudiantes.nro_documento', 'like', '%' . $request->documento_estudiante . '%');
+            }
+    
+        if ($request->has('ciclo')) {
+            $query->where('ciclos.nombre', 'like', '%' . $request->ciclo . '%');
+        }
+    
+        if ($request->has('estado_pago')) {
+            $query->where('inscripcions.estadopago', $request->estado_pago);
+        }
+    
+        // Paginar
+        $inscripciones = $query->paginate(10);
+    
+        // Datos adicionales para filtros (si los necesitas en el frontend)
+        $estudiantes = DB::table('estudiantes')->select('id', 'nombres', 'aPaterno', 'aMaterno')->get();
+        $programaEstudio = DB::table('programa_estudios')->select('id', 'nombre_programa')->get();
+        $ciclosInscripcion = DB::table('ciclos')->select('id', 'nombre')->get();
+        $grupos = DB::table('grupos')->select('id', 'nombre')->get();
+    
+        // Retornar los datos con Inertia
+       /* return Inertia::render('GestiondePagos', [
+            'inscripciones' => $inscripciones,
+            'estudiantes' => $estudiantes,
+            'programaEstudio' => $programaEstudio,
+            'ciclosInscripcion' => $ciclosInscripcion,
+            'grupos' => $grupos,
+        ]);*/
+        return response()->json([
+            'inscripciones' => $inscripciones,
+            'estudiantes' => $estudiantes,
+            'programaEstudio' => $programaEstudio,
+            'ciclosInscripcion' => $ciclosInscripcion,
+            'grupos' => $grupos,
+        ]);
+    }
+    
 
+    public function listadoDePagos(Request $request)
+{
+    // Obtener los filtros desde la solicitud
+    $nombre = $request->input('nombre');
+    $nroDocumento = $request->input('nroDocumento');
 
+    // Construir la consulta
+    $query = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.ciclo', 'inscripcion.grupo'])
+        ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher','idInscripcion');
     
-    // Retornar los datos a la vista con Inertia
-    return Inertia::render('GestiondePagos', [
-        'inscripciones' => $inscripciones,
-        'estudiantes' => $estudiantes,
-        'programaEstudio' => $programaEstudio,
-        'ciclosInscripcion' => $ciclosInscripcion,
-        'grupos' => $grupos,
-    ]);
-    
+    // Filtrar por nombre del estudiante si se proporciona
+    if ($nombre) {
+        $query->whereHas('inscripcion.estudiante', function($q) use ($nombre) {
+            $q->where('nombres', 'like', '%' . $nombre . '%');
+        });
     }
 
-public function listadoDePagos(){
-    
-      $pagos = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.ciclo', 'inscripcion.grupo'])
-      ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher','idInscripcion')
-      ->paginate(5);
+    // Filtrar por número de documento si se proporciona
+    if ($nroDocumento) {
+        $query->whereHas('inscripcion.estudiante', function($q) use ($nroDocumento) {
+            $q->where('nro_documento', 'like', '%' . $nroDocumento . '%');
+        });
+    }
 
-  // Formatear el campo `estado_pago`
-  $pagos->getCollection()->transform(function ($pago) {
-      $pago->estado_pago = $pago->estado_pago == 1 ? 'Pagado' : 'Pendiente';  // Ajusta según tu lógica
-      return $pago;
-  });
+    // Realizar la paginación
+    $pagos = $query->paginate(5);
 
-  // Obtener los datos adicionales para el formulario
-  
+    // Formatear el campo `estado_pago`
+    $pagos->getCollection()->transform(function ($pago) {
+        $pago->estado_pago = $pago->estado_pago == 1 ? 'Pagado' : 'Pendiente';
+        return $pago;
+    });
 
-  return response()->json([
-    'pagos',
-  
-]);
-
-
- 
-
+    return response()->json($pagos);
 }
+
 
 
 

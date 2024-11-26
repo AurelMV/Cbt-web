@@ -1,6 +1,7 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-
+import { InertiaLink } from '@inertiajs/inertia-react'; 
+import { Inertia } from '@inertiajs/inertia';
 import Prueva from "./Prueva";
 
 import React, { useState, useEffect } from "react";
@@ -32,25 +33,18 @@ function Pagination({ links }) {
     );
 }
 
-export default function GestionPagos({ inscripciones }) {
+export default function GestionPagos({ inscripciones, estudiantes, programaEstudio, ciclosInscripcion, grupos }) {
     // const [inscripciones, setInscripciones] = useState([]);
 
-    const [pagos, setPagos] = useState([]);
-    const [estudiantes, setEstudiantes] = useState([]);
-    const [programaEstudio, setProgramaEstudio] = useState([]);
-    const [ciclosInscripcion, setCiclosInscripcion] = useState([]);
-    const [grupos, setGrupos] = useState([]);
-    const [pagination, setPagination] = useState(null);
+    const [nombreEstudiante, setNombreEstudiante] = useState("");
+    const [documentoEstudiante, setDocumentoEstudiante] = useState("");
 
-    //Cargar inscripciones
     useEffect(() => {
         axios
             .get("/GestionPagos")
             .then((response) => {
                 setEstudiantes(response.data.estudiantes);
-                setProgramaEstudio(response.data.programaEstudio);
-                setCiclosInscripcion(response.data.ciclosInscripcion);
-                setGrupos(response.data.grupos);
+              
             })
             .catch((error) => {
                 console.error(
@@ -123,6 +117,17 @@ export default function GestionPagos({ inscripciones }) {
                 console.error("Error al registrar el pago:", error);
             });
     };
+    //fonita de filtrado de datos 
+    const handleFilterChange = () => {
+        Inertia.get('/GestionPagos', {
+            nombre_estudiante: nombreEstudiante,
+            documento_estudiante: documentoEstudiante,
+        }, {
+            preserveState: true, // Asegúrate de que preserveState esté configurado
+            replace: true, // Usar replace si quieres que la URL cambie sin recargar la página
+        });
+    };
+    
 
     return (
         <AuthenticatedLayout>
@@ -269,10 +274,19 @@ export default function GestionPagos({ inscripciones }) {
                                                 Lista de Estudiantes Inscritos
                                             </h3>
                                             <input
-                                                type="text"
-                                                placeholder="Buscar pago"
-                                                className=" border p-2 rounded-md mb-4"
-                                            />
+                    type="text"
+                    placeholder="Buscar por nombre"
+                    value={nombreEstudiante}
+                    onChange={(e) => setNombreEstudiante(e.target.value)}
+                    onBlur={handleFilterChange}  // Filtro al salir del campo
+                />
+                <input
+                    type="text"
+                    placeholder="Buscar por documento"
+                    value={documentoEstudiante}
+                    onChange={(e) => setDocumentoEstudiante(e.target.value)}
+                    onBlur={handleFilterChange}  // Filtro al salir del campo
+                />
                                             <table className="min-w-full border divide-y divide-gray-200">
                                                 <thead className="bg-gray-50">
                                                     <tr>
@@ -333,7 +347,9 @@ export default function GestionPagos({ inscripciones }) {
                                                                         }
                                                                     </td>
                                                                     <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {inscripcion.aPaterno}
+                                                                        {
+                                                                            inscripcion.aPaterno
+                                                                        }
                                                                     </td>
 
                                                                     <td className="px-6 py-4 text-sm text-gray-900">
