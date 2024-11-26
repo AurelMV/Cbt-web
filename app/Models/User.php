@@ -28,7 +28,8 @@ class User extends Authenticatable
         'nombres',
         'a_paterno',
         'a_materno',
-        'estado'
+        'estado',
+        'roles',
     ];
 
     /**
