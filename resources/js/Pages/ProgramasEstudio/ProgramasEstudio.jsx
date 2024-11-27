@@ -6,10 +6,7 @@ import axios from 'axios';
 export default function ProgramasEstudio({ programasEstudio: initialPrograma }) {
     const [nombre, setNombre] = useState('');
     const [listaProgramas, setlistaProgramas] = useState(initialPrograma);
-    // Estado para el menú contextual
-    const [showContextMenu, setShowContextMenu] = useState(false);
-    // Posición del menú
-    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+
     // Programa seleccionado para eliminar o modificar
     const [selectedPrograma, setSelectedPrograma] = useState(null);
 
@@ -17,6 +14,11 @@ export default function ProgramasEstudio({ programasEstudio: initialPrograma }) 
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     // Estado para el nombre en edición
     const [editNombre, setEditNombre] = useState('');
+
+    // // Estado para el menú contextual
+    // const [showContextMenu, setShowContextMenu] = useState(false);
+    // // Posición del menú
+    // const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -39,39 +41,39 @@ export default function ProgramasEstudio({ programasEstudio: initialPrograma }) 
     };
 
 
-    const handleContextMenu = (e, programaId) => {
-        e.preventDefault(); // Prevenir el menú contextual por defecto
-        setSelectedPrograma(programaId); // Establecer el programa seleccionado
-        setContextMenuPosition({ x: e.clientX, y: e.clientY }); // Obtener la posición del clic
-        setShowContextMenu(true); // Mostrar el menú contextual
-    };
+    // const handleContextMenu = (e, programaId) => {
+    //     e.preventDefault(); // Prevenir el menú contextual por defecto
+    //     setSelectedPrograma(programaId); // Establecer el programa seleccionado
+    //     setContextMenuPosition({ x: e.clientX, y: e.clientY }); // Obtener la posición del clic
+    //     setShowContextMenu(true); // Mostrar el menú contextual
+    // };
 
-    const handleDelete = async () => {
-       
-        try {
-            const response = await axios.delete(`/programasEstudio/${selectedPrograma}`);
-       
-            if (response.status === 200) {
-                setlistaProgramas(listaProgramas.filter(programa => programa.id !== selectedPrograma));
-                setShowContextMenu(false); // Ocultar el menú contextual
-            } else {
-                console.error('Error al eliminar el programa', response);
-            }
-        } catch (error) {
-            console.error('Error al eliminar el programa', error);
-        }
-    };
+    // const handleDelete = async () => {
 
-    const handleCloseContextMenu = () => {
-        setShowContextMenu(false); // Cerrar el menú contextual si se hace clic fuera de él
-    };
+    //     try {
+    //         const response = await axios.delete(`/programasEstudio/${selectedPrograma}`);
+
+    //         if (response.status === 200) {
+    //             setlistaProgramas(listaProgramas.filter(programa => programa.id !== selectedPrograma));
+    //             setShowContextMenu(false); // Ocultar el menú contextual
+    //         } else {
+    //             console.error('Error al eliminar el programa', response);
+    //         }
+    //     } catch (error) {
+    //         console.error('Error al eliminar el programa', error);
+    //     }
+    // };
+
+    // const handleCloseContextMenu = () => {
+    //     setShowContextMenu(false); // Cerrar el menú contextual si se hace clic fuera de él
+    // };
 
     // Función para abrir el modal de edición y establecer los datos del programa seleccionado
     const openEditModal = (programa) => {
         setEditNombre(programa.nombre_programa);
         setSelectedPrograma(programa.id);
         setIsEditModalOpen(true);
-        setShowContextMenu(false);
+        //setShowContextMenu(false);
     };
 
     // Función para manejar la edición del programa
@@ -146,16 +148,24 @@ export default function ProgramasEstudio({ programasEstudio: initialPrograma }) 
                                             <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
                                                 Nombre del programa de estudio
                                             </th>
+                                            <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500">
+                                                Acciones
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
                                         {listaProgramas.map((programa) => (
-                                            <tr
-                                                key={programa.id}
-                                                onContextMenu={(e) => handleContextMenu(e, programa.id)} // Detectar clic derecho
-                                            >
+                                            <tr key={programa.id}>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                     {programa.nombre_programa}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                    <button
+                                                        onClick={() => openEditModal(programa)}
+                                                        className="text-blue-600 hover:text-blue-900"
+                                                    >
+                                                        Editar
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -168,8 +178,8 @@ export default function ProgramasEstudio({ programasEstudio: initialPrograma }) 
                 </div>
             </div>
 
-             {/* Modal de edición */}
-             {isEditModalOpen && (
+            {/* Modal de edición */}
+            {isEditModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-md shadow-lg w-1/3">
                         <h3 className="text-lg font-medium mb-4">Editar Programa</h3>
@@ -200,7 +210,7 @@ export default function ProgramasEstudio({ programasEstudio: initialPrograma }) 
             )}
 
             {/*Abrir menú contextual*/}
-            {showContextMenu && (
+            {/* {showContextMenu && (
                 <div
                     className="absolute bg-white border border-gray-300 shadow-lg rounded-md p-2"
                     style={{ top: `${contextMenuPosition.y}px`, left: `${contextMenuPosition.x}px` }}
@@ -219,7 +229,7 @@ export default function ProgramasEstudio({ programasEstudio: initialPrograma }) 
                         Eliminar Programa
                     </button>
                 </div>
-            )}
+            )} */}
 
         </AuthenticatedLayout>
     );

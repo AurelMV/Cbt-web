@@ -6,8 +6,11 @@ import Listado from "@/Components/DepartamentoServicio";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
+import axios from 'axios';
 
 export default function Dashboard() {
+
+    const [userId, setUserId] = useState('');
     const [ciclos, setCiclos] = useState([]);
     const [grupos, setGrupos] = useState([]);
     const [selectedCiclo, setSelectedCiclo] = useState("");
@@ -138,9 +141,8 @@ export default function Dashboard() {
                     console.error("Encabezados:", error.response.headers);
 
                     alert(
-                        `Error al realizar la inscripción: ${
-                            error.response.data.message ||
-                            "Revise los datos ingresados."
+                        `Error al realizar la inscripción: ${error.response.data.message ||
+                        "Revise los datos ingresados."
                         }`
                     );
                 } else if (error.request) {
@@ -249,6 +251,21 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
+        axios
+            .get('users/show')
+            .then(response => {
+                const user = response.data;
+                const userIdWithName = `${user.id} - ${user.nombres}`;
+                setUserId(userIdWithName);
+                setFormData(prevData => ({
+                    ...prevData,
+                    p_Usuarios_id: userIdWithName
+                }));
+            })
+            .catch(error => {
+                console.error('Error fetching user data:', error);
+            });
+
         axios
             .get("/api/programas")
             .then((response) => {
@@ -626,6 +643,7 @@ export default function Dashboard() {
                                                 placeholder="idusuario"
                                                 className="col-span-1 border p-2 rounded-md"
                                                 required
+                                                readOnly
                                             />
                                         </div>
                                         <div>
@@ -653,7 +671,7 @@ export default function Dashboard() {
                                             >
                                                 idcolegio
                                             </label>
-                                            
+
 
 
 
@@ -892,12 +910,11 @@ export default function Dashboard() {
                                                                         number
                                                                     )
                                                                 }
-                                                                className={`px-4 py-2 mx-1 rounded-md ${
-                                                                    number ===
+                                                                className={`px-4 py-2 mx-1 rounded-md ${number ===
                                                                     currentPage
-                                                                        ? "bg-blue-500 text-white"
-                                                                        : "bg-gray-300"
-                                                                }`}
+                                                                    ? "bg-blue-500 text-white"
+                                                                    : "bg-gray-300"
+                                                                    }`}
                                                             >
                                                                 {number}
                                                             </button>
@@ -995,8 +1012,8 @@ export default function Dashboard() {
                                                                     value={
                                                                         ColegioDAta.latitud
                                                                             ? ColegioDAta.latitud.toFixed(
-                                                                                  6
-                                                                              )
+                                                                                6
+                                                                            )
                                                                             : "-"
                                                                     }
                                                                     onChange={
@@ -1016,8 +1033,8 @@ export default function Dashboard() {
                                                                     value={
                                                                         ColegioDAta.longitud
                                                                             ? ColegioDAta.longitud.toFixed(
-                                                                                  6
-                                                                              )
+                                                                                6
+                                                                            )
                                                                             : "-"
                                                                     }
                                                                     onChange={
@@ -1146,19 +1163,19 @@ export default function Dashboard() {
                                                         <MapContainer
                                                             center={
                                                                 ColegioDAta.latitud &&
-                                                                ColegioDAta.longitud
+                                                                    ColegioDAta.longitud
                                                                     ? [
-                                                                          ColegioDAta.latitud,
-                                                                          ColegioDAta.longitud,
-                                                                      ]
+                                                                        ColegioDAta.latitud,
+                                                                        ColegioDAta.longitud,
+                                                                    ]
                                                                     : [
-                                                                          -10.4074729,
-                                                                          -75.3347043,
-                                                                      ]
+                                                                        -10.4074729,
+                                                                        -75.3347043,
+                                                                    ]
                                                             }
                                                             zoom={
                                                                 ColegioDAta.latitud &&
-                                                                ColegioDAta.longitud
+                                                                    ColegioDAta.longitud
                                                                     ? 15
                                                                     : 6
                                                             }
@@ -1276,8 +1293,8 @@ export default function Dashboard() {
                                                 className="w-full border p-2 rounded-md mb-4"
                                                 required
                                             >
-                                                  <option value="" disabled>
-                                                   Seleccione el medio de Pago
+                                                <option value="" disabled>
+                                                    Seleccione el medio de Pago
                                                 </option>
 
                                                 <option value="CAJA">
@@ -1496,7 +1513,7 @@ export default function Dashboard() {
                                                 ))}
                                             </select>
                                         </div>
-                                        <div>
+                                        <div className="mb-4">
                                             <label
                                                 htmlFor="fotop"
                                                 className="block text-sm font-medium text-gray-800"
@@ -1508,8 +1525,10 @@ export default function Dashboard() {
                                                 type="file"
                                                 onChange={handleChange}
                                                 accept=".png, .jpg, .jpeg"
+                                                className="block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mt-2 ml-4"
                                             />
                                         </div>
+
                                     </div>
                                 </div>
                             </div>
