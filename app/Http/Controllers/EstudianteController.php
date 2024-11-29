@@ -28,7 +28,7 @@ class EstudianteController extends Controller
     }
 
     // Obtener los resultados filtrados
-    $estudiantes = $query->get();
+    $estudiantes = $query->paginate(3);
 
     return Inertia::render('Estudiantes', [
         'estudiantes' => $estudiantes,

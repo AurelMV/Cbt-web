@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
 use App\Models\Pago;
 use App\Http\Requests\StorePagoRequest;
@@ -8,6 +9,7 @@ use App\Http\Requests\UpdatePagoRequest;
 use App\Models\Ciclo;
 use App\Models\Estudiante;
 use App\Models\Grupo;
+use App\Models\Inscripcion;
 use App\Models\ProgramaEstudio;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -15,108 +17,84 @@ use Inertia\Inertia;
 
 class PagoController extends Controller
 {
-    public function index(Request $request)
+    public function index()
     {
-        $query = DB::table('inscripcions')
-            ->join('estudiantes', 'inscripcions.idEstudiante', '=', 'estudiantes.id')
-            ->join('programa_estudios', 'inscripcions.idprogramaestudios', '=', 'programa_estudios.id')
-            ->join('ciclos', 'inscripcions.idciclo', '=', 'ciclos.id')
-            ->join('grupos', 'inscripcions.idGrupos', '=', 'grupos.id')
-            ->select(
-                'inscripcions.id',
-                'inscripcions.turno',
-                'inscripcions.fechaInscripcion',
-                DB::raw("CASE WHEN inscripcions.estadopago = 1 THEN 'Pagado' ELSE 'Deudor' END as estadopago"),
-                'estudiantes.nombres as estudiante_nombres',
-                'estudiantes.aPaterno',
-                'estudiantes.aMaterno',
-                'ciclos.nombre as ciclo_nombre',
-                'programa_estudios.nombre_programa as programa_nombre',
-                'grupos.nombre as grupo_nombre'
-            );
-    
-            if ($request->has('nombre_estudiante') && $request->nombre_estudiante != '') {
-                $query->where(function ($query) use ($request) {
-                    $query->where('estudiantes.nombres', 'like', '%' . $request->nombre_estudiante . '%');
-                       
-                });
-            }
-        
-            // Filtro por documento del estudiante (si tienes el campo en la tabla estudiantes)
-            if ($request->has('documento_estudiante') && $request->documento_estudiante != '') {
-                $query->where('estudiantes.nro_documento', 'like', '%' . $request->documento_estudiante . '%');
-            }
-    
-        if ($request->has('ciclo')) {
-            $query->where('ciclos.nombre', 'like', '%' . $request->ciclo . '%');
+        $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(3);
+
+        //return response()->json(
+
+        //   $inscripcion, 
+
+        //);
+        $query = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo']);
+
+        // Verificar si se pasó un parámetro de búsqueda por nombre del estudiante
+        if (request()->has('name') && !empty(request('name'))) {
+            $query->whereHas('estudiante', function ($subQuery) {
+                $subQuery->where('nombres', 'like', '%' . request('name') . '%');
+            });
         }
-    
-        if ($request->has('estado_pago')) {
-            $query->where('inscripcions.estadopago', $request->estado_pago);
+        if (request()->has('documento') && !empty(request('documento'))) {
+            $query->whereHas('estudiante', function ($subQuery) {
+                $subQuery->where('Nrodocumento', 'like', '%' . request('documento') . '%');
+            });
         }
-    
-        // Paginar
-        $inscripciones = $query->paginate(10);
-    
-        // Datos adicionales para filtros (si los necesitas en el frontend)
-        $estudiantes = DB::table('estudiantes')->select('id', 'nombres', 'aPaterno', 'aMaterno')->get();
-        $programaEstudio = DB::table('programa_estudios')->select('id', 'nombre_programa')->get();
-        $ciclosInscripcion = DB::table('ciclos')->select('id', 'nombre')->get();
-        $grupos = DB::table('grupos')->select('id', 'nombre')->get();
-    
+
+ 
+        // Paginar los resultados
+        $inscripcion = $query->paginate(3);
+        return Inertia::render('GestiondePagos', [
+            'inscripciones' => $inscripcion,
+            'queryParams' => request()->query(),
+        ]);
+
         // Retornar los datos con Inertia
-       /* return Inertia::render('GestiondePagos', [
+
+        /*return response()->json([
             'inscripciones' => $inscripciones,
             'estudiantes' => $estudiantes,
             'programaEstudio' => $programaEstudio,
             'ciclosInscripcion' => $ciclosInscripcion,
             'grupos' => $grupos,
         ]);*/
-        return response()->json([
-            'inscripciones' => $inscripciones,
-            'estudiantes' => $estudiantes,
-            'programaEstudio' => $programaEstudio,
-            'ciclosInscripcion' => $ciclosInscripcion,
-            'grupos' => $grupos,
-        ]);
     }
-    
+
 
     public function listadoDePagos(Request $request)
-{
-    // Obtener los filtros desde la solicitud
-    $nombre = $request->input('nombre');
-    $nroDocumento = $request->input('nroDocumento');
+    {
+        // Obtener los filtros desde la solicitud
+        $nombre = $request->input('nombre');
+        $nroDocumento = $request->input('nroDocumento');
 
-    // Construir la consulta
-    $query = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.ciclo', 'inscripcion.grupo'])
-        ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher','idInscripcion');
-    
-    // Filtrar por nombre del estudiante si se proporciona
-    if ($nombre) {
-        $query->whereHas('inscripcion.estudiante', function($q) use ($nombre) {
-            $q->where('nombres', 'like', '%' . $nombre . '%');
+        // Construir la consulta
+        $query = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.ciclo', 'inscripcion.grupo'])
+            ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher', 'idInscripcion');
+
+        // Filtrar por nombre del estudiante si se proporciona
+        if ($nombre) {
+            $query->whereHas('inscripcion.estudiante', function ($q) use ($nombre) {
+                $q->where('nombres', 'like', '%' . $nombre . '%');
+            });
+        }
+
+        // Filtrar por número de documento si se proporciona
+        if ($nroDocumento) {
+            $query->whereHas('inscripcion.estudiante', function ($q) use ($nroDocumento) {
+                $q->where('nro_documento', 'like', '%' . $nroDocumento . '%');
+            });
+        }
+
+        // Realizar la paginación
+        $pagos = $query->paginate(5);
+
+        // Formatear el campo `estado_pago`
+        $pagos->getCollection()->transform(function ($pago) {
+            $pago->estado_pago = $pago->estado_pago == 1 ? 'Pagado' : 'Pendiente';
+            return $pago;
         });
+
+        return response()->json($pagos);
     }
-
-    // Filtrar por número de documento si se proporciona
-    if ($nroDocumento) {
-        $query->whereHas('inscripcion.estudiante', function($q) use ($nroDocumento) {
-            $q->where('nro_documento', 'like', '%' . $nroDocumento . '%');
-        });
-    }
-
-    // Realizar la paginación
-    $pagos = $query->paginate(5);
-
-    // Formatear el campo `estado_pago`
-    $pagos->getCollection()->transform(function ($pago) {
-        $pago->estado_pago = $pago->estado_pago == 1 ? 'Pagado' : 'Pendiente';
-        return $pago;
-    });
-
-    return response()->json($pagos);
-}
 
 
 
@@ -144,7 +122,7 @@ class PagoController extends Controller
             'nroVoucher' => 'required|string|max:10',
             'idInscripcion' => 'required|regex:/^\d+$/|exists:inscripcions,id',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -166,13 +144,15 @@ class PagoController extends Controller
      */
     public function show($id)
     {
-        $pago = Pago::select(  'fecha',
-        'monto',
-        'medioPago',
-        'nroVoucher',
-        'idInscripcion',)
-        
-        ->findOrFail($id);
+        $pago = Pago::select(
+            'fecha',
+            'monto',
+            'medioPago',
+            'nroVoucher',
+            'idInscripcion',
+        )
+
+            ->findOrFail($id);
 
         return response()->json([
             'status' => true,
