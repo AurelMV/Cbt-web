@@ -1,58 +1,43 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import { Head } from "@inertiajs/react";
-import { InertiaLink } from '@inertiajs/inertia-react'; 
-import { Inertia } from '@inertiajs/inertia';
-import Prueva from "./Prueva";
 
+import { Inertia } from "@inertiajs/inertia";
+import Prueva from "./Prueva";
+import TextInput from "@/Components/TextInput";
 import React, { useState, useEffect } from "react";
 
-function Pagination({ links }) {
-    const handlePagination = (url) => {
-        if (url) {
-            window.location.href = url;
-        }
-    };
+import { router, usePage } from "@inertiajs/react";
 
-    return (
-        <div className="flex justify-center mt-4">
-            {links.map((link, index) => (
-                <button
-                    key={index}
-                    onClick={() => handlePagination(link.url)}
-                    disabled={!link.url}
-                    className={`px-4 py-2 mx-1 text-sm rounded-md ${
-                        link.url
-                            ? "bg-indigo-600 text-white"
-                            : "bg-gray-300 text-gray-500"
-                    }`}
-                >
-                    {link.label}
-                </button>
-            ))}
-        </div>
-    );
-}
-
-export default function GestionPagos({ inscripciones, estudiantes, programaEstudio, ciclosInscripcion, grupos }) {
+export default function GestionPagos({ queryParams = null }) {
     // const [inscripciones, setInscripciones] = useState([]);
-
+    const [queryParamsState, setQueryParams] = useState(
+        () => queryParams || {}
+    );
     const [nombreEstudiante, setNombreEstudiante] = useState("");
     const [documentoEstudiante, setDocumentoEstudiante] = useState("");
+    const { inscripciones } = usePage().props;
+    const [searchTerm, setSearchTerm] = useState("");
 
-    useEffect(() => {
-        axios
-            .get("/GestionPagos")
-            .then((response) => {
-                setEstudiantes(response.data.estudiantes);
-              
-            })
-            .catch((error) => {
-                console.error(
-                    "Hubo un error al cargar las inscripciones",
-                    error
-                );
-            });
-    }, []);
+    const handleInputChange = (name, value) => {
+        setQueryParams((prev) => ({
+            ...prev,
+            [name]: value || undefined,
+        }));
+        router.get(route("pagos.index"), {
+            ...queryParamsState,
+            [name]: value,
+        });
+    };
+
+    const filteredInscripciones = inscripciones.data.filter((inscripcion) => {
+        const fullName =
+            `${inscripcion.estudiante.aPaterno} ${inscripcion.estudiante.aMaterno}`.toLowerCase();
+        const searchTermLower = searchTerm.toLowerCase();
+        return (
+            fullName.includes(searchTermLower) ||
+            inscripcion.estudiante.dni.includes(searchTermLower)
+        );
+    });
 
     ////------------------------------------------------------aqui se cierra la wea
 
@@ -66,8 +51,9 @@ export default function GestionPagos({ inscripciones, estudiantes, programaEstud
 
     const handleSelectClick = (inscripcion) => {
         document.querySelector('[name="nombre"]').value =
-            inscripcion.estudiante_nombres;
-        document.querySelector('[name="apellido"]').value = inscripcion.turno;
+            inscripcion.estudiante.nombres;
+        document.querySelector('[name="apellido"]').value =
+            inscripcion.estudiante.aPaterno;
         document.querySelector('[name="idInscripcion"]').value = inscripcion.id; // Aquí, por ejemplo, usas el ID de la inscripción
     };
 
@@ -117,17 +103,22 @@ export default function GestionPagos({ inscripciones, estudiantes, programaEstud
                 console.error("Error al registrar el pago:", error);
             });
     };
-    //fonita de filtrado de datos 
+    //fonita de filtrado de datos
     const handleFilterChange = () => {
-        Inertia.get('/GestionPagos', {
-            nombre_estudiante: nombreEstudiante,
-            documento_estudiante: documentoEstudiante,
-        }, {
-            preserveState: true, // Asegúrate de que preserveState esté configurado
-            replace: true, // Usar replace si quieres que la URL cambie sin recargar la página
-        });
+        Inertia.get(
+            "/GestionPagos",
+            {
+                nombre_estudiante: nombreEstudiante,
+                documento_estudiante: documentoEstudiante,
+            },
+            {
+                preserveState: true, // Asegúrate de que preserveState esté configurado
+                replace: true, // Usar replace si quieres que la URL cambie sin recargar la página
+            }
+        );
     };
-    
+
+    //filtrado para la inscripcion
 
     return (
         <AuthenticatedLayout>
@@ -273,242 +264,135 @@ export default function GestionPagos({ inscripciones, estudiantes, programaEstud
                                             <h3 className="text-md font-medium mb-4 text-blue-900">
                                                 Lista de Estudiantes Inscritos
                                             </h3>
-                                            <input
-                    type="text"
-                    placeholder="Buscar por nombre"
-                    value={nombreEstudiante}
-                    onChange={(e) => setNombreEstudiante(e.target.value)}
-                    onBlur={handleFilterChange}  // Filtro al salir del campo
-                />
-                <input
-                    type="text"
-                    placeholder="Buscar por documento"
-                    value={documentoEstudiante}
-                    onChange={(e) => setDocumentoEstudiante(e.target.value)}
-                    onBlur={handleFilterChange}  // Filtro al salir del campo
-                />
-                                            <table className="min-w-full border divide-y divide-gray-200">
-                                                <thead className="bg-gray-50">
-                                                    <tr>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Turno
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Fecha
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Valor de Pago
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Estudiante
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Apellidos
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Ciclo
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Programa
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Acciones
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="bg-white divide-y divide-gray-200">
-                                                    {inscripciones &&
-                                                    inscripciones.data ? (
-                                                        inscripciones.data.map(
-                                                            (inscripcion) => (
-                                                                <tr
-                                                                    key={
-                                                                        inscripcion.id
-                                                                    }
-                                                                >
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.turno
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.fechaInscripcion
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.estadopago
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.estudiante_nombres
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.aPaterno
-                                                                        }
-                                                                    </td>
+                                            <TextInput
+                                                placeholder="Nombre del estudiante"
+                                                defaultValue={
+                                                    queryParamsState.name
+                                                }
+                                                onBlur={(e) =>
+                                                    handleInputChange(
+                                                        "name",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                onKeyDown={(e) =>
+                                                    e.key === "Enter" &&
+                                                    handleInputChange(
+                                                        "name",
+                                                        e.target.value,
+                                                        true
+                                                    )
+                                                }
+                                            />
 
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.ciclo_nombre
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.programa_nombre
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-500">
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                handleSelectClick(
-                                                                                    inscripcion
-                                                                                )
-                                                                            }
-                                                                            className="text-indigo-600 hover:text-indigo-900"
-                                                                        >
-                                                                            Seleccionar
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            )
-                                                        )
-                                                    ) : (
-                                                        <tr>
-                                                            <td
-                                                                colSpan="7"
-                                                                className="px-6 py-4 text-sm text-gray-500 text-center"
-                                                            >
-                                                                No hay datos
-                                                                disponibles
-                                                            </td>
-                                                        </tr>
-                                                    )}
-                                                </tbody>
-                                            </table>
-                                            <div className="mt-4">
-                                                <Pagination
-                                                    links={inscripciones.links}
-                                                />
-                                            </div>
+                                            <input
+                                                type="number"
+                                                placeholder="Nro de Documento"
+                                                defaultValue={
+                                                    queryParamsState.documento
+                                                }
+                                                onBlur={(e) =>
+                                                    handleInputChange(
+                                                        "documento",
+                                                        e.target.value
+                                                    )
+                                                }
+                                                onKeyDown={(e) =>
+                                                    e.key === "Enter" &&
+                                                    handleInputChange(
+                                                        "documento",
+                                                        e.target.value,
+                                                        true
+                                                    )
+                                                }
+                                            />
                                         </div>
                                     </div>
+                                    <table className="min-w-full border border-gray-300 rounded-lg bg-white shadow">
+                                        <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                                            <tr>
+                                                <th className="py-3 px-6 text-left">
+                                                    Turno
+                                                </th>
+                                                <th className="py-3 px-6 text-left">
+                                                    Nombres
+                                                </th>
+                                                <th className="py-3 px-6 text-left">
+                                                    Apellidos
+                                                </th>
+                                                <th className="py-3 px-6 text-left">
+                                                    Ciclo
+                                                </th>
+                                                <th className="py-3 px-6 text-left">
+                                                    Programa
+                                                </th>
+                                                <th className="py-3 px-6 text-left">
+                                                    Grupo
+                                                </th>
+                                                <th className="py-3 px-6 text-center">
+                                                    Acciones
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="text-gray-600 text-sm">
+                                            {filteredInscripciones.map(
+                                                (inscripcion) => (
+                                                    <tr
+                                                        key={inscripcion.id}
+                                                        className="border-b border-gray-200 hover:bg-gray-100"
+                                                    >
+                                                        <td className="py-3 px-6">
+                                                            {inscripcion.turno}
+                                                        </td>
+                                                        <td className="py-3 px-6">
+                                                            {
+                                                                inscripcion
+                                                                    .estudiante
+                                                                    .nombres
+                                                            }
+                                                        </td>
+                                                        <td className="py-3 px-6">
+                                                            {`${inscripcion.estudiante.aPaterno} ${inscripcion.estudiante.aMaterno}`}
+                                                        </td>
 
-                                    {showStudentList && (
-                                        <div>
-                                            <h3 className="text-md font-medium mb-4 text-blue-900">
-                                                Lista de Estudiantes Inscritos
-                                            </h3>
-                                            <input
-                                                type="text"
-                                                placeholder="Buscar pago"
-                                                className=" border p-2 rounded-md mb-4"
-                                            />
-                                            <table className="min-w-full border divide-y divide-gray-200">
-                                                <thead className="bg-gray-50">
-                                                    <tr>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Turno
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Fecha
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Valor de Pago
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Estudiante
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Ciclo
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Programa
-                                                        </th>
-                                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
-                                                            Acciones
-                                                        </th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="bg-white divide-y divide-gray-200">
-                                                    {inscripciones &&
-                                                    inscripciones.data ? (
-                                                        inscripciones.data.map(
-                                                            (inscripcion) => (
-                                                                <tr
-                                                                    key={
-                                                                        inscripcion.id
-                                                                    }
-                                                                >
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.turno
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.fechaInscripcion
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.estadopago
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.estudiante_nombres
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.ciclo_nombre
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-900">
-                                                                        {
-                                                                            inscripcion.programa_nombre
-                                                                        }
-                                                                    </td>
-                                                                    <td className="px-6 py-4 text-sm text-gray-500">
-                                                                        <button
-                                                                            onClick={() =>
-                                                                                handleSelectClick(
-                                                                                    inscripcion
-                                                                                )
-                                                                            }
-                                                                            className="text-indigo-600 hover:text-indigo-900"
-                                                                        >
-                                                                            Seleccionar
-                                                                        </button>
-                                                                    </td>
-                                                                </tr>
-                                                            )
-                                                        )
-                                                    ) : (
-                                                        <tr>
-                                                            <td
-                                                                colSpan="7"
-                                                                className="px-6 py-4 text-sm text-gray-500 text-center"
+                                                        <td className="py-3 px-6">
+                                                            {
+                                                                inscripcion
+                                                                    .ciclo
+                                                                    .nombre
+                                                            }
+                                                        </td>
+                                                        <td className="py-3 px-6">
+                                                            {
+                                                                inscripcion
+                                                                    .programa_estudio
+                                                                    .nombre_programa
+                                                            }
+                                                        </td>
+                                                        <td className="py-3 px-6">
+                                                            {
+                                                                inscripcion
+                                                                    .grupo
+                                                                    .nombre
+                                                            }
+                                                        </td>
+                                                        <td className="py-3 px-6 text-center">
+                                                            <button
+                                                                className="bg-blue-500 text-white px-3 py-1 rounded hover:bg-blue-600"
+                                                                onClick={() =>
+                                                                    handleSelectClick(
+                                                                        inscripcion
+                                                                    )
+                                                                }
                                                             >
-                                                                No hay datos
-                                                                disponibles
-                                                            </td>
-                                                        </tr>
-                                                    )}
-                                                </tbody>
-                                            </table>
-                                            <div className="mt-4">
-                                                <Pagination
-                                                    links={inscripciones.links}
-                                                />
-                                            </div>
-                                        </div>
-                                    )}
+                                                                Seleccionar
+                                                            </button>
+                                                        </td>
+                                                    </tr>
+                                                )
+                                            )}
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                         </div>

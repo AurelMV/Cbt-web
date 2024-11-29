@@ -22,7 +22,7 @@ class InscripcionController extends Controller
 {
     public function index()
     {
-        $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(10);
+        $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(3);
 
         //return response()->json(
 
@@ -57,7 +57,7 @@ class InscripcionController extends Controller
 
 
         // Paginar los resultados
-        $inscripcion = $query->paginate(5);
+        $inscripcion = $query->paginate(3);
 
 
 
@@ -66,6 +66,7 @@ class InscripcionController extends Controller
             'inscripciones' => $inscripcion,
             'queryParams' => request()->query(),
         ]);
+       
     }
 
 

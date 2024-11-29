@@ -2,9 +2,22 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import React, { useState, useEffect } from "react";
 import { router, usePage } from "@inertiajs/react"; // Para trabajar con props y navegación
 import { Inertia } from "@inertiajs/inertia";
+import { Link } from "@inertiajs/react";
 import TextInput from "@/Components/TextInput";
 
-export default function GestionInscripciones({ queryParams = null }) {
+export default function GestionInscripciones({
+    queryParams: propsQueryParams = null,
+}) {
+    const { inscripciones, queryParams: inertiaQueryParams } = usePage().props;
+
+    // Combina los queryParams de props con los de Inertia
+    const queryParams = propsQueryParams || inertiaQueryParams;
+
+    // Estado para manejar los parámetros de la búsqueda
+    const [queryParamsState, setQueryParams] = useState(
+        () => queryParams || {}
+    );
+
     const [ciclos, setCiclos] = useState([]);
     const [selectedCiclo, setSelectedCiclo] = useState("");
     const [selectedGrupo, setSelectedGrupo] = useState("");
@@ -13,33 +26,28 @@ export default function GestionInscripciones({ queryParams = null }) {
         p_Ciclo_id: "",
         p_Grupos_id: "",
     });
-    const [queryParamsState, setQueryParams] = useState(
-        () => queryParams || {}
-    );
-    const { inscripciones } = usePage().props;
+
     const [showModal, setShowModal] = useState(false);
     const [editingInscripcion, setEditingInscripcion] = useState(null);
     const [opciones, setOpciones] = useState({ ciclos: [], programas: [] });
     const [gruposFiltrados, setGruposFiltrados] = useState([]);
     const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
-
     const [cicloSeleccionado, setCicloSeleccionado] = useState("");
 
     const handleInputChange = (name, value, isKeyPress = false) => {
         if (isKeyPress && value.trim() === "") return;
-    
+
         const updatedQueryParams = {
-            ...queryParamsState,  // Asegúrate de usar el estado actual, no `queryParams` directamente
+            ...queryParamsState, // Asegúrate de usar el estado actual, no `queryParams` directamente
             [name]: value || undefined,
         };
-    
+
         // Actualiza solo los parámetros que han cambiado, sin afectar los valores de los select
         setQueryParams(updatedQueryParams);
-    
+
         // Enviar los parámetros al backend solo si es necesario
         router.get(route("gestInscripcion.index"), updatedQueryParams);
     };
-    
 
     useEffect(() => {
         if (showModal) {
@@ -108,6 +116,14 @@ export default function GestionInscripciones({ queryParams = null }) {
             inscripcion.estudiante.dni.includes(searchTermLower)
         );
     });
+    const handleClearFilters = () => {
+        // Limpiar los valores de los select y otros filtros
+        setQueryParams({});
+        // Recargar la página sin filtros
+        router.get(route("gestInscripcion.index"));
+    };
+
+
 
     return (
         <AuthenticatedLayout>
@@ -118,13 +134,6 @@ export default function GestionInscripciones({ queryParams = null }) {
 
                 {/* Zona de búsqueda */}
                 <div className="mb-4">
-                    <input
-                        type="text"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Buscar por nombre o DNI"
-                        className="p-2 border rounded w-1/3"
-                    />
                     <TextInput
                         placeholder="Nombre del estudiante"
                         defaultValue={queryParamsState.name}
@@ -149,36 +158,29 @@ export default function GestionInscripciones({ queryParams = null }) {
                             handleInputChange("documento", e.target.value, true)
                         }
                     />
-
-
-
-
-
-
-
-
-
-
-
-
-
                     <select
                         name="p_cicloinscripciones_id"
                         value={queryParamsState.p_cicloinscripciones_id}
                         onBlur={(e) =>
-                            handleInputChange("p_cicloinscripciones_id", e.target.value)
+                            handleInputChange(
+                                "p_cicloinscripciones_id",
+                                e.target.value
+                            )
                         }
                         onKeyDown={(e) =>
                             e.key === "Enter" &&
-                            handleInputChange("p_cicloinscripciones_id", e.target.value, true)
+                            handleInputChange(
+                                "p_cicloinscripciones_id",
+                                e.target.value,
+                                true
+                            )
                         }
-                        
-                         onChange={(e) => {
-                            
-                            handleInputChange("p_cicloinscripciones_id", e.target.value);
-                           
+                        onChange={(e) => {
+                            handleInputChange(
+                                "p_cicloinscripciones_id",
+                                e.target.value
+                            );
                         }}
-                        
                     >
                         <option value="">Seleccione un ciclo</option>
                         {ciclos.map((ciclo) => (
@@ -187,19 +189,10 @@ export default function GestionInscripciones({ queryParams = null }) {
                             </option>
                         ))}
                     </select>
-
-
-
-
-
-
-
                     <select
                         name="p_cicloinscripciones_id"
                         defaultValue={queryParamsState.p_cicloinscripciones_id}
-
-                         onChange={handleCicloChange}
-                        
+                        onChange={handleCicloChange}
                     >
                         <option value="">Seleccione un ciclo</option>
                         {ciclos.map((ciclo) => (
@@ -211,11 +204,20 @@ export default function GestionInscripciones({ queryParams = null }) {
                     <select
                         name="p_Grupos_id"
                         defaultValue={queryParamsState.p_Grupos_id}
-                        onBlur={(e) => handleInputChange("p_Grupos_id", e.target.value)}
-    onKeyDown={(e) =>
-        e.key === "Enter" && handleInputChange("p_Grupos_id", e.target.value, true)
-    }
-    onChange={(e) => handleInputChange("p_Grupos_id", e.target.value)}
+                        onBlur={(e) =>
+                            handleInputChange("p_Grupos_id", e.target.value)
+                        }
+                        onKeyDown={(e) =>
+                            e.key === "Enter" &&
+                            handleInputChange(
+                                "p_Grupos_id",
+                                e.target.value,
+                                true
+                            )
+                        }
+                        onChange={(e) =>
+                            handleInputChange("p_Grupos_id", e.target.value)
+                        }
                     >
                         <option value="">Seleccione un grupo</option>
                         {grupos.map((grupo) => (
@@ -224,6 +226,12 @@ export default function GestionInscripciones({ queryParams = null }) {
                             </option>
                         ))}
                     </select>
+                    <button
+                    onClick={handleClearFilters}
+                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                >
+                    Limpiar Filtros
+                </button>
                 </div>
 
                 <table className="min-w-full border border-gray-300 rounded-lg bg-white shadow">
@@ -280,6 +288,55 @@ export default function GestionInscripciones({ queryParams = null }) {
                         ))}
                     </tbody>
                 </table>
+                <div className="mt-4 flex justify-between items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+                    <p className="text-sm text-gray-500">
+                        Página {inscripciones.current_page} de{" "}
+                        {inscripciones.last_page}
+                    </p>
+
+                    <nav
+                        className="inline-flex shadow-sm rounded-md"
+                        aria-label="Pagination"
+                    >
+                        {/* Paginación Anterior */}
+                        {inscripciones.prev_page_url && (
+                            <Link
+                                href={inscripciones.prev_page_url}
+                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            ></Link>
+                        )}
+
+                        {/* Páginas */}
+                        {inscripciones.links &&
+                            inscripciones.links.map((link, index) => (
+                                <Link
+                                    key={index}
+                                    href={link.url || "#"}
+                                    className={`px-4 py-2 text-sm font-medium border border-gray-300 ${
+                                        link.active
+                                            ? "bg-indigo-500 text-white"
+                                            : "bg-white text-gray-700 hover:bg-gray-100"
+                                    } ${
+                                        !link.url
+                                            ? "cursor-not-allowed"
+                                            : "cursor-pointer"
+                                    }`}
+                                >
+                                    {link.label
+                                        .replace("&laquo;", "«")
+                                        .replace("&raquo;", "»")}
+                                </Link>
+                            ))}
+
+                        {/* Paginación Siguiente */}
+                        {inscripciones.next_page_url && (
+                            <Link
+                                href={inscripciones.next_page_url}
+                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            ></Link>
+                        )}
+                    </nav>
+                </div>
 
                 {/* Modal */}
                 {showModal && editingInscripcion && (
