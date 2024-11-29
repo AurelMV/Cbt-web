@@ -118,12 +118,12 @@ export default function Dashboard() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         if (name === "p_celularestudiante") {
-            const isValid = /^\d{0,9}$/.test(value); 
-            if (!isValid) return; 
+            const isValid = /^\d{0,9}$/.test(value);
+            if (!isValid) return;
         }
         if (name === "p_celularapoderado") {
-            const isValid = /^\d{0,9}$/.test(value); 
-            if (!isValid) return; 
+            const isValid = /^\d{0,9}$/.test(value);
+            if (!isValid) return;
         }
         setFormData((prevData) => ({
             ...prevData,
@@ -136,11 +136,11 @@ export default function Dashboard() {
 
 
         if (name === "p_tipodocumento") {
-            const limit = value === "DNI" ? 8 : 12; 
+            const limit = value === "DNI" ? 8 : 12;
             setDigitLimit(limit);
         }
 
-  
+
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
@@ -150,10 +150,10 @@ export default function Dashboard() {
     const handleInputChange2 = (e) => {
         const { name, value } = e.target;
 
-  
+
         if (name === "p_nroDocumento") {
-            const isValid = new RegExp(`^\\d{0,${digitLimit}}$`).test(value); 
-            if (!isValid) return; 
+            const isValid = new RegExp(`^\\d{0,${digitLimit}}$`).test(value);
+            if (!isValid) return;
         }
 
         setFormData((prevData) => ({
@@ -711,7 +711,7 @@ export default function Dashboard() {
                                                 required
                                             />
                                         </div>
-                                        
+
                                         <div>
                                             {/*<label
                                                 htmlFor="idcolegio"
@@ -735,114 +735,70 @@ export default function Dashboard() {
 
                                 {modalOpen && (
                                     <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50">
-                                        <div className="bg-white p-6 rounded-lg shadow-lg flex w-full max-w-4xl">
-                                            <div className="w-1/2 pr-4 border-r">
+                                        <div className="bg-white p-8 rounded-lg shadow-lg flex w-full max-w-7xl">
+                                            <div className="w-2/5 pl-6 border-r">
                                                 <h3 className="text-lg font-semibold mb-4">
-                                                    Seleccione Ubicación y
-                                                    Colegio
+                                                    Seleccione Ubicación y Colegio
                                                 </h3>
                                                 <div className="space-y-4">
                                                     <select
-                                                        className="w-full border p-2 rounded-md"
+                                                        className="w-11/12 mx-auto border p-2 rounded-md"
                                                         required
-                                                        onChange={
-                                                            handleDepartamentoChange
-                                                        }
+                                                        onChange={handleDepartamentoChange}
                                                     >
-                                                        <option value="">
-                                                            Departamento
-                                                        </option>
-                                                        {departamentos.map(
-                                                            (depa) => (
-                                                                <option
-                                                                    key={
-                                                                        depa.id
-                                                                    }
-                                                                    value={
-                                                                        depa.id
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        depa.nombredepartamento
-                                                                    }
-                                                                </option>
-                                                            )
-                                                        )}
-                                                    </select>
-                                                    <select
-                                                        className="w-full border p-2 rounded-md"
-                                                        required
-                                                        onChange={
-                                                            handleProvinciaChange
-                                                        }
-                                                    >
-                                                        <option value="">
-                                                            Provincia
-                                                        </option>
-                                                        {provincias.map(
-                                                            (lista) => (
-                                                                <option
-                                                                    key={
-                                                                        lista.id
-                                                                    }
-                                                                    value={
-                                                                        lista.id
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        lista.nombreprovincia
-                                                                    }
-                                                                </option>
-                                                            )
-                                                        )}
-                                                    </select>
-                                                    <select
-                                                        className="w-full border p-2 rounded-md"
-                                                        required
-                                                        onChange={
-                                                            handleColegioChange
-                                                        }
-                                                    >
-                                                        <option value="">
-                                                            Distrito
-                                                        </option>
-                                                        {distritos.map(
-                                                            (lista) => (
-                                                                <option
-                                                                    key={
-                                                                        lista.id
-                                                                    }
-                                                                    value={
-                                                                        lista.id
-                                                                    }
-                                                                >
-                                                                    {
-                                                                        lista.nombredistrito
-                                                                    }
-                                                                </option>
-                                                            )
-                                                        )}
+                                                        <option value="">Departamento</option>
+                                                        {departamentos.map((depa) => (
+                                                            <option key={depa.id} value={depa.id}>
+                                                                {depa.nombredepartamento}
+                                                            </option>
+                                                        ))}
                                                     </select>
 
-                                                    <div>
+                                                    <select
+                                                        className="w-11/12 mx-auto border p-2 rounded-md"
+                                                        required
+                                                        onChange={handleProvinciaChange}
+                                                    >
+                                                        <option value="">Provincia</option>
+                                                        {provincias.map((lista) => (
+                                                            <option key={lista.id} value={lista.id}>
+                                                                {lista.nombreprovincia}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+
+                                                    <select
+                                                        className="w-11/12 mx-auto border p-2 rounded-md"
+                                                        required
+                                                        onChange={handleColegioChange}
+                                                    >
+                                                        <option value="">Distrito</option>
+                                                        {distritos.map((lista) => (
+                                                            <option key={lista.id} value={lista.id}>
+                                                                {lista.nombredistrito}
+                                                            </option>
+                                                        ))}
+                                                    </select>
+
+                                                    <div className="w-11/12 mx-auto">
                                                         <input
                                                             type="text"
                                                             value={inputValue}
-                                                            onChange={
-                                                                handleInputChange
-                                                            }
+                                                            onChange={handleInputChange}
                                                             placeholder="Buscar colegios..."
-                                                            className="input-class"
+                                                            className="w-11/12 mx-auto border p-2 rounded-md"
                                                         />
                                                     </div>
+
                                                     <button
                                                         type="button"
                                                         onClick={openModal2}
-                                                        className="w-full bg-indigo-600 text-white p-2 rounded-md mt-2"
+                                                        className="w-11/12 mx-auto bg-indigo-600 text-white p-2 rounded-md mt-2"
                                                     >
                                                         Agregar Colegio
                                                     </button>
                                                 </div>
+
                                                 <div className="flex justify-end mt-4 space-x-2">
                                                     <button
                                                         onClick={closeModal}
@@ -860,7 +816,8 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
 
-                                            <div className="w-1/2 pl-4 overflow-x-auto">
+
+                                            <div className="w-3/5 pr-6 overflow-x-auto">
                                                 <h3 className="text-lg font-semibold mb-4">
                                                     Colegios Seleccionados
                                                 </h3>
@@ -887,51 +844,43 @@ export default function Dashboard() {
                                                     <tbody>
                                                         {currentItems.length >
                                                             0 &&
-                                                            currentItems.map(
-                                                                (
-                                                                    resultado,
-                                                                    index
-                                                                ) => (
-                                                                    <tr
-                                                                        key={
-                                                                            index
+                                                            currentItems.map((resultado, index) => (
+                                                                <tr key={index}>
+                                                                    <td className="border px-4 py-2">
+                                                                        <button
+                                                                            className="inline-flex items-center rounded-md border border-transparent bg-green-500 px-1 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
+                                                                            type="button"
+                                                                            onClick={() =>
+                                                                                handleSelectColegio(
+                                                                                    resultado.id
+                                                                                )
+                                                                            }
+                                                                        >
+                                                                            Seleccionar
+                                                                        </button>
+                                                                    </td>
+                                                                    <td className="border px-4 py-2">
+                                                                        {
+                                                                            resultado.nombrecolegio
                                                                         }
-                                                                    >
-                                                                        <td className="border px-4 py-2">
-                                                                            <button
-                                                                                className="inline-flex items-center rounded-md border border-transparent bg-green-500 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                                                                                type="button"
-                                                                                onClick={() =>
-                                                                                    handleSelectColegio(
-                                                                                        resultado.id
-                                                                                    )
-                                                                                }
-                                                                            >
-                                                                                Seleccionar
-                                                                            </button>
-                                                                        </td>
-                                                                        <td className="border px-4 py-2">
-                                                                            {
-                                                                                resultado.nombrecolegio
-                                                                            }
-                                                                        </td>
-                                                                        <td className="border px-4 py-2">
-                                                                            {
-                                                                                resultado.codModular
-                                                                            }
-                                                                        </td>
-                                                                        <td className="border px-4 py-2">
-                                                                            {
-                                                                                resultado.modalidad
-                                                                            }
-                                                                        </td>
-                                                                        <td className="border px-4 py-2">
-                                                                            {
-                                                                                resultado.gestion
-                                                                            }
-                                                                        </td>
-                                                                    </tr>
-                                                                )
+                                                                    </td>
+                                                                    <td className="border px-4 py-2">
+                                                                        {
+                                                                            resultado.codModular
+                                                                        }
+                                                                    </td>
+                                                                    <td className="border px-4 py-2">
+                                                                        {
+                                                                            resultado.modalidad
+                                                                        }
+                                                                    </td>
+                                                                    <td className="border px-4 py-2">
+                                                                        {
+                                                                            resultado.gestion
+                                                                        }
+                                                                    </td>
+                                                                </tr>
+                                                            )
                                                             )}
                                                     </tbody>
                                                 </table>
@@ -941,12 +890,8 @@ export default function Dashboard() {
                                                         (number) => (
                                                             <button
                                                                 key={number}
-                                                                onClick={() =>
-                                                                    paginate(
-                                                                        number
-                                                                    )
-                                                                }
-                                                                className={`px-4 py-2 mx-1 rounded-md ${number ===
+                                                                onClick={() => paginate(number)}
+                                                                className={`px-1.5 py-0.95 mx-1 rounded-md ${number ===
                                                                     currentPage
                                                                     ? "bg-blue-500 text-white"
                                                                     : "bg-gray-300"
@@ -1102,20 +1047,10 @@ export default function Dashboard() {
                                                                         distrito
                                                                     </option>
                                                                     {distritos.map(
-                                                                        (
-                                                                            lista
-                                                                        ) => (
-                                                                            <option
-                                                                                key={
-                                                                                    lista.id
-                                                                                }
-                                                                                value={
-                                                                                    lista.id
-                                                                                }
-                                                                            >
-                                                                                {
-                                                                                    lista.nombredistrito
-                                                                                }
+                                                                        (lista) => (
+                                                                            <option key={lista.id}
+                                                                                value={lista.id}>
+                                                                                {lista.nombredistrito}
                                                                             </option>
                                                                         )
                                                                     )}
@@ -1240,27 +1175,15 @@ export default function Dashboard() {
                                                                             true
                                                                         }
                                                                         eventHandlers={{
-                                                                            dragend:
-                                                                                (
-                                                                                    e
-                                                                                ) => {
-                                                                                    const {
-                                                                                        lat,
-                                                                                        lng,
-                                                                                    } =
-                                                                                        e.target.getLatLng();
-                                                                                    setColegioDAta(
-                                                                                        (
-                                                                                            prevData
-                                                                                        ) => ({
-                                                                                            ...prevData,
-                                                                                            latitud:
-                                                                                                lat,
-                                                                                            longitud:
-                                                                                                lng,
-                                                                                        })
-                                                                                    );
-                                                                                },
+                                                                            dragend: (e) => {
+                                                                                const { lat, lng, } =
+                                                                                    e.target.getLatLng();
+                                                                                setColegioDAta((prevData) => ({
+                                                                                    ...prevData,
+                                                                                    latitud: lat, longitud: lng,
+                                                                                })
+                                                                                );
+                                                                            },
                                                                         }}
                                                                     />
                                                                 )}
@@ -1330,7 +1253,7 @@ export default function Dashboard() {
                                                 required
                                             >
                                                 <option value="" disabled>
-                                                   Seleccione medio
+                                                    Seleccione medio
                                                 </option>
 
                                                 <option value="CAJA">
@@ -1556,7 +1479,6 @@ export default function Dashboard() {
                                             <input
                                                 id="fotop"
                                                 type="file"
-                                                className="mt-2"
                                                 onChange={handleChange}
                                                 accept=".png, .jpg, .jpeg"
                                                 className="block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mt-2 ml-4"

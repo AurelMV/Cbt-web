@@ -1,5 +1,6 @@
 import axios from 'axios';
 const API_URL = 'http://127.0.0.1:8000/api/Colegio';
+const token = localStorage.getItem('token');
 const ColegioServicio = {
     // Obtener todos los colegios
     index: async () => {
@@ -26,7 +27,11 @@ const ColegioServicio = {
     // Crear un nuevo colegio
     store: async (colegioData) => {
         try {
-            const response = await axios.post(API_URL, colegioData);
+            const response = await axios.post(API_URL, colegioData, {
+                headers: {
+                  Authorization: `Bearer ${token}` // Incluye el token en el encabezado
+                }
+              });
             return response.data;
         } catch (error) {
             console.error("Error en store:", error);
