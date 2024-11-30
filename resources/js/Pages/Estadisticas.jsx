@@ -6,7 +6,7 @@ import Mapa from '@/Components/diagramaMapa';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import { Head } from '@inertiajs/react';
 
-export default function Estadistias() {
+export default function Estadisticas() {
     return (
         <AuthenticatedLayout>
             <Head title="Estudiantes" />
@@ -14,25 +14,30 @@ export default function Estadistias() {
             <h2 className="text-xl font-semibold leading-tight text-black">
                 GRÁFICOS
             </h2>
-            <p className="leading-tight text-gray-400">Vea algunos graficos y estadisticas de como esta llendo el cbt</p>
+            <p className="leading-tight text-gray-400">Vea algunos gráficos y estadísticas de como está yendo el CBT</p>
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-8">
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1 gap-8">
                         <div className="border border-gray-200  overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg">
                             <h3 className="text-lg font-semibold mb-4 text-blue-900">Análisis de Inscripciones por Ciclo</h3>
                             <EnrollmentAnalysis />
                         </div>
+                    </div>
+
+                    <div className="grid grid-cols-1">
                         <div className="border border-gray-200 overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg">
                             <h3 className="text-lg font-semibold mb-4 text-blue-900">Diagrama de Barras</h3>
                             <DiagramaBarras />
                         </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                         <div className="border border-gray-200 overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg">
                             <h3 className="text-lg font-semibold mb-4 text-blue-900">Diagrama de Pastel</h3>
                             <DiagraPastel />
                         </div>
                     </div>
-
  
                     <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
   
