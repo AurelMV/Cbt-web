@@ -4,16 +4,27 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Grupo;
+use App\Models\Ciclo;
+use App\Models\ProgramaEstudio;
+use App\Models\Estudiante;
+
 
 class ReportesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    
     public function index()
     {
-        //
-        return Inertia::render('Reportes');
+        $grupos=Grupo::all();
+        $estudiantes=Estudiante::all();
+        $ciclos=Ciclo::all();
+        $programa=ProgramaEstudio::all();
+        return Inertia::render('Reportes',[
+            'grupos'=>$grupos,
+            'estudiantes'=>$estudiantes,
+            'ciclos'=>$ciclos,
+            'programa'=>$programa
+        ]);
     }
 
     /**
