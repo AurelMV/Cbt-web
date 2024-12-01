@@ -8,18 +8,17 @@ ChartJS.register(CategoryScale, BarElement, Title, Tooltip, Legend);
 
 const DiagramaBarras = () => {
 
-  const { programas, inscritosPorPrograma } = usePage().props;
-  console.log(programas);
-  console.log(inscritosPorPrograma);
+  const { inscritosPorPrograma } = usePage().props;
+
+  const programas = inscritosPorPrograma.map((programa) => programa.programa);
+  const inscritos = inscritosPorPrograma.map((programa) => programa.inscritos);
   // Datos del gráfico
   const data = {
-    labels: inscritosPorPrograma.map((programa) => programa.programa), // Nombres de los programas
+    labels: programas, // Nombres de los programas
     datasets: [
       {
         label: 'Inscritos por programa',
-        data: programas.map((programa) => {
-          const inscrito = inscritosPorPrograma.find((p) => p.programa === programa.nombre);
-          return inscrito ? inscrito.inscritos : 0;}), // Número de inscritos por programa
+        data: inscritos, // Número de inscritos por programa
         backgroundColor: 'rgba(54, 162, 235, 0.6)', // Color de las barras
         borderColor: 'rgba(54, 162, 235, 1)', // Color del borde de las barras
         borderWidth: 1, // Grosor del borde
