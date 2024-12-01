@@ -80,7 +80,7 @@ export default function Estudiantes({ queryParams: propsQueryParams = null, }) {
     ) : [];
     
 
-    
+
 
     return (
         <AuthenticatedLayout>
@@ -90,50 +90,92 @@ export default function Estudiantes({ queryParams: propsQueryParams = null, }) {
                 </h2>
                 <p className="leading-tight text-gray-400">
                     Administra a los estudiantes que se han inscrito
+               
                 </p>
-                <div>
-                    {/*tmr x q no hay los otros div xd....aqui dentro tenia que ir con sus propiedades pex */}
-                    <TextInput
-                        placeholder="Nombre del estudiante"
-                        defaultValue={queryParamsState.name}
-                        onBlur={(e) =>
-                            handleInputChange("name", e.target.value)
-                        }
-                        onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            handleInputChange("name", e.target.value, true)
-                        }
-                    />
+                <div className="py-12">
+                    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                        <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                            <div className="p-2 text-gray-900">
+                                <div className="mb-8 p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
+                                <h3 className="text-md font-semibold mb-4 text-blue-900">
+                                Filtros
+                                </h3>
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb6">
+                                    <div className="col-span-1">
+                                        <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                        Nombre del estudiante
+                                        </label>
+                                        <TextInput
+                                            placeholder="Nombre del estudiante"
+                                            defaultValue={queryParamsState.name}
+                                            onBlur={(e) =>
+                                                handleInputChange("name", e.target.value)
+                                            }
+                                            onKeyDown={(e) =>
+                                                e.key === "Enter" &&
+                                                handleInputChange("name", e.target.value, true)
+                                            }
+                                        />
+                                    </div>
+                                    <div className="col-span-1">
+    <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+        Número de documento
+    </label>
+    <input
+        type="text" // Cambiar a "text" para un control más granular sobre la entrada
+        className="w-52 border p-2 rounded-md"
+        placeholder="Nro de Documento"
+        defaultValue={queryParamsState.documento}
+        onBlur={(e) =>
+            handleInputChange("documento", e.target.value)
+        }
+        onKeyDown={(e) => {
+            if (e.key === "Enter") {
+                handleInputChange("documento", e.target.value, true);
+            }
+        }}
+        onInput={(e) => {
+            let value = e.target.value;
 
-                    <input
-                        type="number"
-                        placeholder="Nro de Documento"
-                        defaultValue={queryParamsState.documento}
-                        onBlur={(e) =>
-                            handleInputChange("documento", e.target.value)
-                        }
-                        onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            handleInputChange("documento", e.target.value, true)
-                        }
-                    />
+            // Eliminar caracteres no numéricos y signos negativos
+            value = value.replace(/[^0-9]/g, "");
 
-                    <TextInput
-                        placeholder="Email o correo"
-                        defaultValue={queryParamsState.Email}
-                        onBlur={(e) =>
-                            handleInputChange("Email", e.target.value)
-                        }
-                        onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            handleInputChange("Email", e.target.value, true)
-                        }
-                    />
-                </div>
+            // Limitar a 8 caracteres
+            if (value.length > 8) {
+                value = value.slice(0, 8);
+            }
+
+            e.target.value = value; // Actualizar el valor en el campo de entrada
+        }}
+    />
+</div>
+
+                                    <div className="col-span-1">
+                                    <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                        Correo Electronico
+                                        </label>
+                                        <TextInput
+                                            placeholder="Email o correo"
+                                            defaultValue={queryParamsState.Email}
+                                            onBlur={(e) =>
+                                                handleInputChange("Email", e.target.value)
+                                            }
+                                            onKeyDown={(e) =>
+                                                e.key === "Enter" &&
+                                                handleInputChange("Email", e.target.value, true)
+                                            }
+                                        />
+                                    </div>
+                                </div>
                 {/* Tabla de estudiantes */}
-
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead>
+                <div className="mt-4">
+                <h3 className="text-md font-semibold mb-4 text-blue-900">
+                Lista de estudiantes 
+                </h3>
+                </div>
+                <div className="table-container overflow-x-auto">  
+                <table className="min-w-full border border-gray-300 rounded-lg bg-white shadow mt-4 table-fixed">
+                <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         <tr>
                             <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
                                 Nombre
@@ -231,6 +273,7 @@ export default function Estudiantes({ queryParams: propsQueryParams = null, }) {
                         ))}
                     </tbody>
                 </table>
+                </div>
                 <div className="mt-4 flex justify-between items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
                     <p className="text-sm text-gray-500">
                         Página {estudiantes.current_page} de{" "}
@@ -408,6 +451,12 @@ export default function Estudiantes({ queryParams: propsQueryParams = null, }) {
                     </div>
                 )}
             </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            
         </AuthenticatedLayout>
     );
 }
