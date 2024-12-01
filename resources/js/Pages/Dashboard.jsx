@@ -24,6 +24,9 @@ export default function Dashboard() {
     const [provincias, setProvincias] = useState([]);
     const [departamentos, setlistados] = useState([]);
     const [Cole, setCole] = useState([]);
+    const [colegi, setcolegi] = useState({
+        nombre:""
+    });
     const [error, setError] = useState(null);
     const [MensajeError, setMensajeError] = useState("");
 
@@ -363,11 +366,12 @@ export default function Dashboard() {
 
         return null;
     };
-    const handleSelectColegio = (id) => {
+    const handleSelectColegio = (id,nombrecolegio) => {
         setFormData((prevData) => ({
             ...prevData,
-            p_Colegios_id: id, // Asocia el ID del colegio al estudiante
+            p_Colegios_id: id, 
         }));
+        setcolegi(() => ({nombre:nombrecolegio}));
         alert("¡Colegio seleccionado con éxito!");
     };
     const handleSearch = () => {
@@ -698,7 +702,7 @@ export default function Dashboard() {
                                                 htmlFor="idusuario"
                                                 className="block text-sm font-medium text-gray-800"
                                             >
-                                                idusuario
+                                                id Usuario
                                             </label>*/}
                                             <input
                                                 id="idusuario"
@@ -713,21 +717,22 @@ export default function Dashboard() {
                                         </div>
 
                                         <div>
-                                            {/*<label
+                                            <label
                                                 htmlFor="idcolegio"
                                                 className="block text-sm font-medium text-gray-800"
                                             >
-                                                idcolegio
-                                            </label>*/}
+                                                Colegio Seleccionado
+                                            </label>
                                             <input
                                                 id="idcolegio"
                                                 type="text"
                                                 name="p_Colegios_id"
                                                 onChange={handleChange}
-                                                value={formData.p_Colegios_id}
-                                                placeholder="idcolegio"
-                                                className="col-span-1 border p-2 rounded-md hidden"
+                                                value={colegi.nombre}
+                                                placeholder="Colegio"
+                                                className="col-span-1 border p-2 rounded-md "
                                                 required
+                                                readOnly
                                             />
                                         </div>
                                     </div>
@@ -852,7 +857,7 @@ export default function Dashboard() {
                                                                             type="button"
                                                                             onClick={() =>
                                                                                 handleSelectColegio(
-                                                                                    resultado.id
+                                                                                    resultado.id,resultado.nombrecolegio
                                                                                 )
                                                                             }
                                                                         >
