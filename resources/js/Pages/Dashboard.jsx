@@ -298,7 +298,7 @@ export default function Dashboard() {
             .get('users/show')
             .then(response => {
                 const user = response.data;
-                const userIdWithName = `${user.id} - ${user.nombres}`;
+                const userIdWithName = `${user.id}`;
                 setUserId(userIdWithName);
                 setFormData(prevData => ({
                     ...prevData,
@@ -489,6 +489,7 @@ export default function Dashboard() {
                                                 placeholder="Nro de Documento"
                                                 className="col-span-1 border p-2 rounded-md"
                                                 required
+                                                
                                             />
                                         </div>
                                         <div className="col-span-1">
@@ -686,7 +687,7 @@ export default function Dashboard() {
                                                 placeholder="Ultimo año cursado"
                                                 className="w-48 col-span-1 border p-2 rounded-md"
                                                 required
-                                                readOnly
+                                                
                                             />
                                         </div>
                                         <div className="col-span-1">
@@ -704,6 +705,7 @@ export default function Dashboard() {
                                             >
                                                 id Usuario
                                             </label>*/}
+                                            
                                             <input
                                                 id="idusuario"
                                                 type="text"
@@ -1285,6 +1287,13 @@ export default function Dashboard() {
                                                 placeholder="Número de Voucher"
                                                 className="col-span-1 border p-2 rounded-md"
                                                 required
+                                                maxLength="10" // No permite más de 10 caracteres
+                                                minLength="10" // Exige al menos 10 caracteres
+                                                onBlur={(e) => {
+                                                    if (e.target.value.length !== 10) {
+                                                        alert('El número de documento debe tener exactamente 10 dígitos');
+                                                    }
+                                                }}
                                             />
                                         </div>
                                     </div>
