@@ -134,20 +134,23 @@ export default function Dashboard() {
         }));
     };
     const [digitLimit, setDigitLimit] = useState(8)
+
     const handleSelectChange = (e) => {
         const { name, value } = e.target;
-
-
         if (name === "p_tipodocumento") {
             const limit = value === "DNI" ? 8 : 12;
+
             setDigitLimit(limit);
+            setFormData((prevData) => ({
+                ...prevData,
+                p_nroDocumento: "",
+            }));
         }
-
-
         setFormData((prevData) => ({
             ...prevData,
             [name]: value,
         }));
+
     };
 
     const handleInputChange2 = (e) => {
@@ -485,7 +488,7 @@ export default function Dashboard() {
                                                 onChange={handleInputChange2}
                                                 name="p_nroDocumento"
                                                 value={formData.p_nroDocumento}
-                                                type="number"
+                                                type="text"
                                                 placeholder="Nro de Documento"
                                                 className="col-span-1 border p-2 rounded-md"
                                                 required
@@ -564,7 +567,7 @@ export default function Dashboard() {
                                             </label>
                                             <input
                                                 id="Telefono"
-                                                type="number"
+                                                type="text"
                                                 name="p_celularestudiante"
                                                 onChange={handleChange}
                                                 value={
@@ -651,26 +654,7 @@ export default function Dashboard() {
                                             />
                                         </div>
 
-                                        <div>
-                                            <label
-                                                htmlFor="Finscripcion"
-                                                className="block text-sm font-medium text-gray-800"
-                                            >
-                                                Fecha de Inscripción
-                                            </label>
-                                            <input
-                                                id="Finscripcion"
-                                                type="date"
-                                                name="p_fechaInscripcion"
-                                                onChange={handleChange}
-                                                value={
-                                                    formData.p_fechaInscripcion
-                                                }
-                                                placeholder="Fecha de Nacimiento"
-                                                className="w-48 col-span-1 border p-2 rounded-md"
-                                                required
-                                            />
-                                        </div>
+                                        
                                         <div>
                                             <label
                                                 htmlFor="anoculminado"
@@ -699,6 +683,26 @@ export default function Dashboard() {
                                             </button>
                                         </div>
                                         <div>
+                                            <label
+                                                htmlFor="idcolegio"
+                                                className="block text-sm font-medium text-gray-800"
+                                            >
+                                                Colegio Seleccionado
+                                            </label>
+                                            <input
+                                                id="idcolegio"
+                                                
+                                                type="text"
+                                                name="p_Colegios_id"
+                                                onChange={handleChange}
+                                                value={colegi.nombre}
+                                                placeholder="Colegio"
+                                                className="col-span-1 border p-2 rounded-md "
+                                                required
+                                                readOnly
+                                            />
+                                        </div>
+                                        <div>
                                             {/*<label
                                                 htmlFor="idusuario"
                                                 className="block text-sm font-medium text-gray-800"
@@ -718,25 +722,7 @@ export default function Dashboard() {
                                             />
                                         </div>
 
-                                        <div>
-                                            <label
-                                                htmlFor="idcolegio"
-                                                className="block text-sm font-medium text-gray-800"
-                                            >
-                                                Colegio Seleccionado
-                                            </label>
-                                            <input
-                                                id="idcolegio"
-                                                type="text"
-                                                name="p_Colegios_id"
-                                                onChange={handleChange}
-                                                value={colegi.nombre}
-                                                placeholder="Colegio"
-                                                className="col-span-1 border p-2 rounded-md "
-                                                required
-                                                readOnly
-                                            />
-                                        </div>
+                                       
                                     </div>
                                 </div>
 
@@ -1340,10 +1326,10 @@ export default function Dashboard() {
                                                 htmlFor="finscripcion"
                                                 className="block text-sm font-medium text-gray-800"
                                             >
-                                                Fecha de Inscripcion
+                                                Fecha de Inscripción
                                             </label>
                                             <input
-                                                id="dinscripcion"
+                                                id="Finscripcion"
                                                 type="date"
                                                 name="p_fechaInscripcion"
                                                 onChange={handleChange}

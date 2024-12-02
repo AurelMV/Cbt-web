@@ -127,114 +127,126 @@ export default function GestionInscripciones({
 
     return (
         <AuthenticatedLayout>
-            <div className="p-6 bg-gray-100">
-                <h2 className="text-2xl font-semibold mb-4 text-gray-700">
-                    Gestión de Inscripciones
-                </h2>
+            <h2 className="text-xl font-semibold leading-tight text-black">
+                GESTION DE INSCRIPCIONES
+            </h2>
+            <p className="leading-tight text-gray-400">
+                Aqui prodra ver a todos los estudiantes inscritos en el CBT
+            </p>
+            
+<div className="py-12">
+    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+        <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg border border-gray-300">
+            <div className="p-6 text-gray-900">
+            <h3 className="text-md font-semibold mb-4 text-blue-900">
+                Filtros para la busqueda de una inscripcion asociada a un estudiante
+            </h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
 
-                {/* Zona de búsqueda */}
-                <div className="mb-4">
-                    <TextInput
-                        placeholder="Nombre del estudiante"
-                        defaultValue={queryParamsState.name}
-                        onBlur={(e) =>
-                            handleInputChange("name", e.target.value)
-                        }
-                        onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            handleInputChange("name", e.target.value, true)
-                        }
-                    />
+                    {/* Zona de búsqueda */}
+                    <div className="col-span-1">
+              
+                        <div className="mb-4">
+                            <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                Nombre del estudiante
+                            </label>
+                            <TextInput
+                                placeholder="Nombre del estudiante"
+                                defaultValue={queryParamsState.name}
+                                onBlur={(e) => handleInputChange("name", e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleInputChange("name", e.target.value, true)}
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                Número de documento
+                            </label>
+                            <input
+                                type="number"
+                                placeholder="Nro de Documento"
+                                defaultValue={queryParamsState.documento}
+                                onBlur={(e) => handleInputChange("documento", e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleInputChange("documento", e.target.value, true)}
+                            />
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                Ciclos
+                            </label>
+                            <select
+                                name="p_cicloinscripciones_id"
+                                value={queryParamsState.p_cicloinscripciones_id}
+                                onBlur={(e) => handleInputChange("p_cicloinscripciones_id", e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleInputChange("p_cicloinscripciones_id", e.target.value, true)}
+                                onChange={(e) => handleInputChange("p_cicloinscripciones_id", e.target.value)}
+                            >
+                                <option value="">Seleccione un ciclo</option>
+                                {ciclos.map((ciclo) => (
+                                    <option key={ciclo.id} value={ciclo.id}>
+                                        {ciclo.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
 
-                    <input
-                        type="number"
-                        placeholder="Nro de Documento"
-                        defaultValue={queryParamsState.documento}
-                        onBlur={(e) =>
-                            handleInputChange("documento", e.target.value)
-                        }
-                        onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            handleInputChange("documento", e.target.value, true)
-                        }
-                    />
-                    <select
-                        name="p_cicloinscripciones_id"
-                        value={queryParamsState.p_cicloinscripciones_id}
-                        onBlur={(e) =>
-                            handleInputChange(
-                                "p_cicloinscripciones_id",
-                                e.target.value
-                            )
-                        }
-                        onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            handleInputChange(
-                                "p_cicloinscripciones_id",
-                                e.target.value,
-                                true
-                            )
-                        }
-                        onChange={(e) => {
-                            handleInputChange(
-                                "p_cicloinscripciones_id",
-                                e.target.value
-                            );
-                        }}
-                    >
-                        <option value="">Seleccione un ciclo</option>
-                        {ciclos.map((ciclo) => (
-                            <option key={ciclo.id} value={ciclo.id}>
-                                {ciclo.nombre}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        name="p_cicloinscripciones_id"
-                        defaultValue={queryParamsState.p_cicloinscripciones_id}
-                        onChange={handleCicloChange}
-                    >
-                        <option value="">Seleccione un ciclo</option>
-                        {ciclos.map((ciclo) => (
-                            <option key={ciclo.id} value={ciclo.id}>
-                                {ciclo.nombre}
-                            </option>
-                        ))}
-                    </select>
-                    <select
-                        name="p_Grupos_id"
-                        defaultValue={queryParamsState.p_Grupos_id}
-                        onBlur={(e) =>
-                            handleInputChange("p_Grupos_id", e.target.value)
-                        }
-                        onKeyDown={(e) =>
-                            e.key === "Enter" &&
-                            handleInputChange(
-                                "p_Grupos_id",
-                                e.target.value,
-                                true
-                            )
-                        }
-                        onChange={(e) =>
-                            handleInputChange("p_Grupos_id", e.target.value)
-                        }
-                    >
-                        <option value="">Seleccione un grupo</option>
-                        {grupos.map((grupo) => (
-                            <option key={grupo.id} value={grupo.id}>
-                                {grupo.nombre}
-                            </option>
-                        ))}
-                    </select>
+                    <div className="col-span-1 border p-6">
+        
+                        <h3 className="text-md font-semibold mb-4 text-blue-900">
+                            Filtro combinado
+                        </h3>
+                        <div className="mb-4">
+                            <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                Ciclo
+                            </label>
+                            <select
+                                name="p_cicloinscripciones_id"
+                                defaultValue={queryParamsState.p_cicloinscripciones_id}
+                                onChange={handleCicloChange}
+                            >
+                                <option value="">Seleccione un ciclo</option>
+                                {ciclos.map((ciclo) => (
+                                    <option key={ciclo.id} value={ciclo.id}>
+                                        {ciclo.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                        <div className="mb-4">
+                            <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                Grupo de estudio
+                            </label>
+                            <select
+                                name="p_Grupos_id"
+                                defaultValue={queryParamsState.p_Grupos_id}
+                                onBlur={(e) => handleInputChange("p_Grupos_id", e.target.value)}
+                                onKeyDown={(e) => e.key === "Enter" && handleInputChange("p_Grupos_id", e.target.value, true)}
+                                onChange={(e) => handleInputChange("p_Grupos_id", e.target.value)}
+                            >
+                                <option value="">Seleccione un grupo</option>
+                                {grupos.map((grupo) => (
+                                    <option key={grupo.id} value={grupo.id}>
+                                        {grupo.nombre}
+                                    </option>
+                                ))}
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div className="mt-4">
                     <button
-                    onClick={handleClearFilters}
-                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                >
-                    Limpiar Filtros
-                </button>
+                        onClick={handleClearFilters}
+                        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                    >
+                        Limpiar Filtros
+                    </button>
                 </div>
 
-                <table className="min-w-full border border-gray-300 rounded-lg bg-white shadow">
+
+
+
+
+                <table className="min-w-full border border-gray-300 rounded-lg bg-white shadow mt-4">
                     <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         <tr>
                             <th className="py-3 px-6 text-left">Turno</th>
@@ -298,7 +310,7 @@ export default function GestionInscripciones({
                         className="inline-flex shadow-sm rounded-md"
                         aria-label="Pagination"
                     >
-                        {/* Paginación Anterior */}
+      
                         {inscripciones.prev_page_url && (
                             <Link
                                 href={inscripciones.prev_page_url}
@@ -306,7 +318,7 @@ export default function GestionInscripciones({
                             ></Link>
                         )}
 
-                        {/* Páginas */}
+         
                         {inscripciones.links &&
                             inscripciones.links.map((link, index) => (
                                 <Link
@@ -328,7 +340,7 @@ export default function GestionInscripciones({
                                 </Link>
                             ))}
 
-                        {/* Paginación Siguiente */}
+         
                         {inscripciones.next_page_url && (
                             <Link
                                 href={inscripciones.next_page_url}
@@ -423,6 +435,9 @@ export default function GestionInscripciones({
                         </div>
                     </div>
                 )}
+            </div>
+            </div>
+            </div>
             </div>
         </AuthenticatedLayout>
     );

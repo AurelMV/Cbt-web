@@ -71,11 +71,11 @@ export default function AuthenticatedLayout({children }) {
                             <div className="mt-5 space-y-4 inline-flex items-center rounded-md  px-4 py-2 text-xs font-semibold uppercase tracking-widest transition duration-150 ease-in-out hover:bg-gray-400 focus:bg-red-700 focus:outline-none focus:ring-2 active:bg-gray-900">
                                 <img src="https://cdn-icons-png.flaticon.com/512/88/88450.png" width={30} height={30} className='mr-2'/>
                                 <NavLink href={route('dashboard')} active={route().current('dashboard')}>
-                                    Inscripciones
+                                    Inscripciones                            
                                 </NavLink>
                                 <Dropdown>
                                     <Dropdown.Trigger>
-                                        <span className="inline-flex w-full rounded-md ">
+                                        <span className="">
                                             <button
                                                 type="button"
                                                 className="inline-flex w-full "
@@ -130,7 +130,7 @@ export default function AuthenticatedLayout({children }) {
                             active={route().current('docentes.index')}
                         >
                             Docentes
-                            <h1 className='text-gray-300'>_____</h1>
+                            <h1 className='text-gray-300 hover:bg-gray-400'>_____</h1>
                         </NavLink>
                                                     <Dropdown>
                                     <Dropdown.Trigger>
