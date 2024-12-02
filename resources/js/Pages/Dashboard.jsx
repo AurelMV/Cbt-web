@@ -294,6 +294,11 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
+        const fechaActual = new Date().toISOString().split('T')[0];
+        setFormData((prev) => ({
+            ...prev,
+            p_fechaInscripcion: fechaActual,
+        }));
         axios
             .get('users/show')
             .then(response => {
@@ -651,26 +656,7 @@ export default function Dashboard() {
                                             />
                                         </div>
 
-                                        <div>
-                                            <label
-                                                htmlFor="Finscripcion"
-                                                className="block text-sm font-medium text-gray-800"
-                                            >
-                                                Fecha de Inscripción
-                                            </label>
-                                            <input
-                                                id="Finscripcion"
-                                                type="date"
-                                                name="p_fechaInscripcion"
-                                                onChange={handleChange}
-                                                value={
-                                                    formData.p_fechaInscripcion
-                                                }
-                                                placeholder="Fecha de Nacimiento"
-                                                className="w-48 col-span-1 border p-2 rounded-md"
-                                                required
-                                            />
-                                        </div>
+                                       
                                         <div>
                                             <label
                                                 htmlFor="anoculminado"
@@ -1355,6 +1341,8 @@ export default function Dashboard() {
                                                 required
                                             />
                                         </div>
+
+                                      
                                         <div>
                                             <label
                                                 htmlFor="Epago"
