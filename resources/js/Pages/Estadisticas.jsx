@@ -32,8 +32,8 @@ export default function Estadisticas() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                        <div className="border border-gray-200 overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg">
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <div className="border border-gray-200 col-span-1 overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg">
                             <h3 className="text-lg font-semibold mb-4 text-blue-900">Diagrama de Pastel</h3>
                             <DiagraPastel />
                         </div>
