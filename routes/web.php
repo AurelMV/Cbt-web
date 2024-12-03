@@ -57,6 +57,11 @@ Route::put('/docentes/{docente}', [DocenteController::class, 'update'])->name('d
 //Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
 Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
+Route::get('/grupos/grupo/{id}', [ReportesController::class, 'Grupo']);
+Route::get('/grupos/DATAGrupo/{idCiclo}/{idGrupo}', [ReportesController::class, 'DataGrupo']);
+Route::get('/grupos/Programa', [ReportesController::class, 'Programa']);
+Route::get('/grupos/DATAPrograma/{idCiclo}/{idPrograma}', [ReportesController::class, 'DataPrograma']);
+Route::get('/grupos/ciclo/{id}', [ReportesController::class, 'BusCiclo']);
 Route::put('/grupos/{grupo}', [GrupoController::class, 'update'])->name('grupos.update');
 Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('docenteCursos.index');
 Route::post('/docenteCursos', [DocenteCursoController::class, 'store'])->name('docenteCursos.store');
