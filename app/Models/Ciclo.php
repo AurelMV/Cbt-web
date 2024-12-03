@@ -8,7 +8,7 @@ class Ciclo extends Model
 {
     protected $table = 'ciclos';
     protected $primaryKey = 'id';
-    protected $fillable = ['nombre', 'fecha_inicio', 'fecha_fin'];
+    protected $fillable = ['nombre', 'fecha_inicio', 'fecha_fin', 'estado'];
 
     public function grupos()
     {

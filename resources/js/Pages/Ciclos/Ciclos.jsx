@@ -3,28 +3,171 @@ import { Head } from '@inertiajs/react';
 import { useState } from 'react';
 import axios from 'axios';
 
+// Componente del formulario
+const CicloForm = ({ onSubmit, nombre, setNombre, fechaInicio, setFechaInicio, fechaFin, setFechaFin, estado, setEstado }) => (
+    <div className="transition-all duration-300 ease-in-out">
+        <h3 className="text-md font-medium mb-4 text-blue-900">Datos del Ciclo</h3>
+        <form className="space-y-4" onSubmit={onSubmit}>
+            <div>
+                <label
+                    htmlFor="nombre"
+                    className="block text-sm font-medium text-gray-800"
+                >nombre</label>
+                <input
+                    id="nombre"
+                    type="text"
+                    placeholder="Nombre del Ciclo"
+                    className="w-full border p-2 rounded-md"
+                    value={nombre}
+                    onChange={(e) => setNombre(e.target.value)}
+                    required
+                />
+            </div>
+            <label
+                htmlFor="finico"
+                className="block text-sm font-medium text-gray-800"
+            >Fecha de inicio</label>
+            <input
+                id="finico"
+                type="date"
+                placeholder="Fecha de Inicio"
+                className="w-full border p-2 rounded-md"
+                value={fechaInicio}
+                onChange={(e) => setFechaInicio(e.target.value)}
+                required
+            />
+            <label
+                htmlFor="ffinal"
+                className="block text-sm font-medium text-gray-800"
+            >Fecha de finalización</label>
+            <input
+                id='ffinal'
+                type="date"
+                placeholder="Fecha de Finalización"
+                className="w-full border p-2 rounded-md"
+                value={fechaFin}
+                onChange={(e) => setFechaFin(e.target.value)}
+                required
+            />
+            <label
+                htmlFor="estado"
+                className="block text-sm font-medium text-gray-800"
+            >Estado</label>
+            <select
+                id="estado"
+                className="w-full border p-2 rounded-md"
+                value={estado}
+                onChange={(e) => setEstado(e.target.value)}
+                required
+            >
+                <option value="En curso">En curso</option>
+                <option value="Finalizado">Finalizado</option>
+            </select>
+            <div className="space-x-2">
+                <button
+                    type="submit"
+                    className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-green-500 focus:outline-none"
+                >
+                    Guardar
+                </button>
+            </div>
+        </form>
+    </div>
+);
+
+// Componente de la tabla
+const CiclosTable = ({ ciclos, onEdit, isExpanded }) => (
+    <div className={`transition-all duration-300 ease-in-out ${isExpanded ? 'h-[calc(100vh-300px)]' : 'h-[500px]'}`}>
+        <div className="overflow-auto h-full">
+            <table className="min-w-full divide-y divide-gray-200 border">
+                <thead className="bg-gray-50">
+                    <tr>
+                        <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        >
+                            Nombre del Ciclo
+                        </th>
+                        <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        >
+                            Fecha de Inicio
+                        </th>
+                        <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        >
+                            Fecha de Finalización
+                        </th>
+                        <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        >
+                            Estado
+                        </th>
+                        <th
+                            scope="col"
+                            className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                        >
+                            Acciones
+                        </th>
+                    </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-200 bg-white">
+                    {ciclos.map((ciclo) => (
+                        <tr key={ciclo.id}>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                {ciclo.nombre}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {ciclo.fecha_inicio}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {ciclo.fecha_fin}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                {ciclo.estado}
+                            </td>
+                            <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                <button
+                                    onClick={() => onEdit(ciclo)}
+                                    className="text-blue-600 hover:text-blue-900"
+                                >
+                                    Editar
+                                </button>
+                            </td>
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    </div>
+);
+
 export default function Ciclos({ ciclos: initialCiclos }) {
     const [nombre, setNombre] = useState('');
     const [fechaInicio, setFechaInicio] = useState('');
     const [fechaFin, setFechaFin] = useState('');
+    const [estado, setEstado] = useState('En curso');
     const [listaCiclos, setListaCiclos] = useState(initialCiclos);
 
-    // Ciclo seleccionado para eliminar
     const [selectedCiclo, setSelectedCiclo] = useState(null);
-    // Estado para el modal de edición
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    // Estado para el nombre en edición
     const [editNombre, setEditNombre] = useState('');
-    // Estado para la fecha de inicio en edición
     const [editFechaInicio, setEditFechaInicio] = useState('');
-    // Estado para la fecha de finalización en edición
     const [editFechaFin, setEditFechaFin] = useState('');
+    const [editEstado, setEditEstado] = useState('En curso');
 
+    const [isExpanded, setIsExpanded] = useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [itemsPerPage] = useState(10);
 
-    // // Estado para el menú contextual
-    // const [showContextMenu, setShowContextMenu] = useState(false);
-    // // Posición del menú
-    // const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = isExpanded 
+        ? listaCiclos.slice(indexOfFirstItem, indexOfLastItem)
+        : listaCiclos;
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -32,68 +175,40 @@ export default function Ciclos({ ciclos: initialCiclos }) {
             const response = await axios.post('/ciclos', {
                 nombre,
                 fecha_inicio: fechaInicio,
-                fecha_fin: fechaFin
+                fecha_fin: fechaFin,
+                estado
             });
 
-            // Si `response.data` contiene el nuevo ciclo, úsalo para actualizar la lista
             const nuevoCiclo = response.data;
-
-            // Actualizar el listado de ciclos
             setListaCiclos([...listaCiclos, nuevoCiclo]);
-
-            // Limpiar los campos del formulario
             setNombre('');
             setFechaInicio('');
             setFechaFin('');
-
+            setEstado('En curso');
         } catch (error) {
             console.error('Error al registrar el ciclo', error);
         }
     };
 
-    // const handleContextMenu = (e, cicloId) => {
-    //     e.preventDefault(); // Prevenir el menú contextual por defecto
-    //     setSelectedCiclo(cicloId); // Establecer el ciclo seleccionado
-    //     console.log(selectedCiclo);
-    //     setContextMenuPosition({ x: e.clientX, y: e.clientY }); // Obtener la posición del clic
-    //     setShowContextMenu(true); // Mostrar el menú contextual
-    // };
-
-    // const handleDelete = async () => {
-    //     try {
-    //         await axios.delete(`/ciclos/${selectedCiclo}`);
-
-    //         setListaCiclos(listaCiclos.filter(ciclo => ciclo.id !== selectedCiclo));
-    //         setShowContextMenu(false); // Ocultar el menú contextual
-    //     } catch (error) {
-    //         console.error('Error al eliminar el ciclo', error);
-    //     }
-    // };
-
-    // const handleCloseContextMenu = () => {
-    //     setShowContextMenu(false); // Cerrar el menú contextual si se hace clic fuera de él
-    // };
-
-    // Función para abrir el modal de edición y establecer los datos del ciclo seleccionado
     const openEditModal = (ciclo) => {
         setEditNombre(ciclo.nombre);
         setEditFechaInicio(ciclo.fecha_inicio);
         setEditFechaFin(ciclo.fecha_fin);
+        setEditEstado(ciclo.estado);
         setSelectedCiclo(ciclo.id);
         setIsEditModalOpen(true);
-        //setShowContextMenu(false);
     };
 
-    // Función para manejar la edición del ciclo
     const handleEditSubmit = async () => {
         try {
             await axios.put(`/ciclos/${selectedCiclo}`, {
                 nombre: editNombre,
                 fecha_inicio: editFechaInicio,
-                fecha_fin: editFechaFin
+                fecha_fin: editFechaFin,
+                estado: editEstado
             });
             setListaCiclos(listaCiclos.map(ciclo =>
-                ciclo.id === selectedCiclo ? { ...ciclo, nombre: editNombre, fecha_inicio: editFechaInicio, fecha_fin: editFechaFin } : ciclo
+                ciclo.id === selectedCiclo ? { ...ciclo, nombre: editNombre, fecha_inicio: editFechaInicio, fecha_fin: editFechaFin, estado: editEstado } : ciclo
             ));
             setIsEditModalOpen(false);
         } catch (error) {
@@ -104,158 +219,69 @@ export default function Ciclos({ ciclos: initialCiclos }) {
     return (
         <AuthenticatedLayout>
             <Head title="Ciclos" />
-
-            <h2 className=" text-xl font-semibold leading-tight text-black">
-                CICLOS
-            </h2>
-            <p className='leading-tight text-gray-400'>Registre periodos de tiempo por el cual los estudiantes asistira a clases</p>
-
+            
             <div className="py-12">
                 <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
                     <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg p-6 border border-gray-300">
-                        <div className="grid grid-cols-2 gap-8">
-
-                            {/* Formulario de creación */}
+                        <div className="flex justify-between mb-4">
                             <div>
-                                <h3 className="text-md font-medium mb-4 text-blue-900">Datos del Ciclo</h3>
-                                <form className="space-y-4" onSubmit={handleSubmit}>
-                                    {/* Campos de entrada */}
-                                    <div>
-                                    <label
-                                                htmlFor="nombre"
-                                                className="block text-sm font-medium text-gray-800"
-                                            >nombre</label>
-                                    <input
-                                        id="nombre"
-                                        type="text"
-                                        placeholder="Nombre del Ciclo"
-                                        className="w-full border p-2 rounded-md"
-                                        value={nombre}
-                                        onChange={(e) => setNombre(e.target.value)}
-                                        required
-                                    />
-                                    </div>
-                                   
-                                    <label
-                                                htmlFor="finico"
-                                                className="block text-sm font-medium text-gray-800"
-                                            >Fecha de inicio</label>
-                                    <input
-                                        id="finico"
-                                        type="date"
-                                        placeholder="Fecha de Inicio"
-                                        className="w-full border p-2 rounded-md"
-                                        value={fechaInicio}
-                                        onChange={(e) => setFechaInicio(e.target.value)}
-                                        required
-                                    />
-                                    <label
-                                                htmlFor="ffinal"
-                                                className="block text-sm font-medium text-gray-800"
-                                            >Fecha de finalización</label>
-                                    <input
-                                        id='ffinal'
-                                        type="date"
-                                        placeholder="Fecha de Finalización"
-                                        className="w-full border p-2 rounded-md"
-                                        value={fechaFin}
-                                        onChange={(e) => setFechaFin(e.target.value)}
-                                        required
-                                    />
-                                    <div className="space-x-2">
-                                        <button
-                                            type="submit"
-                                            className="inline-flex items-center rounded-md border border-transparent bg-green-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-green-500 focus:outline-none"
-                                        >
-                                            Guardar
-                                        </button>
-
-                                        {/* <button
-                                            type="button"
-                                            className="inline-flex items-center rounded-md border border-transparent bg-yellow-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-yellow-500 focus:outline-none"
-                                        >
-                                            Modificar
-                                        </button>
-                                        <button
-                                            type="button"
-                                            className="inline-flex items-center rounded-md border border-transparent bg-red-600 px-4 py-2 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-red-500 focus:outline-none"
-
-                                        >
-                                            Eliminar
-                                        </button> */}
-                                    </div>
-                                </form>
+                                <h2 className="text-xl font-semibold text-black">CICLOS</h2>
+                                <p className='text-gray-400'>Registre periodos de tiempo por el cual los estudiantes asistirán a clases</p>
                             </div>
+                            <button
+                                onClick={() => setIsExpanded(!isExpanded)}
+                                className="text-blue-600 hover:text-blue-800"
+                            >
+                                {isExpanded ? 'Mostrar menos' : 'Mostrar más'}
+                            </button>
+                        </div>
 
-                            {/* Listado de ciclos */}
-                            <div>
-                                <h3 className="text-md font-medium mb-4 text-blue-900">Listado de Ciclos</h3>
-                                <table className="min-w-full divide-y divide-gray-200 border">
-                                    <thead className="bg-gray-50">
-                                        <tr>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                            >
-                                                Nombre del Ciclo
-                                            </th>
+                        <div className={`grid ${isExpanded ? 'grid-cols-1' : 'grid-cols-2'} gap-8`}>
+                            {!isExpanded && (
+                                <CicloForm
+                                    onSubmit={handleSubmit}
+                                    nombre={nombre}
+                                    setNombre={setNombre}
+                                    fechaInicio={fechaInicio}
+                                    setFechaInicio={setFechaInicio}
+                                    fechaFin={fechaFin}
+                                    setFechaFin={setFechaFin}
+                                    estado={estado}
+                                    setEstado={setEstado}
+                                />
+                            )}
 
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                            >
-                                                Fecha de Inicio
-                                            </th>
+                            <div className={`transition-all duration-300 ease-in-out ${isExpanded ? 'col-span-1' : ''}`}>
+                                <CiclosTable
+                                    ciclos={currentItems}
+                                    onEdit={openEditModal}
+                                    isExpanded={isExpanded}
+                                />
 
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                {isExpanded && (
+                                    <div className="mt-4 flex justify-center space-x-2">
+                                        {Array.from({ length: Math.ceil(listaCiclos.length / itemsPerPage) }).map((_, index) => (
+                                            <button
+                                                key={index}
+                                                onClick={() => setCurrentPage(index + 1)}
+                                                className={`px-3 py-1 rounded ${
+                                                    currentPage === index + 1
+                                                        ? 'bg-blue-600 text-white'
+                                                        : 'bg-gray-200'
+                                                }`}
                                             >
-                                                Fecha de Finalización
-                                            </th>
-                                            <th
-                                                scope="col"
-                                                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
-                                            >
-                                                Acciones
-                                            </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="divide-y divide-gray-200 bg-white">
-                                        {listaCiclos.map((ciclo) => (
-                                            <tr
-                                                key={ciclo.id}
-                                                //onContextMenu={(e) => handleContextMenu(e, ciclo.id)} // Detectar clic derecho
-                                            >
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                    {ciclo.nombre}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {ciclo.fecha_inicio}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    {ciclo.fecha_fin}
-                                                </td>
-                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                                                    <button
-                                                        onClick={() => openEditModal(ciclo)}
-                                                        className="text-blue-600 hover:text-blue-900"
-                                                    >
-                                                        Editar
-                                                    </button>
-                                                </td>
-                                            </tr>
+                                                {index + 1}
+                                            </button>
                                         ))}
-                                    </tbody>
-                                </table>
+                                    </div>
+                                )}
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-             {/* Modal de edición */}
-             {isEditModalOpen && (
+            {isEditModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
                     <div className="bg-white p-6 rounded-md shadow-lg w-1/3">
                         <h3 className="text-lg font-medium mb-4">Editar Ciclo</h3>
@@ -281,6 +307,15 @@ export default function Ciclos({ ciclos: initialCiclos }) {
                             onChange={(e) => setEditFechaFin(e.target.value)}
                             required
                         />
+                        <select
+                            className="w-full border p-2 rounded-md mt-2"
+                            value={editEstado}
+                            onChange={(e) => setEditEstado(e.target.value)}
+                            required
+                        >
+                            <option value="En curso">En curso</option>
+                            <option value="Finalizado">Finalizado</option>
+                        </select>
                         <div className="flex justify-end space-x-2 mt-4">
                             <button
                                 onClick={handleEditSubmit}
@@ -298,29 +333,6 @@ export default function Ciclos({ ciclos: initialCiclos }) {
                     </div>
                 </div>
             )}
-
-            {/*Abrir menú contextual*/}
-            {/* {showContextMenu && (
-                <div
-                    className="absolute bg-white border border-gray-300 shadow-lg rounded-md p-2"
-                    style={{ top: `${contextMenuPosition.y}px`, left: `${contextMenuPosition.x}px` }}
-                    onClick={handleCloseContextMenu} // Cerrar menú al hacer clic fuera
-                >
-                    <button
-                        onClick={() => openEditModal(listaCiclos.find(c => c.id === selectedCiclo))}
-                        className="block w-full text-black-600 px-4 py-2 text-sm text-left"
-                    >
-                        Modificar Ciclo
-                    </button>
-                    <button
-                        onClick={handleDelete}
-                        className="block w-full text-red-600 px-4 py-2 text-sm text-left"
-                    >
-                        Eliminar Ciclo
-                    </button>
-                </div>
-            )} */}
-
         </AuthenticatedLayout>
     );
 }

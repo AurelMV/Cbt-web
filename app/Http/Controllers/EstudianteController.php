@@ -16,18 +16,24 @@ class EstudianteController extends Controller
      */
     public function index()
     {
-      // Obtener todos los estudiantes
-      $estudiantes = Estudiante::all();
+        $query = Estudiante::query();
+    if (request("name")) {
+        $query->where("nombres", "like", "%" . request("name") . "%");
+    }
+    if (request("documento")) {
+        $query->where("Nrodocumento", "like", "%" . request("documento") . "%");
+    }
+    if (request("Email")) {
+        $query->where("email", "like", "%" . request("Email") . "%");
+    }
 
-      
-    
-      // Retornar los datos a la vista de React usando Inertia
-   
-    
-        // Pasar los estudiantes a la vista de Inertia
-        return Inertia::render('Estudiantes', [
-            'estudiantes' => $estudiantes
-        ]);
+    // Obtener los resultados filtrados
+    $estudiantes = $query->paginate(3);
+
+    return Inertia::render('Estudiantes', [
+        'estudiantes' => $estudiantes,
+        'queryParams' => request()->query() ?: null,
+    ]);
     }
     
 

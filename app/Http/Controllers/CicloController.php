@@ -37,7 +37,8 @@ class CicloController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date'
+            'fecha_fin' => 'required|date',
+            'estado' => 'required|string|in:En curso,Finalizado'
         ]);
 
         $ciclo = Ciclo::create($request->all());
@@ -77,7 +78,8 @@ class CicloController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:255',
             'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date'
+            'fecha_fin' => 'required|date',
+            'estado' => 'required|string|in:En curso,Finalizado'
         ]);
 
         $ciclo->update($request->all());

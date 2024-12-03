@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string("nombre")->unique();
             $table->date("fecha_inicio");
             $table->date("fecha_fin");
+            $table->string("estado")->default('En curso');
             $table->timestamps();
         });
     }
