@@ -63,6 +63,7 @@ class UserController extends Controller
         ]);
 
         $user->assignRole($request->roles);
+        
 
         return response()->json($user);
     }
@@ -95,10 +96,17 @@ class UserController extends Controller
         ]);
 
         $user->syncRoles($request->roles);
-       
-        $user->update($request->all());
 
-        return response()->json(['success' => true, 'message' => 'Ciclo actualizado exitosamente', 'ciclo' => $user]);
+        $data = $request->except('roles');
+        if (!empty($data['password'])) {
+            $data['password'] = bcrypt($data['password']);
+        } else {
+            unset($data['password']);
+        }
+       
+        $user->update($data);
+
+        return response()->json(['success' => true, 'message' => 'Usuario actualizado exitosamente', 'usuario' => $user]);
     }
 
     // Eliminar un usuario
