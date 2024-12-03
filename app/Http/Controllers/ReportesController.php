@@ -4,63 +4,68 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Inertia\Inertia;
+use App\Models\Grupo;
+use App\Models\Ciclo;
+use App\Models\Inscripcion;
+use App\Models\ProgramaEstudio;
+use App\Models\Estudiante;
+use Illuminate\Support\Facades\DB;
+
 
 class ReportesController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+
     public function index()
     {
-        //
-        return Inertia::render('Reportes');
+        $grupos = Grupo::all();
+        $estudiantes = Estudiante::all();
+        $ciclos = Ciclo::all();
+        $programa = ProgramaEstudio::all();
+        return Inertia::render('Reportes', [
+            'grupos' => $grupos,
+            'estudiantes' => $estudiantes,
+            'ciclos' => $ciclos,
+            'programa' => $programa
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function Grupo(string $idCiclo)
     {
-        //
+        $grupos = Grupo::where('idciclo', $idCiclo)->get();
+        return response()->json($grupos);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function Programa()
     {
-        //
+        $grupos = ProgramaEstudio::all();
+        return response()->json($grupos);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function DataPrograma(string $idCiclo, string $idPrograma)
     {
-        //
+        $inscripcion = Inscripcion::with('Estudiante', 'Grupo', 'ProgramaEstudio', 'Ciclo')
+            ->where('idciclo', $idCiclo)
+            ->where('idprogramaestudios', $idPrograma)
+            ->get();
+
+        return response()->json($inscripcion);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function DataGrupo(string $idCiclo, string $idgrupo)
     {
-        //
+        $inscripcion = Inscripcion::with('Estudiante', 'Grupo', 'ProgramaEstudio', 'Ciclo')
+            ->where('idciclo', $idCiclo)
+            ->where('idGrupos', $idgrupo)
+            ->get();
+
+        return response()->json($inscripcion);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function BusCiclo(string $idCiclo)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+        $inscripcion = Inscripcion::with('Estudiante', 'Grupo', 'ProgramaEstudio', 'Ciclo')
+            ->where('idciclo', $idCiclo)
+            ->get();
+        return response()->json($inscripcion);
     }
 }

@@ -8,13 +8,9 @@ export default function Ciclos({ ciclos: initialCiclos }) {
     const [fechaInicio, setFechaInicio] = useState('');
     const [fechaFin, setFechaFin] = useState('');
     const [listaCiclos, setListaCiclos] = useState(initialCiclos);
-    // Estado para el menú contextual
-    const [showContextMenu, setShowContextMenu] = useState(false);
-    // Posición del menú
-    const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
+
     // Ciclo seleccionado para eliminar
     const [selectedCiclo, setSelectedCiclo] = useState(null);
-
     // Estado para el modal de edición
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     // Estado para el nombre en edición
@@ -23,6 +19,12 @@ export default function Ciclos({ ciclos: initialCiclos }) {
     const [editFechaInicio, setEditFechaInicio] = useState('');
     // Estado para la fecha de finalización en edición
     const [editFechaFin, setEditFechaFin] = useState('');
+
+
+    // // Estado para el menú contextual
+    // const [showContextMenu, setShowContextMenu] = useState(false);
+    // // Posición del menú
+    // const [contextMenuPosition, setContextMenuPosition] = useState({ x: 0, y: 0 });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -49,28 +51,28 @@ export default function Ciclos({ ciclos: initialCiclos }) {
         }
     };
 
-    const handleContextMenu = (e, cicloId) => {
-        e.preventDefault(); // Prevenir el menú contextual por defecto
-        setSelectedCiclo(cicloId); // Establecer el ciclo seleccionado
-        console.log(selectedCiclo);
-        setContextMenuPosition({ x: e.clientX, y: e.clientY }); // Obtener la posición del clic
-        setShowContextMenu(true); // Mostrar el menú contextual
-    };
+    // const handleContextMenu = (e, cicloId) => {
+    //     e.preventDefault(); // Prevenir el menú contextual por defecto
+    //     setSelectedCiclo(cicloId); // Establecer el ciclo seleccionado
+    //     console.log(selectedCiclo);
+    //     setContextMenuPosition({ x: e.clientX, y: e.clientY }); // Obtener la posición del clic
+    //     setShowContextMenu(true); // Mostrar el menú contextual
+    // };
 
-    const handleDelete = async () => {
-        try {
-            await axios.delete(`/ciclos/${selectedCiclo}`);
+    // const handleDelete = async () => {
+    //     try {
+    //         await axios.delete(`/ciclos/${selectedCiclo}`);
 
-            setListaCiclos(listaCiclos.filter(ciclo => ciclo.id !== selectedCiclo));
-            setShowContextMenu(false); // Ocultar el menú contextual
-        } catch (error) {
-            console.error('Error al eliminar el ciclo', error);
-        }
-    };
+    //         setListaCiclos(listaCiclos.filter(ciclo => ciclo.id !== selectedCiclo));
+    //         setShowContextMenu(false); // Ocultar el menú contextual
+    //     } catch (error) {
+    //         console.error('Error al eliminar el ciclo', error);
+    //     }
+    // };
 
-    const handleCloseContextMenu = () => {
-        setShowContextMenu(false); // Cerrar el menú contextual si se hace clic fuera de él
-    };
+    // const handleCloseContextMenu = () => {
+    //     setShowContextMenu(false); // Cerrar el menú contextual si se hace clic fuera de él
+    // };
 
     // Función para abrir el modal de edición y establecer los datos del ciclo seleccionado
     const openEditModal = (ciclo) => {
@@ -79,7 +81,7 @@ export default function Ciclos({ ciclos: initialCiclos }) {
         setEditFechaFin(ciclo.fecha_fin);
         setSelectedCiclo(ciclo.id);
         setIsEditModalOpen(true);
-        setShowContextMenu(false);
+        //setShowContextMenu(false);
     };
 
     // Función para manejar la edición del ciclo
@@ -211,13 +213,19 @@ export default function Ciclos({ ciclos: initialCiclos }) {
                                             >
                                                 Fecha de Finalización
                                             </th>
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500"
+                                            >
+                                                Acciones
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody className="divide-y divide-gray-200 bg-white">
                                         {listaCiclos.map((ciclo) => (
                                             <tr
                                                 key={ciclo.id}
-                                                onContextMenu={(e) => handleContextMenu(e, ciclo.id)} // Detectar clic derecho
+                                                //onContextMenu={(e) => handleContextMenu(e, ciclo.id)} // Detectar clic derecho
                                             >
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                                                     {ciclo.nombre}
@@ -227,6 +235,14 @@ export default function Ciclos({ ciclos: initialCiclos }) {
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                                                     {ciclo.fecha_fin}
+                                                </td>
+                                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                    <button
+                                                        onClick={() => openEditModal(ciclo)}
+                                                        className="text-blue-600 hover:text-blue-900"
+                                                    >
+                                                        Editar
+                                                    </button>
                                                 </td>
                                             </tr>
                                         ))}
@@ -284,7 +300,7 @@ export default function Ciclos({ ciclos: initialCiclos }) {
             )}
 
             {/*Abrir menú contextual*/}
-            {showContextMenu && (
+            {/* {showContextMenu && (
                 <div
                     className="absolute bg-white border border-gray-300 shadow-lg rounded-md p-2"
                     style={{ top: `${contextMenuPosition.y}px`, left: `${contextMenuPosition.x}px` }}
@@ -303,7 +319,7 @@ export default function Ciclos({ ciclos: initialCiclos }) {
                         Eliminar Ciclo
                     </button>
                 </div>
-            )}
+            )} */}
 
         </AuthenticatedLayout>
     );

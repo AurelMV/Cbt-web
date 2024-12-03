@@ -1,13 +1,33 @@
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import { Head, usePage } from '@inertiajs/react'; // Solo importa una vez
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import { Head, router, usePage } from "@inertiajs/react"; // Solo importa una vez
 import { useState } from "react";
-import { Inertia } from '@inertiajs/inertia';
+import { Inertia } from "@inertiajs/inertia";
+import TextInput from "@/Components/TextInput";
+import { Link } from "@inertiajs/react";
 
-export default function Estudiantes() {
-    const [filterText, setFilterText] = useState('');
-    const { estudiantes } = usePage().props;
+export default function Estudiantes({ queryParams: propsQueryParams = null, }) {
+
+    const { estudiantes, queryParams: inertiaQueryParams } = usePage().props;
+    const queryParams = propsQueryParams || inertiaQueryParams;
+    const [queryParamsState, setQueryParams] = useState(
+        () => queryParams || {}
+    );
+    const [filterText, setFilterText] = useState("");
+  
     const [modalVisible, setModalVisible] = useState(false);
     const [selectedEstudiante, setSelectedEstudiante] = useState(null);
+
+    const handleInputChange = (name, value, isKeyPress = false) => {
+        if (isKeyPress && value.trim() === "") return;
+
+        const updatedQueryParams = {
+            ...queryParams,
+            [name]: value || undefined,
+        };
+        setQueryParams(updatedQueryParams);
+
+        router.get(route("estudiantes.index"), updatedQueryParams);
+    };
 
     // Función para mostrar el modal y cargar los datos del estudiante
     const handleEditClick = (estudiante) => {
@@ -23,89 +43,227 @@ export default function Estudiantes() {
         });
     };
 
-
     const closeModal = () => {
-        Inertia.reload(); 
-      };
+        Inertia.reload();
+    };
 
     // Función para enviar el formulario de actualización
     const handleSubmit = (e) => {
         e.preventDefault();
 
-        Inertia.put(`/estudiantes/${selectedEstudiante.id}`, selectedEstudiante, {
-            onSuccess: () => {
-                setModalVisible(false); // Cerrar el modal después de actualizar
-                // Si deseas actualizar la lista sin recargar la página, puedes usar:
-                // Inertia.visit('/ruta-de-los-estudiantes', { method: 'get' }); 
-                // o redirigir al listado
-                Inertia.visit('/estudiantes.index'); // Redirige a la página de estudiantes
-            },
-            onError: () => {
-                console.error('Error al actualizar el estudiante');
+        Inertia.put(
+            `/estudiantes/${selectedEstudiante.id}`,
+            selectedEstudiante,
+            {
+                onSuccess: () => {
+                    setModalVisible(false); // Cerrar el modal después de actualizar
+                    // Si deseas actualizar la lista sin recargar la página, puedes usar:
+                    // Inertia.visit('/ruta-de-los-estudiantes', { method: 'get' });
+                    // o redirigir al listado
+                    Inertia.visit("/estudiantes.index"); // Redirige a la página de estudiantes
+                },
+                onError: () => {
+                    console.error("Error al actualizar el estudiante");
+                },
             }
-        });
+        );
     };
 
-    const filteredEstudiantes = estudiantes.filter(estudiante =>
-        estudiante.nombres.toLowerCase().includes(filterText.toLowerCase()) || 
-        estudiante.Nrodocumento.toLowerCase().includes(filterText.toLowerCase())
-    );
-  
-
+    const filteredEstudiantes = Array.isArray(estudiantes.data) ? estudiantes.data.filter(
+        (estudiante) =>
+            estudiante.nombres
+                .toLowerCase()
+                .includes(filterText.toLowerCase()) ||
+            estudiante.Nrodocumento.toLowerCase().includes(
+                filterText.toLowerCase()
+            )
+    ) : [];
+    
 
 
 
     return (
         <AuthenticatedLayout>
             <div>
+                <h2 className="text-xl font-semibold text-black">
+                    GESTION DE ESTUDIANTES
+                </h2>
+                <p className="leading-tight text-gray-400">
+                    Administra a los estudiantes que se han inscrito
+               
+                </p>
+                <div className="py-12">
+                    <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+                        <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg">
+                            <div className="p-2 text-gray-900">
+                                <div className="mb-8 p-4 border border-gray-300 rounded-md bg-white shadow-md sm:p-8">
+                                <h3 className="text-md font-semibold mb-4 text-blue-900">
+                                Filtros
+                                </h3>
+                                <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb6">
+                                    <div className="col-span-1">
+                                        <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                        Nombre del estudiante
+                                        </label>
+                                        <TextInput
+                                            placeholder="Nombre del estudiante"
+                                            defaultValue={queryParamsState.name}
+                                            onBlur={(e) =>
+                                                handleInputChange("name", e.target.value)
+                                            }
+                                            onKeyDown={(e) =>
+                                                e.key === "Enter" &&
+                                                handleInputChange("name", e.target.value, true)
+                                            }
+                                        />
+                                    </div>
+                                    <div className="col-span-1">
+    <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+        Número de documento
+    </label>
+    <input
+        type="text" // Cambiar a "text" para un control más granular sobre la entrada
+        className="w-52 border p-2 rounded-md"
+        placeholder="Nro de Documento"
+        defaultValue={queryParamsState.documento}
+        onBlur={(e) =>
+            handleInputChange("documento", e.target.value)
+        }
+        onKeyDown={(e) => {
+            if (e.key === "Enter") {
+                handleInputChange("documento", e.target.value, true);
+            }
+        }}
+        onInput={(e) => {
+            let value = e.target.value;
 
-                <h2 className="text-xl font-semibold text-black">GESTION DE ESTUDIANTES</h2>
-                <p className="leading-tight text-gray-400">Administra a los estudiantes que se han inscrito</p>
-                <div>
-                    {/*tmr x q no hay los otros div xd....aqui dentro tenia que ir con sus propiedades pex */}
-                </div>
+            // Eliminar caracteres no numéricos y signos negativos
+            value = value.replace(/[^0-9]/g, "");
+
+            // Limitar a 8 caracteres
+            if (value.length > 8) {
+                value = value.slice(0, 8);
+            }
+
+            e.target.value = value; // Actualizar el valor en el campo de entrada
+        }}
+    />
+</div>
+
+                                    <div className="col-span-1">
+                                    <label htmlFor="idcolegio" className="block text-sm font-medium text-gray-800">
+                                        Correo Electronico
+                                        </label>
+                                        <TextInput
+                                            placeholder="Email o correo"
+                                            defaultValue={queryParamsState.Email}
+                                            onBlur={(e) =>
+                                                handleInputChange("Email", e.target.value)
+                                            }
+                                            onKeyDown={(e) =>
+                                                e.key === "Enter" &&
+                                                handleInputChange("Email", e.target.value, true)
+                                            }
+                                        />
+                                    </div>
+                                </div>
                 {/* Tabla de estudiantes */}
-              
-
-                <table className="min-w-full divide-y divide-gray-200">
-                    <thead>
+                <div className="mt-4">
+                <h3 className="text-md font-semibold mb-4 text-blue-900">
+                Lista de estudiantes 
+                </h3>
+                </div>
+                <div className="table-container overflow-x-auto">  
+                <table className="min-w-full border border-gray-300 rounded-lg bg-white shadow mt-4 table-fixed">
+                <thead className="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                         <tr>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nombre</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Paterno</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Apellido Materno</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Sexo</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Tipo de Documento</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Nro de Documentro</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">telefono de estudiante</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">telefono de apoderado</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">fecha de nacimiento</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">direccion</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">email</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">foto</th>
-                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">Acción</th>
-
-                           
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Nombre
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Apellido Paterno
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Apellido Materno
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Sexo
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Tipo de Documento
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Nro de Documentro
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                telefono de estudiante
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                telefono de apoderado
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                fecha de nacimiento
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                direccion
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                email
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                foto
+                            </th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500">
+                                Acción
+                            </th>
                         </tr>
                     </thead>
+
                     <tbody>
-                        {estudiantes.map((estudiante) => (
+                        {estudiantes.data.map((estudiante) => (
                             <tr key={estudiante.id}>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.nombres}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.aPaterno}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.aMaterno}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.sexo}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.tipodocumento}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.Nrodocumento}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.celularestudiante}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.celularapoderado}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.fechaNacimiento}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.direccion}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.email}</td>
-                                <td className="px-6 py-4 text-sm text-gray-900">{estudiante.foto}</td>
-                                
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.nombres}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.aPaterno}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.aMaterno}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.sexo}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.tipodocumento}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.Nrodocumento}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.celularestudiante}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.celularapoderado}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.fechaNacimiento}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.direccion}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.email}
+                                </td>
+                                <td className="px-6 py-4 text-sm text-gray-900">
+                                    {estudiante.foto}
+                                </td>
+
                                 <td className="px-6 py-4 text-sm text-gray-500">
                                     <button
-                                        onClick={() => handleEditClick(estudiante)}
+                                        onClick={() =>
+                                            handleEditClick(estudiante)
+                                        }
                                         className="text-indigo-600 hover:text-indigo-900"
                                     >
                                         Editar
@@ -115,6 +273,56 @@ export default function Estudiantes() {
                         ))}
                     </tbody>
                 </table>
+                </div>
+                <div className="mt-4 flex justify-between items-center p-4 bg-white border border-gray-200 rounded-lg shadow-md">
+                    <p className="text-sm text-gray-500">
+                        Página {estudiantes.current_page} de{" "}
+                        {estudiantes.last_page}
+                    </p>
+
+                    <nav
+                        className="inline-flex shadow-sm rounded-md"
+                        aria-label="Pagination"
+                    >
+                        {/* Paginación Anterior */}
+                        {estudiantes.prev_page_url && (
+                            <Link
+                                href={estudiantes.prev_page_url}
+                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-l-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            ></Link>
+                        )}
+
+                        {/* Páginas */}
+                        {estudiantes.links &&
+                            estudiantes.links.map((link, index) => (
+                                <Link
+                                    key={index}
+                                    href={link.url || "#"}
+                                    className={`px-4 py-2 text-sm font-medium border border-gray-300 ${
+                                        link.active
+                                            ? "bg-indigo-500 text-white"
+                                            : "bg-white text-gray-700 hover:bg-gray-100"
+                                    } ${
+                                        !link.url
+                                            ? "cursor-not-allowed"
+                                            : "cursor-pointer"
+                                    }`}
+                                >
+                                    {link.label
+                                        .replace("&laquo;", "«")
+                                        .replace("&raquo;", "»")}
+                                </Link>
+                            ))}
+
+                        {/* Paginación Siguiente */}
+                        {estudiantes.next_page_url && (
+                            <Link
+                                href={estudiantes.next_page_url}
+                                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-r-md hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
+                            ></Link>
+                        )}
+                    </nav>
+                </div>
 
                 {/* Modal para editar estudiante */}
                 {modalVisible && selectedEstudiante && (
@@ -206,7 +414,7 @@ export default function Estudiantes() {
                                     required
                                 />
                                 <input
-                                    type="text"
+                                    type="hidden"
                                     name="idcolegios"
                                     value={selectedEstudiante.idcolegios}
                                     onChange={handleChange}
@@ -232,10 +440,9 @@ export default function Estudiantes() {
                                     required
                                 />
                                 <button
-                                  href={route('estudiantes.index')}
+                                    href={route("estudiantes.index")}
                                     type="submit"
                                     className="w-full inline-flex items-center rounded-md bg-blue-600 px-4 py-2 text-white font-semibold hover:bg-blue-500"
-                                    
                                 >
                                     Modificar Estudiante
                                 </button>
@@ -244,7 +451,12 @@ export default function Estudiantes() {
                     </div>
                 )}
             </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            </div>
+            
         </AuthenticatedLayout>
     );
 }
-

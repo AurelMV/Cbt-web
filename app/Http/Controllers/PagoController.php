@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Support\Facades\DB;
 use App\Models\Pago;
 use App\Http\Requests\StorePagoRequest;
@@ -8,6 +9,7 @@ use App\Http\Requests\UpdatePagoRequest;
 use App\Models\Ciclo;
 use App\Models\Estudiante;
 use App\Models\Grupo;
+use App\Models\Inscripcion;
 use App\Models\ProgramaEstudio;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Http\Request;
@@ -17,72 +19,83 @@ class PagoController extends Controller
 {
     public function index()
     {
-        $inscripciones = DB::table('inscripcions')
-        ->join('estudiantes', 'inscripcions.idEstudiante', '=', 'estudiantes.id')
-        ->join('programa_estudios', 'inscripcions.idprogramaestudios', '=', 'programa_estudios.id')
-        ->join('ciclos', 'inscripcions.idciclo', '=', 'ciclos.id')
-        ->join('grupos', 'inscripcions.idGrupos', '=', 'grupos.id')
-        ->select(
-            'inscripcions.id',
-            'inscripcions.turno',
-            'inscripcions.fechaInscripcion',
-            DB::raw("CASE WHEN inscripcions.estadopago = 1 THEN 'Pagado' ELSE 'Deudor' END as estadopago"),  // Transformar el valor de estadopago
-            'estudiantes.nombres as estudiante_nombres',
-            'ciclos.nombre as ciclo_nombre',
-            'programa_estudios.nombre_programa as programa_nombre',
-            'grupos.nombre as grupo_nombre'
-        )
-        ->paginate(2);
-    
-    // Consultar los datos adicionales necesarios para el formulario o lista de selección
-    $estudiantes = DB::table('estudiantes')->select('id', 'nombres', 'aPaterno', 'aMaterno')->get();
-    $programaEstudio = DB::table('programa_estudios')->select('id', 'nombre_programa')->get();
-    $ciclosInscripcion = DB::table('ciclos')->select('id', 'nombre')->get();
-    $grupos = DB::table('grupos')->select('id', 'nombre')->paginate(10);
+        $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(3);
 
+        //return response()->json(
 
-    
-    // Retornar los datos a la vista con Inertia
-    return Inertia::render('GestiondePagos', [
-        'inscripciones' => $inscripciones,
-        'estudiantes' => $estudiantes,
-        'programaEstudio' => $programaEstudio,
-        'ciclosInscripcion' => $ciclosInscripcion,
-        'grupos' => $grupos,
-    ]);
-    
+        //   $inscripcion, 
+
+        //);
+        $query = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo']);
+
+        // Verificar si se pasó un parámetro de búsqueda por nombre del estudiante
+        if (request()->has('name') && !empty(request('name'))) {
+            $query->whereHas('estudiante', function ($subQuery) {
+                $subQuery->where('nombres', 'like', '%' . request('name') . '%');
+            });
+        }
+        if (request()->has('documento') && !empty(request('documento'))) {
+            $query->whereHas('estudiante', function ($subQuery) {
+                $subQuery->where('Nrodocumento', 'like', '%' . request('documento') . '%');
+            });
+        }
+
+ 
+        // Paginar los resultados
+        $inscripcion = $query->paginate(3);
+        return Inertia::render('GestiondePagos', [
+            'inscripciones' => $inscripcion,
+            'queryParams' => request()->query(),
+        ]);
+
+        // Retornar los datos con Inertia
+
+        /*return response()->json([
+            'inscripciones' => $inscripciones,
+            'estudiantes' => $estudiantes,
+            'programaEstudio' => $programaEstudio,
+            'ciclosInscripcion' => $ciclosInscripcion,
+            'grupos' => $grupos,
+        ]);*/
     }
 
-public function listadoDePagos(){
-    
-      $pagos = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.ciclo', 'inscripcion.grupo'])
-      ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher','idInscripcion')
-      ->paginate(5);
 
-  // Formatear el campo `estado_pago`
-  $pagos->getCollection()->transform(function ($pago) {
-      $pago->estado_pago = $pago->estado_pago == 1 ? 'Pagado' : 'Pendiente';  // Ajusta según tu lógica
-      return $pago;
-  });
+    public function listadoDePagos(Request $request)
+    {
+        // Obtener los filtros desde la solicitud
+        $nombre = $request->input('nombre');
+        $nroDocumento = $request->input('nroDocumento');
 
-  // Obtener los datos adicionales para el formulario
-  
+        // Construir la consulta
+        $query = Pago::with(['inscripcion.estudiante', 'inscripcion.programaEstudio', 'inscripcion.ciclo', 'inscripcion.grupo'])
+            ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher', 'idInscripcion');
 
-  return response()->json(
-  
-        $pagos, // O cualquier otro dato que estés pasando
- 
-    
+        // Filtrar por nombre del estudiante si se proporciona
+        if ($nombre) {
+            $query->whereHas('inscripcion.estudiante', function ($q) use ($nombre) {
+                $q->where('nombres', 'like', '%' . $nombre . '%');
+            });
+        }
 
-   /* return response()->json([
-        'pagos' => $pagos,*/
-      
-    );
+        // Filtrar por número de documento si se proporciona
+        if ($nroDocumento) {
+            $query->whereHas('inscripcion.estudiante', function ($q) use ($nroDocumento) {
+                $q->where('nro_documento', 'like', '%' . $nroDocumento . '%');
+            });
+        }
 
+        // Realizar la paginación
+        $pagos = $query->paginate(5);
 
- 
+        // Formatear el campo `estado_pago`
+        $pagos->getCollection()->transform(function ($pago) {
+            $pago->estado_pago = $pago->estado_pago == 1 ? 'Pagado' : 'Pendiente';
+            return $pago;
+        });
 
-}
+        return response()->json($pagos);
+    }
+
 
 
 
@@ -109,7 +122,7 @@ public function listadoDePagos(){
             'nroVoucher' => 'required|string|max:10',
             'idInscripcion' => 'required|regex:/^\d+$/|exists:inscripcions,id',
         ]);
-        
+
         if ($validator->fails()) {
             return response()->json([
                 'status' => false,
@@ -131,13 +144,15 @@ public function listadoDePagos(){
      */
     public function show($id)
     {
-        $pago = Pago::select(  'fecha',
-        'monto',
-        'medioPago',
-        'nroVoucher',
-        'idInscripcion',)
-        
-        ->findOrFail($id);
+        $pago = Pago::select(
+            'fecha',
+            'monto',
+            'medioPago',
+            'nroVoucher',
+            'idInscripcion',
+        )
+
+            ->findOrFail($id);
 
         return response()->json([
             'status' => true,

@@ -1,19 +1,18 @@
 import { Line } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend } from 'chart.js';
 import React from 'react';
+import { usePage } from '@inertiajs/react';
 
 // Registrar los componentes de Chart.js
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 
 export default function EnrollmentAnalysis() {
+
+  const { inscritosPorCiclo } = usePage().props;
+  console.log(inscritosPorCiclo);
   // Datos estáticos de ejemplo
-  const ciclos = ["Ciclo 1", "Ciclo 2", "Ciclo 3", "Ciclo 4"];
-  const inscripcionesPorCiclo = {
-    "Ciclo 1": 30,
-    "Ciclo 2": 45,
-    "Ciclo 3": 25,
-    "Ciclo 4": 50,
-  };
+  const ciclos = inscritosPorCiclo.map((ciclo) => ciclo.ciclo);
+  const inscritos = inscritosPorCiclo.map((ciclo) => ciclo.inscritos);
 
   // Datos para el gráfico
   const chartData = {
@@ -21,7 +20,7 @@ export default function EnrollmentAnalysis() {
     datasets: [
       {
         label: 'Número de Inscripciones',
-        data: ciclos.map((ciclo) => inscripcionesPorCiclo[ciclo]),
+        data: inscritos,
         borderColor: '#FF5733', // Color de la línea
         backgroundColor: 'rgba(255, 87, 51, 0.2)', // Color de fondo de los puntos
         fill: true, // Rellenar el área debajo de la línea
