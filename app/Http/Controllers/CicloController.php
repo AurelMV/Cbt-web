@@ -34,10 +34,41 @@ class CicloController extends Controller
      */
     public function store(Request $request)
     {   
+        // Get the latest cycle
+        $latestCiclo = Ciclo::latest('fecha_inicio')->first();
+        
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date'
+            'fecha_inicio' => [
+                'required',
+                'date',
+                function ($attribute, $value, $fail) use ($latestCiclo) {
+                    if ($latestCiclo) {
+                        $startDate = new \DateTime($value);
+                        $latestStart = new \DateTime($latestCiclo->fecha_inicio);
+                        $latestEnd = new \DateTime($latestCiclo->fecha_fin);
+                        
+                        if ($startDate >= $latestStart && $startDate <= $latestEnd) {
+                            $fail('La fecha de inicio no puede estar dentro del rango de fechas del último ciclo.');
+                        }
+                    }
+                }
+            ],
+            'fecha_fin' => [
+                'required',
+                'date',
+                'after:fecha_inicio',
+                function ($attribute, $value, $fail) use ($request) {
+                    $start = new \DateTime($request->fecha_inicio);
+                    $end = new \DateTime($value);
+                    $diff = $start->diff($end);
+                    
+                    if ($diff->m < 3 && $diff->y == 0) {
+                        $fail('El ciclo debe tener una duración mínima de 3 meses.');
+                    }
+                }
+            ],
+            'estado' => 'required|string|in:En curso,Finalizado'
         ]);
 
         $ciclo = Ciclo::create($request->all());
@@ -74,10 +105,43 @@ class CicloController extends Controller
      */
     public function update(Request $request, Ciclo $ciclo)
     {
+        // Similar validation for update
+        $latestCiclo = Ciclo::where('id', '!=', $ciclo->id)
+                            ->latest('fecha_inicio')
+                            ->first();
+        
         $request->validate([
             'nombre' => 'required|string|max:255',
-            'fecha_inicio' => 'required|date',
-            'fecha_fin' => 'required|date'
+            'fecha_inicio' => [
+                'required',
+                'date',
+                function ($attribute, $value, $fail) use ($latestCiclo) {
+                    if ($latestCiclo) {
+                        $startDate = new \DateTime($value);
+                        $latestStart = new \DateTime($latestCiclo->fecha_inicio);
+                        $latestEnd = new \DateTime($latestCiclo->fecha_fin);
+                        
+                        if ($startDate >= $latestStart && $startDate <= $latestEnd) {
+                            $fail('La fecha de inicio no puede estar dentro del rango de fechas del último ciclo.');
+                        }
+                    }
+                }
+            ],
+            'fecha_fin' => [
+                'required',
+                'date',
+                'after:fecha_inicio',
+                function ($attribute, $value, $fail) use ($request) {
+                    $start = new \DateTime($request->fecha_inicio);
+                    $end = new \DateTime($value);
+                    $diff = $start->diff($end);
+                    
+                    if ($diff->m < 3 && $diff->y == 0) {
+                        $fail('El ciclo debe tener una duración mínima de 3 meses.');
+                    }
+                }
+            ],
+            'estado' => 'required|string|in:En curso,Finalizado'
         ]);
 
         $ciclo->update($request->all());

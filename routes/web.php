@@ -1,5 +1,5 @@
 <?php
-
+use App\Models\User;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CicloController;
 use App\Http\Controllers\CursoController;
@@ -35,10 +35,6 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    
-    //Route::get('/user', [UserController::class, 'index'])->name('user.userManager');
-    Route::resource('users', UserController::class);
-
     Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index');
     Route::get('/Estudiantes', [EstudianteController::class, 'index'])->name('estudiantes.index');
     Route::get('/GestionIncripciones', [InscripcionController::class, 'index'])->name('gestInscripcion.index');
@@ -70,6 +66,7 @@ Route::get('/enrollment-data', [EnrollmentController::class, 'index'])->name('di
 // Rutas accesibles para usuario con el rol admin
 Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
     Route::resource('ciclos', CicloController::class);
+    Route::resource('users', UserController::class);
     //Route::resource('cursos', CursoController::class);
     Route::resource('programasEstudio', ProgramaEstudioController::class);
 });
