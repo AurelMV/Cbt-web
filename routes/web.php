@@ -1,11 +1,10 @@
 <?php
 
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\CicloController;
 use App\Http\Controllers\CursoController;
 use App\Http\Controllers\DocenteController;
 use App\Http\Controllers\DocenteCursoController;
-use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GrupoController;
@@ -33,13 +32,16 @@ Route::get('/dashboard', function () {
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/profile/user', [ProfileController::class, 'userManagement'])->name('profile.user');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
+    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    
+    //Route::get('/user', [UserController::class, 'index'])->name('user.userManager');
+    Route::resource('users', UserController::class);
+
     Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index');
     Route::get('/Estudiantes', [EstudianteController::class, 'index'])->name('estudiantes.index');
     Route::get('/GestionIncripciones', [InscripcionController::class, 'index'])->name('gestInscripcion.index');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
 
@@ -55,23 +57,27 @@ Route::put('/docentes/{docente}', [DocenteController::class, 'update'])->name('d
 //Route::get('/programasEstudio', [ProgramaEstudioController::class, 'index'])->name('programasEstudio.index');
 Route::get('/grupos', [GrupoController::class, 'index'])->name('grupos.index');
 Route::post('/grupos', [GrupoController::class, 'store'])->name('grupos.store');
+Route::get('/grupos/grupo/{id}', [ReportesController::class, 'Grupo']);
+Route::get('/grupos/DATAGrupo/{idCiclo}/{idGrupo}', [ReportesController::class, 'DataGrupo']);
+Route::get('/grupos/Programa', [ReportesController::class, 'Programa']);
+Route::get('/grupos/DATAPrograma/{idCiclo}/{idPrograma}', [ReportesController::class, 'DataPrograma']);
+Route::get('/grupos/ciclo/{id}', [ReportesController::class, 'BusCiclo']);
 Route::put('/grupos/{grupo}', [GrupoController::class, 'update'])->name('grupos.update');
 Route::get('/docenteCursos', [DocenteCursoController::class, 'index'])->name('docenteCursos.index');
 Route::post('/docenteCursos', [DocenteCursoController::class, 'store'])->name('docenteCursos.store');
 Route::put('/docenteCursos/{docenteCurso}', [DocenteCursoController::class, 'update'])->name('docenteCursos.update');
 Route::get('/enrollment-data', [EnrollmentController::class, 'index'])->name('diagrama.index');
 // Rutas accesibles para usuario con el rol admin
-Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {
-    Route::get('/admin', [AdminController::class, 'index'])->name('admin');
+Route::group(['middleware' => ['auth', 'verified', 'role:admin']], function () {  
     Route::resource('ciclos', CicloController::class);
-    Route::resource('cursos', CursoController::class);
+    //Route::resource('cursos', CursoController::class);
     Route::resource('programasEstudio', ProgramaEstudioController::class);
 });
 
 
 // Rutas accesibles para usuarios con el rol trabajador
 Route::group(['middleware' => ['auth', 'verified', 'role:empleado']], function () {
-    Route::get('/empleado', [EmpleadoController::class, 'index'])->name('empleado');
+
 });
 
 
@@ -114,3 +120,4 @@ Route::put('/editar-pago/{id}', [PagoController::class, 'editarPago']);
 
 
 require __DIR__ . '/auth.php';
+
