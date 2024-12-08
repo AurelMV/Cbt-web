@@ -17,6 +17,7 @@ return new class extends Migration
             $table->integer('monto');
             $table->string('medioPago', 20);
             $table->string('nroVoucher', 10);
+            $table->binary('fotoVoucher')->nullable();
             $table->unsignedBigInteger('idInscripcion');
             $table->timestamps();
 
