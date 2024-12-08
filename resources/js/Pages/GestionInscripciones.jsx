@@ -9,7 +9,8 @@ export default function GestionInscripciones({
     queryParams: propsQueryParams = null,
 }) {
     const { inscripciones, queryParams: inertiaQueryParams } = usePage().props;
-
+    const { flash } = usePage(); // Accedemos a los mensajes de la sesión
+    const [message, setMessage] = useState('');
     // Combina los queryParams de props con los de Inertia
     const queryParams = propsQueryParams || inertiaQueryParams;
 
@@ -33,6 +34,7 @@ export default function GestionInscripciones({
     const [gruposFiltrados, setGruposFiltrados] = useState([]);
     const [searchTerm, setSearchTerm] = useState(""); // Estado para el término de búsqueda
     const [cicloSeleccionado, setCicloSeleccionado] = useState("");
+    const [error, setError] = useState(null);
 
     const handleInputChange = (name, value, isKeyPress = false) => {
         if (isKeyPress && value.trim() === "") return;
@@ -50,6 +52,8 @@ export default function GestionInscripciones({
     };
 
     useEffect(() => {
+
+       
         if (showModal) {
             fetch("/api/inscripcionesopciones")
                 .then((res) => res.json())
@@ -71,9 +75,17 @@ export default function GestionInscripciones({
                 setError("Error al obtener los datos: " + error.message);
             }
         };
+        
 
         listadoservice();
     }, [showModal]);
+
+    useEffect(() => {
+        if (flash && flash.success) {
+          setMessage(flash.success);
+        }
+      }, [flash]);
+      
 
     const handleEditClick = (inscripcion) => {
         setEditingInscripcion(inscripcion);
@@ -103,8 +115,13 @@ export default function GestionInscripciones({
             idprogramaestudios: editingInscripcion.idprogramaestudios,
             idGrupos: editingInscripcion.idGrupos,
         });
+    
+        setMessage('Inscripción actualizada correctamente');
+    
         setShowModal(false); // Cierra el modal después de guardar
     };
+    
+
 
     // Filtra las inscripciones según el nombre o DNI
     const filteredInscripciones = inscripciones.data.filter((inscripcion) => {
@@ -133,7 +150,12 @@ export default function GestionInscripciones({
             <p className="leading-tight text-gray-400">
                 Aqui prodra ver a todos los estudiantes inscritos en el CBT
             </p>
-            
+           
+      {/* Mostrar mensaje de éxito */}
+      {message && <div className="alert">{message}</div>}
+
+      {/* Aquí iría el contenido de tu modal y demás UI */}
+   
 <div className="py-12">
     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
         <div className="overflow-hidden bg-white shadow-sm sm:rounded-lg border border-gray-300">
@@ -367,6 +389,7 @@ export default function GestionInscripciones({
                                         handleCicloChange(e.target.value)
                                     }
                                     className="w-full mb-4 px-3 py-2 border rounded"
+                                    disabled
                                 >
                                     {opciones.ciclos.map((ciclo) => (
                                         <option key={ciclo.id} value={ciclo.id}>

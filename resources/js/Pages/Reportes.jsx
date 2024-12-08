@@ -134,7 +134,7 @@ export default function Reportes() {
                     dato.estudiante.aPaterno,
                     dato.estudiante.aMaterno,
                     dato.estadoPago,
-                    dato.grupo.nombre,
+                    dato.programa_estudio.nombre_programa,
                     dato.ciclo.nombre
                 ]),
             });

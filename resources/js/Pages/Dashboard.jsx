@@ -297,6 +297,11 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
+        const fechaActual = new Date().toISOString().split('T')[0];
+        setFormData((prev) => ({
+            ...prev,
+            p_fechaInscripcion: fechaActual,
+        }));
         axios
             .get('users/show')
             .then(response => {
@@ -1341,6 +1346,8 @@ export default function Dashboard() {
                                                 required
                                             />
                                         </div>
+
+                                      
                                         <div>
                                             <label
                                                 htmlFor="Epago"
