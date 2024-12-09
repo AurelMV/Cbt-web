@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\InscripcionTemporal;
 use App\Http\Requests\StoreInscripcionTemporalRequest;
 use App\Http\Requests\UpdateInscripcionTemporalRequest;
+use Inertia\Inertia;
 
 class InscripcionTemporalController extends Controller
 {
@@ -14,6 +15,12 @@ class InscripcionTemporalController extends Controller
     public function index()
     {
         //
+        $inscripcion="";
+        
+        return Inertia::render('StudentForm', [
+            'inscripciones' => $inscripcion,
+            'queryParams' => request()->query(),
+        ]);
     }
 
     /**
