@@ -9,6 +9,7 @@ use App\Http\Controllers\EnrollmentController;
 use App\Http\Controllers\EstudianteController;
 use App\Http\Controllers\GrupoController;
 use App\Http\Controllers\InscripcionController;
+use App\Http\Controllers\InscripcionTemporalController;
 use App\Http\Controllers\PagoController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProgramaEstudioController;
@@ -21,10 +22,12 @@ Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
         'canRegister' => Route::has('register'),
+        'canStudentForm' => Route::has('StudentForm'),
         'laravelVersion' => Application::VERSION,
         'phpVersion' => PHP_VERSION,
     ]);
 });
+Route::resource('/StudentForm', InscripcionTemporalController::class);
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
