@@ -84,14 +84,14 @@ export default function Reportes() {
 
             doc.autoTable({
                 startY: 50, 
-                head: [['Nombre', 'Apellido Paterno', 'Apellido Materno', 'Estado de Pago', 'Programa de Estudio', 'Ciclo']],
+                head: [['Nombre', 'Apellido Paterno', 'Apellido Materno', 'Estado de Pago', 'Turno', 'Fecha de Inscripción']],
                 body: datosGrupo.map((dato) => [
                     dato.estudiante.nombres,
                     dato.estudiante.aPaterno,
                     dato.estudiante.aMaterno,
-                    dato.estadoPago,
-                    dato.programa_estudio.nombre_programa,
-                    dato.ciclo.nombre
+                    dato.estadopago === 0 ? 'Pendiente' : 'Pagado',
+                    dato.turno,
+                    dato.fechaInscripcion,
                 ]),
             });
         }
@@ -111,9 +111,9 @@ export default function Reportes() {
                         dato.estudiante.nombres,
                         dato.estudiante.aPaterno,
                         dato.estudiante.aMaterno,
-                        dato.estadoPago,
-                        dato.programa_estudio.nombre_programa,
-                        dato.ciclo.nombre
+                        dato.estadopago === 0 ? 'Pendiente' : 'Pagado',
+                        dato.turno,
+                        dato.fechaInscripcion,
                     ]),
                 });
             });
@@ -129,13 +129,13 @@ export default function Reportes() {
             doc.autoTable({
                 startY: 40, 
                 head: [['Nombre', 'Apellido Paterno', 'Apellido Materno', 'Estado de Pago', 'Grupo', 'Ciclo']],
-                body: datosPrograma.map((dato) => [
+                body: datosGrupo.map((dato) => [
                     dato.estudiante.nombres,
                     dato.estudiante.aPaterno,
                     dato.estudiante.aMaterno,
-                    dato.estadoPago,
-                    dato.programa_estudio.nombre_programa,
-                    dato.ciclo.nombre
+                    dato.estadopago === 0 ? 'Pendiente' : 'Pagado',
+                    dato.turno,
+                    dato.fechaInscripcion,
                 ]),
             });
         }
