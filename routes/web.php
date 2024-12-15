@@ -116,6 +116,7 @@ Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('p
 
 Route::put('/editar-pago/{id}', [PagoController::class, 'editarPago']);
 
+Route::resource('inscripcion-temporals', InscripcionTemporalController::class)->withoutMiddleware('auth');
 
 
 
