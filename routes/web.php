@@ -29,10 +29,8 @@ Route::get('/', function () {
 });
 Route::resource('/StudentForm', InscripcionTemporalController::class);
 
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
+Route::get('/dashboard', [InscripcionTemporalController::class, 'listInscripcionsTemp'])->middleware(['auth', 'verified'])->name('dashboard');
+Route::post('/dashboard', [InscripcionTemporalController::class, 'approve'])->middleware(['auth', 'verified'])->name('inscripcion.approve');
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -119,7 +117,5 @@ Route::get('/gestion-pagos', [PagoController::class, 'listadoDePagos'])->name('p
 Route::put('/editar-pago/{id}', [PagoController::class, 'editarPago']);
 
 Route::resource('inscripcion-temporals', InscripcionTemporalController::class)->withoutMiddleware('auth');
-
-
 
 require __DIR__ . '/auth.php';

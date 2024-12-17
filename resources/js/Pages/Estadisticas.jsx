@@ -32,42 +32,11 @@ export default function Estadisticas() {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div className="grid grid-cols-1">
                         <div className="border border-gray-200 col-span-1 overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg">
                             <h3 className="text-lg font-semibold mb-4 text-blue-900">Diagrama de Pastel</h3>
                             <DiagraPastel />
                         </div>
-                    </div>
- 
-                    <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
-  
-                        <div className="border border-gray-200 col-span-3 overflow-hidden bg-white p-6 shadow-xl sm:rounded-lg">
-                            <h3 className="text-lg font-semibold mb-4 text-blue-900">Mapa de Distritos</h3>
-                            <Mapa />
-                        </div>
-
-      
-                        <div className='overflow-hidden bg-white shadow-xl sm:rounded-lg'>
-                        <div className="m-2 flex flex-col space-y-4 mt-8 ">
-                            <div className="border border-gray-200 overflow-hidden p-4 shadow-xl sm:rounded-lg">
-                                <h4 className="text-md font-semibold mb-2 text-blue-900">Top 1: Departamento A</h4>
-                                <p>Descripción de las inscripciones</p>
-                                <p>Descripción de las inscripciones</p>
-
-                            </div>
-                            <div className="border border-gray-200 overflow-hidden p-4 shadow-xl sm:rounded-lg">
-                                <h4 className="text-md font-semibold mb-2 text-blue-900">Top 2: Departamento B</h4>
-                                <p>Descripción de las inscripciones</p>
-                                <p>Descripción de las inscripciones</p>
-                            </div>
-                            <div className="border border-gray-200 overflow-hidden p-4 shadow-xl sm:rounded-lg">
-                                <h4 className="text-md font-semibold mb-2 text-blue-900">Top 3: Departamento C</h4>
-                                <p>Descripción de las inscripciones</p>
-                                <p>Descripción de las inscripciones</p>
-                            </div>
-                        </div>
-                        </div>
-                       
                     </div>
                 </div>
             </div>

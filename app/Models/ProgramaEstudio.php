@@ -16,4 +16,9 @@ class ProgramaEstudio extends Model
     {
         return $this->hasMany(Inscripcion::class, 'idprogramaestudios', 'id');
     }
+
+    public function inscripcionesTemporales()
+    {
+        return $this->hasMany(InscripcionTemporal::class, 'idprogramaestudios', 'id');
+    }
 }

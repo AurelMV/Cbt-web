@@ -21,4 +21,8 @@ class Ciclo extends Model
         return $this->hasMany(Inscripcion::class, 'idciclo', 'id');
     }
 
+    public function inscripcionesTemporales()
+    {
+        return $this->hasMany(InscripcionTemporal::class, 'idciclo', 'id');
+    }
 }
