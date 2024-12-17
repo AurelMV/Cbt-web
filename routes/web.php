@@ -38,7 +38,9 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
     Route::get('/GestionPagos', [PagoController::class, 'index'])->name('pagos.index');
     Route::get('/Estudiantes', [EstudianteController::class, 'index'])->name('estudiantes.index');
+
     Route::get('/GestionIncripciones', [InscripcionController::class, 'index'])->name('gestInscripcion.index');
+    Route::get('/PDFpagos', [PagoController::class, 'ListadoparPDF'])->name('getpago.index');
 });
 
 

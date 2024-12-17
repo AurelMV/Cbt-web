@@ -153,7 +153,37 @@ export default function Dashboard() {
     const handleModalInscripcionsTemp = () => {
         setModalInscripcionsTemp(true);
     };
-
+  
+    const resetForm = () => {
+        setFormData({
+            p_nombres: '',
+            p_tipodocumento: '',
+            p_nroDocumento: '',
+            p_sexo: '',
+            p_aPaterno: '',
+            p_aMaterno: '',
+            p_email: '',
+            p_celularestudiante: '',
+            p_celularapoderado: '',
+            p_direccion: '',
+            p_fechaNacimiento: '',
+            p_anoculminado: '',
+            p_Colegios_id: '',
+            
+            p_fechaPago: "",
+            p_monto: "",
+            p_medioPago: "",
+            p_nroVoucher: "",
+            p_turno: "",
+            p_fechaInscripcion: "",
+            p_estadopago: "",
+            p_cicloinscripciones_id: "",
+            p_Grupos_id: "",
+            p_Programaestudios_id: "",
+            p_fotoComprobante: null,
+        });
+    };
+    
     const handleChangeDAtaColegio = (e) => {
         const { name, value } = e.target;
         setColegioDAta((prevState) => ({
@@ -230,6 +260,7 @@ export default function Dashboard() {
             .post("/api/registrar-inscripcion-pago", formData)
             .then((response) => {
                 alert("Inscripción realizada con éxito!");
+                resetForm();
             })
             .catch((error) => {
                 if (error.response) {
@@ -796,7 +827,7 @@ export default function Dashboard() {
                                                 placeholder="Colegio"
                                                 className="col-span-1 border p-2 rounded-md "
                                                 required
-                                                readOnly
+                                                readOnlyc
                                             />
                                         </div>
                                         <div>
