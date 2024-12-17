@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { use, useEffect, useState } from "react";
 import ColegioServicio from "@/Components/ColegioServicio";
 import Listado from "@/Components/DepartamentoServicio";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
@@ -261,6 +261,16 @@ const InscripcionForm = () => {
     const [minDate, setMinDate] = useState("");
     const [maxDate, setMaxDate] = useState("");
 
+    useEffect(() => {
+        const today = new Date();
+  
+        const max = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()); 
+        const min = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate()); 
+  
+        setMaxDate(max.toISOString().split("T")[0]);
+        setMinDate(min.toISOString().split("T")[0]);
+    }, []);
+
     const [digitLimit, setDigitLimit] = useState(8)
 
     const handleSubmit = async (e) => {
@@ -309,14 +319,6 @@ const InscripcionForm = () => {
     };
 
     useEffect(() => {
-        const today = new Date();
-  
-        const max = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()); 
-        const min = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate()); 
-  
-        setMaxDate(max.toISOString().split("T")[0]);
-        setMinDate(min.toISOString().split("T")[0]);
-      
         const fechaActual = new Date().toISOString().split('T')[0];
         setFormData((prev) => ({
             ...prev,

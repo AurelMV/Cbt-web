@@ -1,33 +1,42 @@
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import { Head } from "@inertiajs/react";
+import { Head, usePage } from "@inertiajs/react";
 import React, { useEffect, useState } from "react";
 import ColegioServicio from "@/Components/ColegioServicio";
 import Listado from "@/Components/DepartamentoServicio";
+import ListaInscripcionesTemp from "@/Components/ListInscripcionsTemp";
 import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
-import axios from 'axios';
+import axios from "axios";
 
 export default function Dashboard() {
-
-    const [userId, setUserId] = useState('');
+    const [userId, setUserId] = useState("");
     const [ciclos, setCiclos] = useState([]);
     const [grupos, setGrupos] = useState([]);
     const [selectedCiclo, setSelectedCiclo] = useState("");
     const [selectedGrupo, setSelectedGrupo] = useState("");
 
+    const { inscripcionesTemporales, inscripcionPendiente } = usePage().props;
+    console.log(inscripcionPendiente);
     const [minDate, setMinDate] = useState("");
     const [maxDate, setMaxDate] = useState("");
-  
-    useEffect(() => {
 
-      const today = new Date();
-  
-      const max = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()); 
-      const min = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate()); 
-  
-      setMaxDate(max.toISOString().split("T")[0]);
-      setMinDate(min.toISOString().split("T")[0]);
+    useEffect(() => {
+        const today = new Date();
+
+        const max = new Date(
+            today.getFullYear() - 15,
+            today.getMonth(),
+            today.getDate()
+        );
+        const min = new Date(
+            today.getFullYear() - 50,
+            today.getMonth(),
+            today.getDate()
+        );
+
+        setMaxDate(max.toISOString().split("T")[0]);
+        setMinDate(min.toISOString().split("T")[0]);
     }, []);
 
     const [programas, setProgramas] = useState([]);
@@ -39,7 +48,7 @@ export default function Dashboard() {
     const [departamentos, setlistados] = useState([]);
     const [Cole, setCole] = useState([]);
     const [colegi, setcolegi] = useState({
-        nombre:""
+        nombre: "",
     });
     const [error, setError] = useState(null);
     const [MensajeError, setMensajeError] = useState("");
@@ -81,6 +90,8 @@ export default function Dashboard() {
     const openModal2 = () => setModalOpen2(true);
     const closeModal2 = () => setModalOpen2(false);
 
+    const [modalInscripcionsTemp, setModalInscripcionsTemp] = useState(false);
+
     const [formData, setFormData] = useState({
         p_nombres: "",
         p_tipodocumento: "",
@@ -110,6 +121,39 @@ export default function Dashboard() {
         p_Programaestudios_id: "",
         archivo: null,
     });
+
+    useEffect(() => {
+        if (inscripcionPendiente) {
+            setFormData({
+                p_nombres: inscripcionPendiente.nombres,
+                p_aPaterno: inscripcionPendiente.aPaterno,
+                p_aMaterno: inscripcionPendiente.aMaterno,
+                p_sexo: inscripcionPendiente.sexo,
+                p_tipodocumento: inscripcionPendiente.tipodocumento,
+                p_nroDocumento: inscripcionPendiente.nroDocumento,
+                p_email: inscripcionPendiente.email,
+                p_celularestudiante: inscripcionPendiente.celularestudiante,
+                p_fechaNacimiento: inscripcionPendiente.fechaNacimiento,
+                p_celularapoderado: inscripcionPendiente.celularapoderado,
+                p_direccion: inscripcionPendiente.direccion,
+                p_Colegios_id: inscripcionPendiente.idcolegio,
+                p_fechaPago: inscripcionPendiente.fecha,
+                p_monto: inscripcionPendiente.monto,
+                p_medioPago: inscripcionPendiente.medioPago,
+                p_nroVoucher: inscripcionPendiente.nroVoucher,
+                p_cicloinscripciones_id: inscripcionPendiente.idciclo,
+                p_anoculminado: inscripcionPendiente.anoculminado,
+                p_estadopago: inscripcionPendiente.estado,
+                p_Programaestudios_id: inscripcionPendiente.idprogramaestudios,
+                archivo: null,
+            })
+        }
+    }, [inscripcionPendiente]);
+
+    const handleModalInscripcionsTemp = () => {
+        setModalInscripcionsTemp(true);
+    };
+
     const handleChangeDAtaColegio = (e) => {
         const { name, value } = e.target;
         setColegioDAta((prevState) => ({
@@ -117,7 +161,6 @@ export default function Dashboard() {
             [name]: value,
         }));
     };
-
 
     const handleSave = async () => {
         try {
@@ -147,7 +190,7 @@ export default function Dashboard() {
             [name]: value,
         }));
     };
-    const [digitLimit, setDigitLimit] = useState(8)
+    const [digitLimit, setDigitLimit] = useState(8);
 
     const handleSelectChange = (e) => {
         const { name, value } = e.target;
@@ -164,12 +207,10 @@ export default function Dashboard() {
             ...prevData,
             [name]: value,
         }));
-
     };
 
     const handleInputChange2 = (e) => {
         const { name, value } = e.target;
-
 
         if (name === "p_nroDocumento") {
             const isValid = new RegExp(`^\\d{0,${digitLimit}}$`).test(value);
@@ -201,8 +242,9 @@ export default function Dashboard() {
                     console.error("Encabezados:", error.response.headers);
 
                     alert(
-                        `Error al realizar la inscripción: ${error.response.data.message ||
-                        "Revise los datos ingresados."
+                        `Error al realizar la inscripción: ${
+                            error.response.data.message ||
+                            "Revise los datos ingresados."
                         }`
                     );
                 } else if (error.request) {
@@ -311,24 +353,24 @@ export default function Dashboard() {
     };
 
     useEffect(() => {
-        const fechaActual = new Date().toISOString().split('T')[0];
+        const fechaActual = new Date().toISOString().split("T")[0];
         setFormData((prev) => ({
             ...prev,
             p_fechaInscripcion: fechaActual,
         }));
         axios
-            .get('users/show')
-            .then(response => {
+            .get("users/show")
+            .then((response) => {
                 const user = response.data;
                 const userIdWithName = `${user.id}`;
                 setUserId(userIdWithName);
-                setFormData(prevData => ({
+                setFormData((prevData) => ({
                     ...prevData,
-                    p_Usuarios_id: userIdWithName
+                    p_Usuarios_id: userIdWithName,
                 }));
             })
-            .catch(error => {
-                console.error('Error fetching user data:', error);
+            .catch((error) => {
+                console.error("Error fetching user data:", error);
             });
 
         axios
@@ -388,12 +430,12 @@ export default function Dashboard() {
 
         return null;
     };
-    const handleSelectColegio = (id,nombrecolegio) => {
+    const handleSelectColegio = (id, nombrecolegio) => {
         setFormData((prevData) => ({
             ...prevData,
-            p_Colegios_id: id, 
+            p_Colegios_id: id,
         }));
-        setcolegi(() => ({nombre:nombrecolegio}));
+        setcolegi(() => ({ nombre: nombrecolegio }));
         alert("¡Colegio seleccionado con éxito!");
     };
     const handleSearch = () => {
@@ -428,29 +470,51 @@ export default function Dashboard() {
     const DateOfBirthInput = () => {
         const [minDate, setMinDate] = useState("");
         const [maxDate, setMaxDate] = useState("");
-      
-        useEffect(() => {
 
-          const today = new Date();
-      
-          const max = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()); 
-          const min = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate());
-      
-          setMaxDate(max.toISOString().split("T")[0]);
-          setMinDate(min.toISOString().split("T")[0]);
+        useEffect(() => {
+            const today = new Date();
+
+            const max = new Date(
+                today.getFullYear() - 15,
+                today.getMonth(),
+                today.getDate()
+            );
+            const min = new Date(
+                today.getFullYear() - 50,
+                today.getMonth(),
+                today.getDate()
+            );
+
+            setMaxDate(max.toISOString().split("T")[0]);
+            setMinDate(min.toISOString().split("T")[0]);
         }, []);
-    };    
+    };
 
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
 
-            <h2 className="text-xl font-semibold leading-tight text-black">
-                INSCRIPCIONES
-            </h2>
-            <p className="leading-tight text-gray-400">
-                Realize inscripciones de nuevos estudiantes y adjunte un pago
-            </p>
+            <div className="flex justify-between items-center">
+                <div>
+                    <h2 className="text-xl font-semibold leading-tight text-black">
+                        INSCRIPCIONES
+                    </h2>
+                    <p className="leading-tight text-gray-400">
+                        Realize inscripciones de nuevos estudiantes y adjunte un
+                        pago
+                    </p>
+                </div>
+                <div>
+                    <button onClick={handleModalInscripcionsTemp}>
+                        <a className="rounded-md border border-transparent bg-green-500 px-4 py-3 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900">
+                            Inscripciones Pendientes
+                        </a>
+                    </button>
+                </div>
+            </div>
+
+            {modalInscripcionsTemp && (<ListaInscripcionesTemp inscripcionesTemporales={inscripcionesTemporales} />)}
+
             <form onSubmit={handleSubmit}>
                 <div className="py-12">
                     <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
@@ -527,7 +591,6 @@ export default function Dashboard() {
                                                 placeholder="Nro de Documento"
                                                 className="col-span-1 border p-2 rounded-md"
                                                 required
-                                                
                                             />
                                         </div>
                                         <div className="col-span-1">
@@ -691,7 +754,6 @@ export default function Dashboard() {
                                             />
                                         </div>
 
-                                        
                                         <div>
                                             <label
                                                 htmlFor="anoculminado"
@@ -708,7 +770,6 @@ export default function Dashboard() {
                                                 placeholder="Ultimo año cursado"
                                                 className="w-48 col-span-1 border p-2 rounded-md"
                                                 required
-                                                
                                             />
                                         </div>
                                         <div className="col-span-1">
@@ -728,7 +789,6 @@ export default function Dashboard() {
                                             </label>
                                             <input
                                                 id="idcolegio"
-                                                
                                                 type="text"
                                                 name="p_Colegios_id"
                                                 onChange={handleChange}
@@ -746,7 +806,7 @@ export default function Dashboard() {
                                             >
                                                 id Usuario
                                             </label>*/}
-                                            
+
                                             <input
                                                 id="idusuario"
                                                 type="text"
@@ -758,8 +818,6 @@ export default function Dashboard() {
                                                 required
                                             />
                                         </div>
-
-                                       
                                     </div>
                                 </div>
 
@@ -768,53 +826,101 @@ export default function Dashboard() {
                                         <div className="bg-white p-8 rounded-lg shadow-lg flex w-full max-w-7xl">
                                             <div className="w-2/5 pl-6 border-r">
                                                 <h3 className="text-lg font-semibold mb-4">
-                                                    Seleccione Ubicación y Colegio
+                                                    Seleccione Ubicación y
+                                                    Colegio
                                                 </h3>
                                                 <div className="space-y-4">
                                                     <select
                                                         className="w-11/12 mx-auto border p-2 rounded-md"
                                                         required
-                                                        onChange={handleDepartamentoChange}
+                                                        onChange={
+                                                            handleDepartamentoChange
+                                                        }
                                                     >
-                                                        <option value="">Departamento</option>
-                                                        {departamentos.map((depa) => (
-                                                            <option key={depa.id} value={depa.id}>
-                                                                {depa.nombredepartamento}
-                                                            </option>
-                                                        ))}
+                                                        <option value="">
+                                                            Departamento
+                                                        </option>
+                                                        {departamentos.map(
+                                                            (depa) => (
+                                                                <option
+                                                                    key={
+                                                                        depa.id
+                                                                    }
+                                                                    value={
+                                                                        depa.id
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        depa.nombredepartamento
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
                                                     </select>
 
                                                     <select
                                                         className="w-11/12 mx-auto border p-2 rounded-md"
                                                         required
-                                                        onChange={handleProvinciaChange}
+                                                        onChange={
+                                                            handleProvinciaChange
+                                                        }
                                                     >
-                                                        <option value="">Provincia</option>
-                                                        {provincias.map((lista) => (
-                                                            <option key={lista.id} value={lista.id}>
-                                                                {lista.nombreprovincia}
-                                                            </option>
-                                                        ))}
+                                                        <option value="">
+                                                            Provincia
+                                                        </option>
+                                                        {provincias.map(
+                                                            (lista) => (
+                                                                <option
+                                                                    key={
+                                                                        lista.id
+                                                                    }
+                                                                    value={
+                                                                        lista.id
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        lista.nombreprovincia
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
                                                     </select>
 
                                                     <select
                                                         className="w-11/12 mx-auto border p-2 rounded-md"
                                                         required
-                                                        onChange={handleColegioChange}
+                                                        onChange={
+                                                            handleColegioChange
+                                                        }
                                                     >
-                                                        <option value="">Distrito</option>
-                                                        {distritos.map((lista) => (
-                                                            <option key={lista.id} value={lista.id}>
-                                                                {lista.nombredistrito}
-                                                            </option>
-                                                        ))}
+                                                        <option value="">
+                                                            Distrito
+                                                        </option>
+                                                        {distritos.map(
+                                                            (lista) => (
+                                                                <option
+                                                                    key={
+                                                                        lista.id
+                                                                    }
+                                                                    value={
+                                                                        lista.id
+                                                                    }
+                                                                >
+                                                                    {
+                                                                        lista.nombredistrito
+                                                                    }
+                                                                </option>
+                                                            )
+                                                        )}
                                                     </select>
 
                                                     <div className="w-11/12 mx-auto">
                                                         <input
                                                             type="text"
                                                             value={inputValue}
-                                                            onChange={handleInputChange}
+                                                            onChange={
+                                                                handleInputChange
+                                                            }
                                                             placeholder="Buscar colegios..."
                                                             className="w-11/12 mx-auto border p-2 rounded-md"
                                                         />
@@ -846,7 +952,6 @@ export default function Dashboard() {
                                                 </div>
                                             </div>
 
-
                                             <div className="w-3/5 pr-6 overflow-x-auto">
                                                 <h3 className="text-lg font-semibold mb-4">
                                                     Colegios Seleccionados
@@ -874,43 +979,52 @@ export default function Dashboard() {
                                                     <tbody>
                                                         {currentItems.length >
                                                             0 &&
-                                                            currentItems.map((resultado, index) => (
-                                                                <tr key={index}>
-                                                                    <td className="border px-4 py-2">
-                                                                        <button
-                                                                            className="inline-flex items-center rounded-md border border-transparent bg-green-500 px-1 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
-                                                                            type="button"
-                                                                            onClick={() =>
-                                                                                handleSelectColegio(
-                                                                                    resultado.id,resultado.nombrecolegio
-                                                                                )
+                                                            currentItems.map(
+                                                                (
+                                                                    resultado,
+                                                                    index
+                                                                ) => (
+                                                                    <tr
+                                                                        key={
+                                                                            index
+                                                                        }
+                                                                    >
+                                                                        <td className="border px-4 py-2">
+                                                                            <button
+                                                                                className="inline-flex items-center rounded-md border border-transparent bg-green-500 px-1 py-1 text-xs font-semibold uppercase tracking-widest text-white transition duration-150 ease-in-out hover:bg-gray-700 focus:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 active:bg-gray-900"
+                                                                                type="button"
+                                                                                onClick={() =>
+                                                                                    handleSelectColegio(
+                                                                                        resultado.id,
+                                                                                        resultado.nombrecolegio
+                                                                                    )
+                                                                                }
+                                                                            >
+                                                                                Seleccionar
+                                                                            </button>
+                                                                        </td>
+                                                                        <td className="border px-4 py-2">
+                                                                            {
+                                                                                resultado.nombrecolegio
                                                                             }
-                                                                        >
-                                                                            Seleccionar
-                                                                        </button>
-                                                                    </td>
-                                                                    <td className="border px-4 py-2">
-                                                                        {
-                                                                            resultado.nombrecolegio
-                                                                        }
-                                                                    </td>
-                                                                    <td className="border px-4 py-2">
-                                                                        {
-                                                                            resultado.codModular
-                                                                        }
-                                                                    </td>
-                                                                    <td className="border px-4 py-2">
-                                                                        {
-                                                                            resultado.modalidad
-                                                                        }
-                                                                    </td>
-                                                                    <td className="border px-4 py-2">
-                                                                        {
-                                                                            resultado.gestion
-                                                                        }
-                                                                    </td>
-                                                                </tr>
-                                                            )
+                                                                        </td>
+                                                                        <td className="border px-4 py-2">
+                                                                            {
+                                                                                resultado.codModular
+                                                                            }
+                                                                        </td>
+                                                                        <td className="border px-4 py-2">
+                                                                            {
+                                                                                resultado.modalidad
+                                                                            }
+                                                                        </td>
+                                                                        <td className="border px-4 py-2">
+                                                                            {
+                                                                                resultado.gestion
+                                                                            }
+                                                                        </td>
+                                                                    </tr>
+                                                                )
                                                             )}
                                                     </tbody>
                                                 </table>
@@ -920,12 +1034,17 @@ export default function Dashboard() {
                                                         (number) => (
                                                             <button
                                                                 key={number}
-                                                                onClick={() => paginate(number)}
-                                                                className={`px-1.5 py-0.95 mx-1 rounded-md ${number ===
+                                                                onClick={() =>
+                                                                    paginate(
+                                                                        number
+                                                                    )
+                                                                }
+                                                                className={`px-1.5 py-0.95 mx-1 rounded-md ${
+                                                                    number ===
                                                                     currentPage
-                                                                    ? "bg-blue-500 text-white"
-                                                                    : "bg-gray-300"
-                                                                    }`}
+                                                                        ? "bg-blue-500 text-white"
+                                                                        : "bg-gray-300"
+                                                                }`}
                                                             >
                                                                 {number}
                                                             </button>
@@ -1023,8 +1142,8 @@ export default function Dashboard() {
                                                                     value={
                                                                         ColegioDAta.latitud
                                                                             ? ColegioDAta.latitud.toFixed(
-                                                                                6
-                                                                            )
+                                                                                  6
+                                                                              )
                                                                             : "-"
                                                                     }
                                                                     onChange={
@@ -1044,8 +1163,8 @@ export default function Dashboard() {
                                                                     value={
                                                                         ColegioDAta.longitud
                                                                             ? ColegioDAta.longitud.toFixed(
-                                                                                6
-                                                                            )
+                                                                                  6
+                                                                              )
                                                                             : "-"
                                                                     }
                                                                     onChange={
@@ -1077,10 +1196,20 @@ export default function Dashboard() {
                                                                         distrito
                                                                     </option>
                                                                     {distritos.map(
-                                                                        (lista) => (
-                                                                            <option key={lista.id}
-                                                                                value={lista.id}>
-                                                                                {lista.nombredistrito}
+                                                                        (
+                                                                            lista
+                                                                        ) => (
+                                                                            <option
+                                                                                key={
+                                                                                    lista.id
+                                                                                }
+                                                                                value={
+                                                                                    lista.id
+                                                                                }
+                                                                            >
+                                                                                {
+                                                                                    lista.nombredistrito
+                                                                                }
                                                                             </option>
                                                                         )
                                                                     )}
@@ -1164,19 +1293,19 @@ export default function Dashboard() {
                                                         <MapContainer
                                                             center={
                                                                 ColegioDAta.latitud &&
-                                                                    ColegioDAta.longitud
+                                                                ColegioDAta.longitud
                                                                     ? [
-                                                                        ColegioDAta.latitud,
-                                                                        ColegioDAta.longitud,
-                                                                    ]
+                                                                          ColegioDAta.latitud,
+                                                                          ColegioDAta.longitud,
+                                                                      ]
                                                                     : [
-                                                                        -10.4074729,
-                                                                        -75.3347043,
-                                                                    ]
+                                                                          -10.4074729,
+                                                                          -75.3347043,
+                                                                      ]
                                                             }
                                                             zoom={
                                                                 ColegioDAta.latitud &&
-                                                                    ColegioDAta.longitud
+                                                                ColegioDAta.longitud
                                                                     ? 15
                                                                     : 6
                                                             }
@@ -1205,15 +1334,27 @@ export default function Dashboard() {
                                                                             true
                                                                         }
                                                                         eventHandlers={{
-                                                                            dragend: (e) => {
-                                                                                const { lat, lng, } =
-                                                                                    e.target.getLatLng();
-                                                                                setColegioDAta((prevData) => ({
-                                                                                    ...prevData,
-                                                                                    latitud: lat, longitud: lng,
-                                                                                })
-                                                                                );
-                                                                            },
+                                                                            dragend:
+                                                                                (
+                                                                                    e
+                                                                                ) => {
+                                                                                    const {
+                                                                                        lat,
+                                                                                        lng,
+                                                                                    } =
+                                                                                        e.target.getLatLng();
+                                                                                    setColegioDAta(
+                                                                                        (
+                                                                                            prevData
+                                                                                        ) => ({
+                                                                                            ...prevData,
+                                                                                            latitud:
+                                                                                                lat,
+                                                                                            longitud:
+                                                                                                lng,
+                                                                                        })
+                                                                                    );
+                                                                                },
                                                                         }}
                                                                     />
                                                                 )}
@@ -1313,8 +1454,13 @@ export default function Dashboard() {
                                                 maxLength="10" // No permite más de 10 caracteres
                                                 minLength="10" // Exige al menos 10 caracteres
                                                 onBlur={(e) => {
-                                                    if (e.target.value.length !== 10) {
-                                                        alert('El número de documento debe tener exactamente 10 dígitos');
+                                                    if (
+                                                        e.target.value
+                                                            .length !== 10
+                                                    ) {
+                                                        alert(
+                                                            "El número de documento debe tener exactamente 10 dígitos"
+                                                        );
                                                     }
                                                 }}
                                             />
@@ -1379,7 +1525,6 @@ export default function Dashboard() {
                                             />
                                         </div>
 
-                                      
                                         <div>
                                             <label
                                                 htmlFor="Epago"
@@ -1523,7 +1668,6 @@ export default function Dashboard() {
                                                 className="block w-full text-sm text-gray-700 border border-gray-300 rounded-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 mt-2 ml-4"
                                             />
                                         </div>
-
                                     </div>
                                 </div>
                             </div>

@@ -27,12 +27,25 @@ class InscripcionTemporal extends Model
         'medioPago',
         'nroVoucher',
         'fotoVoucher',
+        'estado',
         'idprogramaestudios',
+        'idciclo',
+        'idcolegio'
     ];
 
     // Relación con el modelo ProgramaEstudios
-    public function programaEstudios()
+    public function programaEstudio()
     {
         return $this->belongsTo(ProgramaEstudio::class, 'idprogramaestudios');
+    }
+
+    public function ciclo()
+    {
+        return $this->belongsTo(Ciclo::class, 'idciclo');
+    }
+
+    public function colegio()
+    {
+        return $this->belongsTo(Colegio::class, 'idcolegio');
     }
 }

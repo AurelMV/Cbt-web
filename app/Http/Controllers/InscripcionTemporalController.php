@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\InscripcionTemporal;
+use Illuminate\Http\Request;
 use App\Http\Requests\StoreInscripcionTemporalRequest;
 use App\Http\Requests\UpdateInscripcionTemporalRequest;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class InscripcionTemporalController extends Controller
@@ -15,8 +17,8 @@ class InscripcionTemporalController extends Controller
     public function index()
     {
         //
-        $inscripcion="";
-        
+        $inscripcion = "";
+
         return Inertia::render('StudentForm', [
             'inscripciones' => $inscripcion,
             'queryParams' => request()->query(),
@@ -59,18 +61,18 @@ class InscripcionTemporalController extends Controller
             'idprogramaestudios' => 'required|exists:programa_estudios,id',
             'idciclo' => 'required|exists:ciclos,id',
             'idcolegio' => 'required|exists:colegios,id',
-           
+
         ]);
-    
+
         // Procesar las imágenes si existen
-        $fotoDNI = $request->hasFile('fotoDNI') 
-            ? file_get_contents($request->file('fotoDNI')->getRealPath()) 
+        $fotoDNI = $request->hasFile('fotoDNI')
+            ? file_get_contents($request->file('fotoDNI')->getRealPath())
             : null;
-    
-        $fotoVoucher = $request->hasFile('fotoVoucher') 
-            ? file_get_contents($request->file('fotoVoucher')->getRealPath()) 
+
+        $fotoVoucher = $request->hasFile('fotoVoucher')
+            ? file_get_contents($request->file('fotoVoucher')->getRealPath())
             : null;
-    
+
         // Crear el registro en la base de datos
         InscripcionTemporal::create([
             'nombres' => $validatedData['nombres'],
@@ -96,7 +98,7 @@ class InscripcionTemporalController extends Controller
             'idciclo' => $validatedData['idciclo'],
             'idcolegio' => $validatedData['idcolegio'],
         ]);
-    
+
         // Retornar una respuesta (puede ser un redireccionamiento o JSON)
         return redirect()->route('inscripcion-temporals.index')->with('success', 'Inscripción registrada exitosamente.');
     }
@@ -132,5 +134,80 @@ class InscripcionTemporalController extends Controller
     {
         //
     }
-    
+
+    public function listInscripcionsTemp()
+    {
+        $inscripcionesTemporales = InscripcionTemporal::with('ciclo', 'programaEstudio', 'colegio')->get()->map(function ($inscripcionTemporal) {
+            return [
+                'id' => $inscripcionTemporal->id,
+                'nombres' => $inscripcionTemporal->nombres,
+                'aPaterno' => $inscripcionTemporal->aPaterno,
+                'aMaterno' => $inscripcionTemporal->aMaterno,
+                'apellidos' => $inscripcionTemporal->aPaterno . ' ' . $inscripcionTemporal->aMaterno,
+                'sexo' => $inscripcionTemporal->sexo,
+                'celularestudiante' => $inscripcionTemporal->celularestudiante,
+                'celularapoderado' => $inscripcionTemporal->celularapoderado,
+                'fechaNacimiento' => $inscripcionTemporal->fechaNacimiento,
+                'email' => $inscripcionTemporal->email,
+                'anoculminado' => $inscripcionTemporal->anoculminado,
+                'Nrodocumento' => $inscripcionTemporal->Nrodocumento,
+                'tipodocumento' => $inscripcionTemporal->tipodocumento,
+                'direccion' => $inscripcionTemporal->direccion,
+                'fotoDNI' => $inscripcionTemporal->fotoDNI,
+                'fecha' => $inscripcionTemporal->fecha,
+                'monto' => $inscripcionTemporal->monto,
+                'medioPago' => $inscripcionTemporal->medioPago,
+                'nroVoucher' => $inscripcionTemporal->nroVoucher,
+                'fotoVoucher' => $inscripcionTemporal->fotoVoucher,
+                'estado' => $inscripcionTemporal->estado,
+                'idprogramaestudios' => $inscripcionTemporal->idprogramaestudios,
+                'nombrePrograma' => $inscripcionTemporal->programaEstudio->nombre_programa,
+                'idciclo' => $inscripcionTemporal->idciclo,
+                'nombreCiclo' => $inscripcionTemporal->ciclo->nombre,
+                'idcolegio' => $inscripcionTemporal->idcolegio,
+                'nombreColegio' => $inscripcionTemporal->colegio->nombrecolegio,
+            ];
+        });
+
+        return Inertia::render('Dashboard', [
+            'inscripcionesTemporales' => $inscripcionesTemporales,
+            'inscripcionPendiente' => session('inscripcionPendiente'),
+        ]);
+    }
+
+    public function approve(Request $request)
+    {
+        $validatedData = Validator::make($request->all(), [
+            'nombres' => 'required|string|max:80',
+            'aPaterno' => 'required|string|max:120',
+            'aMaterno' => 'required|string|max:120',
+            'sexo' => 'required|string|size:1',
+            'celularestudiante' => 'required|string|size:9',
+            'celularapoderado' => 'required|string|size:9',
+            'fechaNacimiento' => 'nullable|date',
+            'email' => 'required|email|max:220',
+            'anoculminado' => 'required|string|max:45',
+            'Nrodocumento' => 'nullable|string|max:45',
+            'tipodocumento' => 'nullable|string|max:45',
+            'direccion' => 'required|string|max:45',
+            'fotoDNI' => 'nullable|file|mimes:jpeg,png,jpg|max:2048', // Tamaño máximo 2MB
+            'fecha' => 'required|date',
+            'monto' => 'required|integer',
+            'medioPago' => 'required|string|max:20',
+            'nroVoucher' => 'required|string|max:10',
+            'fotoVoucher' => 'nullable|file|mimes:jpeg,png,jpg|max:2048', // Tamaño máximo 2MB
+            'estado' => 'string|in:Pendiente,Aprobado,Rechazado',
+            'idprogramaestudios' => 'required|exists:programa_estudios,id',
+            'idciclo' => 'required|exists:ciclos,id',
+            'idcolegio' => 'required|exists:colegios,id',
+        ]);
+
+        // Verificar si la validación fue exitosa y devolver un mensaje de error si existe
+        if ($validatedData->fails()) {
+            return redirect()->back()->withErrors($validatedData->errors());
+        }
+
+        $inscripcionPendiente = $request->all();
+        return redirect()->route('dashboard')->with('inscripcionPendiente', $inscripcionPendiente);
+    }
 }
