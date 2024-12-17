@@ -16,6 +16,20 @@ export default function Dashboard() {
     const [selectedCiclo, setSelectedCiclo] = useState("");
     const [selectedGrupo, setSelectedGrupo] = useState("");
 
+    const [minDate, setMinDate] = useState("");
+    const [maxDate, setMaxDate] = useState("");
+  
+    useEffect(() => {
+
+      const today = new Date();
+  
+      const max = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()); 
+      const min = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate()); 
+  
+      setMaxDate(max.toISOString().split("T")[0]);
+      setMinDate(min.toISOString().split("T")[0]);
+    }, []);
+
     const [programas, setProgramas] = useState([]);
     const [programaSeleccionado, setProgramaSeleccionado] = useState("");
 
@@ -411,6 +425,22 @@ export default function Dashboard() {
             });
     };
 
+    const DateOfBirthInput = () => {
+        const [minDate, setMinDate] = useState("");
+        const [maxDate, setMaxDate] = useState("");
+      
+        useEffect(() => {
+
+          const today = new Date();
+      
+          const max = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()); 
+          const min = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate());
+      
+          setMaxDate(max.toISOString().split("T")[0]);
+          setMinDate(min.toISOString().split("T")[0]);
+        }, []);
+    };    
+
     return (
         <AuthenticatedLayout>
             <Head title="Dashboard" />
@@ -648,6 +678,8 @@ export default function Dashboard() {
                                             <input
                                                 id="Fnacimiento"
                                                 type="date"
+                                                min={minDate}
+                                                max={maxDate}
                                                 name="p_fechaNacimiento"
                                                 onChange={handleChange}
                                                 value={

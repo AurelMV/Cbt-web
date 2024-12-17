@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState , useEffect} from 'react';
 
 const InscripcionForm = () => {
     const [currentStep, setCurrentStep] = useState(1); 
@@ -10,7 +10,19 @@ const InscripcionForm = () => {
     const handlePrev = () => {
         setCurrentStep(prev => Math.max(prev - 1, 1)); 
     };
+    const [minDate, setMinDate] = useState("");
+    const [maxDate, setMaxDate] = useState("");
+  
+    useEffect(() => {
 
+      const today = new Date();
+  
+      const max = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()); 
+      const min = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate()); 
+  
+      setMaxDate(max.toISOString().split("T")[0]);
+      setMinDate(min.toISOString().split("T")[0]);
+    }, []);
     return (
         <div className="min-h-screen flex flex-col items-center bg-gray-100 py-10 px-4">
             <div className="w-full max-w-4xl bg-white shadow-md rounded-lg p-6 md:p-10 mx-auto">
@@ -150,6 +162,8 @@ const InscripcionForm = () => {
                         <input 
                             type="date" 
                             name="fechaNacimiento" 
+                            min={minDate}
+                            max={maxDate}
                             className="w-full p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400"
                         />
                     </div>
