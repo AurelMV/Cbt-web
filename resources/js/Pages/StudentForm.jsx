@@ -5,10 +5,7 @@ import { MapContainer, TileLayer, Marker, useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
 
-
 import axios from "axios";
-
-
 
 const InscripcionForm = () => {
     
@@ -236,17 +233,6 @@ const InscripcionForm = () => {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
  
     const [grupos, setGrupos] = useState([]);
     const [selectedCiclo, setSelectedCiclo] = useState("");
@@ -259,12 +245,6 @@ const InscripcionForm = () => {
     const [error, setError] = useState(null);
     const [MensajeError, setMensajeError] = useState("");
 
-  
-   
-
-
- 
- 
 
     const [modalOpen2, setModalOpen2] = useState(false);
     const openModal2 = () => setModalOpen2(true);
@@ -278,16 +258,10 @@ const InscripcionForm = () => {
             [name]: value,
         }));
     };
-
-
- 
-
+    const [minDate, setMinDate] = useState("");
+    const [maxDate, setMaxDate] = useState("");
 
     const [digitLimit, setDigitLimit] = useState(8)
-
-    
-
- 
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -315,10 +289,6 @@ const InscripcionForm = () => {
         }
       };
 
-   
-
-  
-
     //filtrador de ciclos y grupos
     const handleCicloChange = (e) => {
         const cicloId = e.target.value;
@@ -339,6 +309,14 @@ const InscripcionForm = () => {
     };
 
     useEffect(() => {
+        const today = new Date();
+  
+        const max = new Date(today.getFullYear() - 15, today.getMonth(), today.getDate()); 
+        const min = new Date(today.getFullYear() - 50, today.getMonth(), today.getDate()); 
+  
+        setMaxDate(max.toISOString().split("T")[0]);
+        setMinDate(min.toISOString().split("T")[0]);
+      
         const fechaActual = new Date().toISOString().split('T')[0];
         setFormData((prev) => ({
             ...prev,
@@ -395,46 +373,6 @@ const InscripcionForm = () => {
         setcolegi(() => ({nombre:nombrecolegio}));
         alert("¡Colegio seleccionado con éxito!");
     };
-  
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     return (
         <div className="min-h-screen flex flex-col items-center bg-gray-100 py-10 px-4">
@@ -579,7 +517,6 @@ const InscripcionForm = () => {
                                                 
                                             />
                         </div>
-
                         <div>
                             <label className="block text-gray-700 font-medium mb-1">
                                 Celular Estudiante:
@@ -619,6 +556,8 @@ const InscripcionForm = () => {
                             <input
                                 type="date"
                                 name="fechaNacimiento"
+                                min={minDate}
+                                max={maxDate}
                                 onChange={handleChange}
                                 value={
                                     formData.fechaNacimiento
