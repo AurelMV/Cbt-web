@@ -189,14 +189,17 @@ function GestionPagos() {
                             <label className="block text-sm font-medium text-gray-700">Medio de Pago</label>
                             <input
                                 type="text"
+
                                 className="mt-1 p-2 border border-gray-300 rounded-md w-full"
                                 value={pagoEdit?.medioPago || ''}
+                                
                                 onChange={(e) =>
                                     setPagoEdit((prev) => ({
                                         ...prev,
                                         medioPago: e.target.value,
                                     }))
                                 }
+                                readOnly
                             />
                         </div>
                         <div className="mt-4">
