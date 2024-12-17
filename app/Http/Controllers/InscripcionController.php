@@ -292,6 +292,13 @@ class InscripcionController extends Controller
 
         return response()->json($programas);
     }
+
+    public function ListarCilos()
+    {
+        $ciclos = Ciclo::all();
+        return response()->json($ciclos);
+    }
+    
     public function ListadoGruposCiclos()
     {
         $ciclos = Ciclo::with('grupos')->get();
