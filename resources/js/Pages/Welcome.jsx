@@ -92,7 +92,8 @@ const Inicio = ({ auth }) => {
           </li>
           <li>
             <a
-              href="#features"
+
+              href={route('informacion')}
               className="hover:underline hover:decoration-yellow-500 hover:decoration-4 hover:underline-offset-4"
             >
               Información
@@ -100,7 +101,7 @@ const Inicio = ({ auth }) => {
           </li>
           <li>
             <a
-              href="#pricing"
+              href={route('nosotros')}
               className="hover:underline hover:decoration-yellow-500 hover:decoration-4 hover:underline-offset-4"
             >
               Nosotros

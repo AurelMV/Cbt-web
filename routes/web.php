@@ -17,6 +17,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+
+
 Route::get('/', function () {
     return Inertia::render('Welcome', [
         'canLogin' => Route::has('login'),
@@ -25,6 +27,15 @@ Route::get('/', function () {
         'phpVersion' => PHP_VERSION,
     ]);
 });
+
+Route::get('/informacion', function () {
+    return Inertia::render('Informacion');
+})->name('informacion');
+
+Route::get('/nosotros', function (){
+    return Inertia::render('Nosotros');
+})->name('nosotros');
+
 
 Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
