@@ -131,12 +131,7 @@ const Inicio = ({ auth }) => {
                 Log in
               </Link>
               
-              <Link
-                href={route('register')}
-                className="text-white hover:text-yellow-500 hover:underline hover:decoration-yellow-500 hover:decoration-4 hover:underline-offset-4 transition"
-              >
-                Register
-              </Link>
+            
             </>
           )}
         </div>
