@@ -19,7 +19,7 @@ class PagoController extends Controller
 {
     public function index()
     {
-        $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(3);
+        $inscripcion = Inscripcion::with(['estudiante', 'programaEstudio', 'ciclo', 'grupo'])->paginate(15);
 
         //return response()->json(
 
@@ -42,7 +42,7 @@ class PagoController extends Controller
 
  
         // Paginar los resultados
-        $inscripcion = $query->paginate(3);
+        $inscripcion = $query->paginate(15);
         return Inertia::render('GestiondePagos', [
             'inscripciones' => $inscripcion,
             'queryParams' => request()->query(),
@@ -96,7 +96,59 @@ class PagoController extends Controller
         return response()->json($pagos);
     }
 
-
+    public function ListadoparPDF(Request $request)
+    {
+        // Obtener los filtros desde la solicitud
+        $nombre = $request->input('nombre');
+        $nroDocumento = $request->input('nroDocumento');
+        $ciclo = $request->input('ciclo');
+        $grupo = $request->input('grupo');
+    
+        // Construir la consulta con las relaciones necesarias
+        $query = Pago::with([
+            'inscripcion.estudiante', 
+            'inscripcion.programaEstudio', 
+            'inscripcion.ciclo', 
+            'inscripcion.grupo'
+        ])
+        ->select('id', 'monto', 'fecha', 'medioPago', 'nroVoucher', 'idInscripcion');
+    
+        // Filtrar por nombre del estudiante si se proporciona
+        if ($nombre) {
+            $query->whereHas('inscripcion.estudiante', function ($q) use ($nombre) {
+                $q->where('nombres', 'like', '%' . $nombre . '%');
+            });
+        }
+    
+        // Filtrar por número de documento si se proporciona
+        if ($nroDocumento) {
+            $query->whereHas('inscripcion.estudiante', function ($q) use ($nroDocumento) {
+                $q->where('nro_documento', 'like', '%' . $nroDocumento . '%');
+            });
+        }
+    
+        // Filtrar por ciclo si se proporciona
+        if ($ciclo) {
+            $query->whereHas('inscripcion.ciclo', function ($q) use ($ciclo) {
+                $q->where('nombre', 'like', '%' . $ciclo . '%');
+            });
+        }
+    
+        // Filtrar por grupo si se proporciona
+        if ($grupo) {
+            $query->whereHas('inscripcion.grupo', function ($q) use ($grupo) {
+                $q->where('nombre', 'like', '%' . $grupo . '%');
+            });
+        }
+    
+        // Realizar la paginación
+        $pagos = $query->paginate(15);
+    
+        // Devolver los resultados en formato JSON (o como desees)
+        return response()->json($pagos);
+        
+    }
+    
 
 
 

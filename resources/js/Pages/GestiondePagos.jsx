@@ -203,6 +203,7 @@ export default function GestionPagos({ queryParams = null }) {
                                             onChange={(e) =>
                                                 setNombre(e.target.value)
                                             }
+                                            readOnly
                                         />
 
                                         <input
@@ -215,6 +216,7 @@ export default function GestionPagos({ queryParams = null }) {
                                             onChange={(e) =>
                                                 setApellido(e.target.value)
                                             }
+                                            readOnly
                                         />
 
                                         <input
@@ -249,14 +251,7 @@ export default function GestionPagos({ queryParams = null }) {
                                 </div>
                                 <div className="col-span-4">
                                     <div className="mb-8">
-                                        <h3 className="text-md font-medium mb-4">
-                                            Lista de Pagos
-                                        </h3>
-                                        <input
-                                            type="text"
-                                            placeholder="Buscar pago"
-                                            className=" border p-2 rounded-md mb-4"
-                                        />
+                                      
 
                                         <Prueva />
 
