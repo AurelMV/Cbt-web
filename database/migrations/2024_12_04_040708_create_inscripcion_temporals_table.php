@@ -34,11 +34,14 @@ return new class extends Migration
             $table->string("estado")->default('Pendiente');
             $table->unsignedBigInteger('idprogramaestudios');
             $table->unsignedBigInteger('idciclo');
+            $table->unsignedBigInteger('idcolegio');
+            
             $table->timestamps();
 
 
             $table->foreign('idprogramaestudios')->references('id')->on('programa_estudios')->onDelete('cascade');
             $table->foreign('idciclo')->references('id')->on('ciclos')->onDelete('cascade');
+            $table->foreign('idcolegio')->references('id')->on('colegios')->onDelete('cascade');
         });
     }
 
